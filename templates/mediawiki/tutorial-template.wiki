@@ -1,0 +1,41 @@
+{{Tutorial
+|title = {{ title }}
+|author = GitHub Tutorials Expert
+|date = {{ date }}
+|category = {{ category }}
+|difficulty = {{ difficulty }}
+|estimated_time = {{ time }}
+}}
+
+= {{ title }} =
+
+== Overview ==
+
+{{ overview }}
+
+== Prerequisites ==
+
+{{ prerequisites }}
+
+== Implementation ==
+
+{{ main_content }}
+
+== Advanced Topics ==
+
+{{ advanced_content }}
+
+== Troubleshooting ==
+
+{| class="wikitable"
+! Issue !! Cause !! Solution
+|-
+{{ troubleshooting_rows }}
+|}
+
+== See Also ==
+
+{{ related_links }}
+
+[[Category:GitHub Tutorials]]
+[[Category:{{ category }}]]
