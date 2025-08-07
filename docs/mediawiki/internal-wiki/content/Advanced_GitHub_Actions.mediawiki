@@ -1,0 +1,958 @@
+{{Tutorial
+|title = Advanced GitHub Actions
+|author = GitHub Tutorials Expert
+|difficulty = advanced
+|estimated_time = 60 minutes
+|prerequisites = GitHub Actions experience, YAML, programming knowledge
+|topics = Custom actions, Advanced workflows, Performance optimization
+}}
+
+{{TOC limit|3}}
+
+= Advanced GitHub Actions =
+
+This guide covers sophisticated GitHub Actions patterns, custom action development, and enterprise-level workflow optimization techniques for experienced practitioners.
+
+== Custom Actions Development ==
+
+=== Types of Custom Actions ===
+
+'''JavaScript Actions'''
+* Run directly on the runner
+* Fast execution
+* Full GitHub API access
+* Node.js environment
+
+'''Docker Container Actions'''
+* Consistent environment
+* Support any programming language
+* Larger overhead
+* Full system control
+
+'''Composite Actions'''
+* Combine multiple steps
+* Reuse existing actions
+* YAML-based definition
+* Lightweight and fast
+
+=== Creating JavaScript Actions ===
+
+'''Directory structure:'''
+{{Code|text|
+my-action/
+├── action.yml
+├── index.js
+├── package.json
+└── node_modules/
+}}
+
+'''action.yml:'''
+{{Code|yaml|
+name: 'Advanced Deployment Action'
+description: 'Deploy with advanced configuration'
+inputs:
+  environment:
+    description: 'Target environment'
+    required: true
+  config-file:
+    description: 'Configuration file path'
+    required: false
+    default: 'deploy.config.js'
+  dry-run:
+    description: 'Perform dry run'
+    required: false
+    default: 'false'
+outputs:
+  deployment-url:
+    description: 'URL of deployed application'
+  deployment-id:
+    description: 'Unique deployment identifier'
+runs:
+  using: 'node16'
+  main: 'index.js'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
+}}
+
+'''index.js:'''
+{{Code|javascript|
+const core = require('@actions/core');
+const github = require('@actions/github');
+const exec = require('@actions/exec');
+
+async function run() {
+  try {
+    // Get inputs
+    const environment = core.getInput('environment');
+    const configFile = core.getInput('config-file');
+    const dryRun = core.getInput('dry-run') === 'true';
+    
+    // Validate inputs
+    if (!['staging', 'production'].includes(environment)) {
+      core.setFailed(`Invalid environment: ${environment}`);
+      return;
+    }
+    
+    // Get GitHub context
+    const context = github.context;
+    const token = core.getInput('token') || process.env.GITHUB_TOKEN;
+    const octokit = github.getOctokit(token);
+    
+    // Create deployment
+    const deployment = await octokit.rest.repos.createDeployment({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      ref: context.sha,
+      environment: environment,
+      auto_merge: false,
+      required_contexts: []
+    });
+    
+    // Perform deployment
+    let deploymentUrl;
+    if (dryRun) {
+      core.info('Dry run mode - skipping actual deployment');
+      deploymentUrl = `https://staging.example.com`;
+    } else {
+      deploymentUrl = await performDeployment(environment, configFile);
+    }
+    
+    // Update deployment status
+    await octokit.rest.repos.createDeploymentStatus({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      deployment_id: deployment.data.id,
+      state: 'success',
+      environment_url: deploymentUrl,
+      description: 'Deployment completed successfully'
+    });
+    
+    // Set outputs
+    core.setOutput('deployment-url', deploymentUrl);
+    core.setOutput('deployment-id', deployment.data.id);
+    
+    // Create summary
+    await core.summary
+      .addHeading('Deployment Complete')
+      .addTable([
+        [{data: 'Environment', header: true}, {data: 'URL', header: true}],
+        [environment, deploymentUrl]
+      ])
+      .write();
+    
+  } catch (error) {
+    core.setFailed(error.message);
+  }
+}
+
+async function performDeployment(environment, configFile) {
+  // Load configuration
+  const config = require(`./${configFile}`);
+  
+  // Perform deployment steps
+  await exec.exec('npm', ['run', 'build']);
+  await exec.exec('docker', ['build', '-t', `app:${environment}`, '.']);
+  
+  // Deploy to environment
+  const deploymentUrl = await deployToEnvironment(environment, config);
+  
+  return deploymentUrl;
+}
+
+run();
+}}
+
+'''package.json:'''
+{{Code|json|
+{
+  "name": "advanced-deployment-action",
+  "version": "1.0.0",
+  "description": "Advanced deployment action",
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "@actions/exec": "^1.1.1"
+  }
+}
+}}
+
+=== Creating Docker Actions ===
+
+'''Dockerfile:'''
+{{Code|dockerfile|
+FROM python:3.11-slim
+
+# Install dependencies
+COPY requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+
+# Copy action code
+COPY entrypoint.py /entrypoint.py
+COPY src/ /src/
+
+# Set executable permissions
+RUN chmod +x /entrypoint.py
+
+ENTRYPOINT ["/entrypoint.py"]
+}}
+
+'''entrypoint.py:'''
+{{Code|python|
+#!/usr/bin/env python3
+
+import os
+import sys
+import json
+import requests
+from pathlib import Path
+
+def main():
+    # Get inputs from environment variables
+    environment = os.environ.get('INPUT_ENVIRONMENT')
+    api_key = os.environ.get('INPUT_API_KEY')
+    
+    if not environment or not api_key:
+        print("::error::Missing required inputs")
+        sys.exit(1)
+    
+    # Perform complex operations
+    result = perform_advanced_operations(environment, api_key)
+    
+    # Set outputs
+    print(f"::set-output name=result::{result}")
+    
+    # Create job summary
+    summary = {
+        "environment": environment,
+        "status": "success",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+    
+    with open(os.environ['GITHUB_STEP_SUMMARY'], 'w') as f:
+        f.write(f"## Deployment Summary\n\n")
+        f.write(f"- **Environment**: {environment}\n")
+        f.write(f"- **Status**: Success\n")
+        f.write(f"- **Result**: {result}\n")
+
+def perform_advanced_operations(environment, api_key):
+    # Complex business logic here
+    return "deployment-successful"
+
+if __name__ == "__main__":
+    main()
+}}
+
+=== Composite Actions ===
+
+{{Code|yaml|
+name: 'Setup Project Environment'
+description: 'Complete project setup with caching and security scanning'
+
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: '18'
+  python-version:
+    description: 'Python version'
+    required: false
+    default: '3.11'
+  enable-security-scan:
+    description: 'Enable security scanning'
+    required: false
+    default: 'true'
+
+outputs:
+  cache-hit:
+    description: 'Whether cache was hit'
+    value: ${{ steps.cache.outputs.cache-hit }}
+  scan-results:
+    description: 'Security scan results'
+    value: ${{ steps.security-scan.outputs.results }}
+
+runs:
+  using: 'composite'
+  steps:
+    # Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+    
+    # Setup Python
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: 'pip'
+    
+    # Cache dependencies
+    - name: Cache dependencies
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.npm
+          ~/.cache/pip
+          node_modules
+          __pycache__
+        key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json', '**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-deps-
+    
+    # Install dependencies
+    - name: Install Node.js dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: npm ci
+      shell: bash
+    
+    - name: Install Python dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: pip install -r requirements.txt
+      shell: bash
+    
+    # Security scanning
+    - name: Security scan
+      id: security-scan
+      if: inputs.enable-security-scan == 'true'
+      run: |
+        npm audit --audit-level moderate
+        pip-audit
+        echo "results=passed" >> $GITHUB_OUTPUT
+      shell: bash
+}}
+
+== Advanced Workflow Patterns ==
+
+=== Dynamic Matrix Generation ===
+
+{{Code|yaml|
+name: Dynamic Matrix Build
+
+on: [push, pull_request]
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate matrix
+        id: generate
+        run: |
+          # Dynamically generate matrix based on changed files
+          MATRIX=$(python scripts/generate-matrix.py)
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+
+  test:
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test ${{ matrix.service }}
+        run: npm test -- --service=${{ matrix.service }}
+}}
+
+=== Conditional Job Execution ===
+
+{{Code|yaml|
+name: Smart CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.changes.outputs.frontend }}
+      backend: ${{ steps.changes.outputs.backend }}
+      docs: ${{ steps.changes.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+            docs:
+              - 'docs/**'
+              - '*.md'
+
+  test-frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test frontend
+        run: npm run test:frontend
+
+  test-backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test backend
+        run: npm run test:backend
+
+  update-docs:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update documentation
+        run: npm run docs:build
+}}
+
+=== Workflow Orchestration ===
+
+{{Code|yaml|
+name: Multi-Repository Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options: [staging, production]
+        required: true
+
+jobs:
+  deploy-services:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [auth-service, user-service, notification-service]
+        include:
+          - service: auth-service
+            repository: company/auth-service
+          - service: user-service
+            repository: company/user-service
+          - service: notification-service
+            repository: company/notification-service
+    steps:
+      - name: Trigger deployment
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.DEPLOYMENT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'company',
+              repo: '${{ matrix.service }}',
+              workflow_id: 'deploy.yml',
+              ref: 'main',
+              inputs: {
+                environment: '${{ inputs.environment }}'
+              }
+            });
+
+  wait-for-deployments:
+    needs: deploy-services
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for all deployments
+        uses: actions/github-script@v6
+        with:
+          script: |
+            // Custom logic to wait for all deployments to complete
+            // Monitor workflow runs and deployment statuses
+}}
+
+== Performance Optimization ==
+
+=== Parallel Job Optimization ===
+
+{{Code|yaml|
+name: Optimized Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  # Fast feedback jobs
+  quick-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint
+        run: npm run lint
+      - name: Type check
+        run: npm run type-check
+      - name: Unit tests
+        run: npm run test:unit
+
+  # Parallel intensive jobs
+  integration-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-group: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run integration tests group ${{ matrix.test-group }}
+        run: npm run test:integration -- --group=${{ matrix.test-group }}
+
+  # Build artifacts
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build application
+        run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 1
+
+  # Dependent jobs that need artifacts
+  deploy-staging:
+    if: github.ref == 'refs/heads/main'
+    needs: [quick-checks, integration-tests, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist/
+      - name: Deploy to staging
+        run: ./deploy.sh staging
+}}
+
+=== Advanced Caching Strategies ===
+
+{{Code|yaml|
+name: Advanced Caching
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Multi-level caching
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      
+      # Cache build outputs
+      - name: Cache build outputs
+        uses: actions/cache@v3
+        with:
+          path: |
+            dist/
+            .next/cache
+          key: ${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+      
+      # Cache test results
+      - name: Cache test results
+        uses: actions/cache@v3
+        with:
+          path: |
+            coverage/
+            .nyc_output/
+          key: ${{ runner.os }}-tests-${{ hashFiles('src/**', 'tests/**') }}
+      
+      # Conditional build based on cache
+      - name: Build application
+        if: steps.cache-build.outputs.cache-hit != 'true'
+        run: npm run build
+}}
+
+=== Self-Hosted Runner Optimization ===
+
+{{Code|yaml|
+name: Self-Hosted Optimization
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux, x64, high-memory]
+    container:
+      image: node:18-alpine
+      options: --cpus 4 --memory 8g
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Optimized for self-hosted runners
+      - name: Setup environment
+        run: |
+          # Pre-warm caches
+          npm ci --cache /tmp/npm-cache
+          
+          # Parallel operations
+          npm run build &
+          npm run test:unit &
+          wait
+      
+      # Clean up after job
+      - name: Cleanup
+        if: always()
+        run: |
+          docker system prune -f
+          npm cache clean --force
+}}
+
+== Security and Compliance ==
+
+=== Secure Action Development ===
+
+{{Code|javascript|
+// Secure input validation
+function validateInputs(inputs) {
+  const schema = {
+    environment: /^(staging|production)$/,
+    version: /^v?\d+\.\d+\.\d+$/,
+    config: /^[a-zA-Z0-9._-]+\.json$/
+  };
+  
+  for (const [key, pattern] of Object.entries(schema)) {
+    if (inputs[key] && !pattern.test(inputs[key])) {
+      throw new Error(`Invalid ${key}: ${inputs[key]}`);
+    }
+  }
+}
+
+// Secure API calls
+async function secureApiCall(url, data, token) {
+  // Validate URL
+  const allowedHosts = ['api.github.com', 'api.company.com'];
+  const urlObj = new URL(url);
+  
+  if (!allowedHosts.includes(urlObj.hostname)) {
+    throw new Error(`Unauthorized host: ${urlObj.hostname}`);
+  }
+  
+  // Secure headers
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'User-Agent': 'GitHub-Action/1.0',
+    'Accept': 'application/vnd.github.v3+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+  
+  // Implement retry with exponential backoff
+  return await retryWithBackoff(async () => {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API call failed: ${response.status}`);
+    }
+    
+    return response.json();
+  });
+}
+}}
+
+=== Compliance Workflows ===
+
+{{Code|yaml|
+name: Compliance Pipeline
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * *'  # Daily compliance check
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      # SAST scanning
+      - name: CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          languages: javascript, python
+      
+      # Dependency scanning
+      - name: Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'my-project'
+          path: '.'
+          format: 'ALL'
+      
+      # License compliance
+      - name: License Check
+        run: |
+          npx license-checker --onlyAllow 'MIT;Apache-2.0;BSD-3-Clause'
+      
+      # Upload results
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
+
+  audit-trail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create audit record
+        uses: actions/github-script@v6
+        with:
+          script: |
+            // Create detailed audit trail
+            const audit = {
+              workflow: context.workflow,
+              run_id: context.runId,
+              actor: context.actor,
+              event: context.eventName,
+              timestamp: new Date().toISOString(),
+              repository: context.repo,
+              ref: context.ref,
+              sha: context.sha
+            };
+            
+            // Send to compliance system
+            await sendAuditRecord(audit);
+}}
+
+== Monitoring and Observability ==
+
+=== Workflow Monitoring ===
+
+{{Code|yaml|
+name: Monitored Workflow
+
+on: [push, pull_request]
+
+jobs:
+  monitored-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Start monitoring
+      - name: Start workflow monitoring
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const startTime = Date.now();
+            core.exportVariable('WORKFLOW_START_TIME', startTime);
+            
+            // Send start event to monitoring system
+            await fetch('https://monitoring.company.com/workflows/start', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                workflow: context.workflow,
+                run_id: context.runId,
+                start_time: startTime
+              })
+            });
+      
+      # Your workflow steps here
+      - name: Build and test
+        run: |
+          npm ci
+          npm run build
+          npm test
+      
+      # End monitoring
+      - name: End workflow monitoring
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const startTime = parseInt(process.env.WORKFLOW_START_TIME);
+            const endTime = Date.now();
+            const duration = endTime - startTime;
+            
+            // Send completion event
+            await fetch('https://monitoring.company.com/workflows/complete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                workflow: context.workflow,
+                run_id: context.runId,
+                duration: duration,
+                status: job.status
+              })
+            });
+}}
+
+=== Custom Metrics and Alerts ===
+
+{{Code|yaml|
+name: Metrics Collection
+
+on:
+  workflow_run:
+    workflows: ["CI", "Deploy"]
+    types: [completed]
+
+jobs:
+  collect-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect workflow metrics
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: workflowRun } = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id
+            });
+            
+            const metrics = {
+              workflow_name: workflowRun.name,
+              duration: new Date(workflowRun.updated_at) - new Date(workflowRun.created_at),
+              status: workflowRun.conclusion,
+              trigger: workflowRun.event,
+              actor: workflowRun.triggering_actor.login,
+              repository: context.repo.repo
+            };
+            
+            // Send to metrics collection system
+            await sendMetrics(metrics);
+            
+            // Check for anomalies and alert
+            if (metrics.duration > 30 * 60 * 1000) { // 30 minutes
+              await sendAlert('Long running workflow detected', metrics);
+            }
+}}
+
+== Testing Custom Actions ==
+
+=== Unit Testing JavaScript Actions ===
+
+{{Code|javascript|
+// tests/action.test.js
+const core = require('@actions/core');
+const github = require('@actions/github');
+const action = require('../index');
+
+// Mock GitHub API
+jest.mock('@actions/github');
+jest.mock('@actions/core');
+
+describe('Custom Action', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should deploy successfully', async () => {
+    // Mock inputs
+    core.getInput.mockReturnValueOnce('staging');
+    core.getInput.mockReturnValueOnce('deploy.config.js');
+    
+    // Mock GitHub context
+    github.context = {
+      repo: { owner: 'testowner', repo: 'testrepo' },
+      sha: 'abc123'
+    };
+    
+    // Mock API calls
+    const mockOctokit = {
+      rest: {
+        repos: {
+          createDeployment: jest.fn().mockResolvedValue({
+            data: { id: 123 }
+          }),
+          createDeploymentStatus: jest.fn().mockResolvedValue({})
+        }
+      }
+    };
+    github.getOctokit.mockReturnValue(mockOctokit);
+    
+    // Run action
+    await action.run();
+    
+    // Verify outputs
+    expect(core.setOutput).toHaveBeenCalledWith(
+      'deployment-id', 
+      123
+    );
+  });
+});
+}}
+
+=== Integration Testing ===
+
+{{Code|yaml|
+name: Test Custom Action
+
+on: [push, pull_request]
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Test the action in different scenarios
+      - name: Test staging deployment
+        uses: ./
+        with:
+          environment: staging
+          config-file: test/fixtures/staging.config.js
+          dry-run: true
+        
+      - name: Test production deployment
+        uses: ./
+        with:
+          environment: production
+          config-file: test/fixtures/production.config.js
+          dry-run: true
+      
+      # Verify outputs
+      - name: Verify outputs
+        run: |
+          if [ -z "${{ steps.test-staging.outputs.deployment-url }}" ]; then
+            echo "Missing deployment URL output"
+            exit 1
+          fi
+}}
+
+{{See also|
+* [[GitHub Actions Fundamentals]] - Basic workflow concepts
+* [[GitHub Actions Workflows]] - Intermediate workflow patterns
+* [[Security Best Practices]] - Secure action development
+* [[GitHub API Integration]] - API usage in actions
+* [[Performance Optimization]] - Optimize workflow performance
+}}
+
+== Next Steps ==
+
+After mastering advanced GitHub Actions:
+
+# Contribute custom actions to the GitHub Marketplace
+# Build [[Custom GitHub Apps]] for advanced integrations
+# Explore [[GitHub Enterprise Administration]] for organisation-wide policies
+# Study [[GitHub GraphQL API]] for advanced data operations
+# Learn [[Compliance and Auditing]] for regulated environments
+
+{{Success|Advanced GitHub Actions enable sophisticated automation patterns that can transform development workflows and enable enterprise-scale DevOps practices.}}
+
+[[Category:Advanced Tutorials]]
+[[Category:GitHub Actions]]
+[[Category:Automation]]
+[[Category:DevOps]]
+[[Category:CI/CD]]

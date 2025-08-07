@@ -1,0 +1,19 @@
+<noinclude>
+This template marks a page as a stub that needs expansion.
+
+== Usage ==
+<pre>
+{{Stub}}
+{{Stub|GitHub Actions}}
+</pre>
+
+== Parameters ==
+* '''1''' (optional): Topic area that needs expansion
+
+</noinclude><includeonly><div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 3px; padding: 10px; margin: 15px 0; text-align: center;">
+<div style="font-size: 1.1em; margin-bottom: 5px;">📝</div>
+<div><strong>This {{#if:{{{1|}}}|{{{1}}} }}article is a stub.</strong></div>
+<div style="font-size: 0.9em; margin-top: 5px;">You can help by <span class="plainlinks">[{{fullurl:{{FULLPAGENAME}}|action=edit}} expanding it]</span>.</div>
+</div>
+[[Category:Stubs]]{{#if:{{{1|}}}|[[Category:{{{1}}} stubs]]}}</includeonly>
+[[Category:Maintenance templates]]

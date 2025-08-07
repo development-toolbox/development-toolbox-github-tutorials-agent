@@ -1,0 +1,508 @@
+{{Tutorial
+|title = GitHub Web Interface Tour
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 15 minutes
+|prerequisites = GitHub account
+|topics = Navigation, Interface, Features, Layout
+}}
+
+{{TOC limit|3}}
+
+= GitHub Web Interface Tour =
+
+GitHub's web interface is your gateway to millions of repositories and collaborative development. This tour will help you navigate like a pro and discover all the powerful features at your fingertips.
+
+== Getting Oriented ==
+
+=== The GitHub Homepage ===
+
+When you first visit GitHub, you'll see:
+* '''Header navigation''' - Always visible, provides access to key features
+* '''Search bar''' - Find repositories, users, and code
+* '''Feed''' - Activity from people and projects you follow
+* '''Sidebar''' - Your repositories, teams, and shortcuts
+
+{{Note|Your homepage personalises based on your activity and follows. New accounts will see trending repositories and suggested content.}}
+
+=== Header Navigation ===
+
+The black header bar is your command centre:
+
+'''Left side:'''
+* '''GitHub logo''' - Returns to homepage
+* '''Search bar''' - Global search across all of GitHub
+
+'''Right side:'''
+* '''+''' icon - Create new repository, organisation, or import
+* '''Notifications''' bell - Issues, PRs, and mentions
+* '''Profile menu''' - Settings, repositories, and account options
+
+=== Universal Search ===
+
+GitHub's search is incredibly powerful:
+* '''Quick search''' - Type in the header search bar
+* '''Repository search''' - Find repos by name, description, or topic
+* '''Code search''' - Search within code files
+* '''User search''' - Find developers and organisations
+
+'''Search tips:'''
+{{Code|text|
+user:octocat                    # Repositories by user
+org:github                      # Repositories by organisation
+language:javascript             # Repositories by programming language
+topic:machine-learning          # Repositories by topic
+stars:>1000                     # Popular repositories
+created:>2023-01-01            # Recently created repositories
+}}
+
+== Repository Interface ==
+
+=== Repository Header ===
+
+Every repository page shows:
+* '''Repository name''' and owner
+* '''Description''' and topics
+* '''Star, Watch, Fork''' buttons
+* '''Clone/Download''' button
+* '''Visibility''' indicator (public/private)
+
+'''Action buttons:'''
+* '''Watch''' - Get notifications about repository activity
+* '''Star''' - Bookmark repository (like a "favourite")
+* '''Fork''' - Create your own copy of the repository
+
+{{Good|Starring repositories helps you find them later and shows appreciation to maintainers.}}
+
+=== Repository Tabs ===
+
+'''Code Tab (Default):'''
+* File browser with repository contents
+* README display
+* Recent commits and contributors
+* Repository statistics
+
+'''Issues Tab:'''
+* Bug reports and feature requests
+* Discussion threads
+* Project planning and task tracking
+* Label and milestone organisation
+
+'''Pull Requests Tab:'''
+* Code change proposals
+* Review and collaboration space
+* Merge and deployment tracking
+* Branch comparison tools
+
+'''Actions Tab:'''
+* Automated workflows and CI/CD
+* Build and test results
+* Deployment history
+* Workflow logs and artifacts
+
+'''Projects Tab:'''
+* Kanban-style project boards
+* Issue and PR organisation
+* Sprint planning and tracking
+* Team collaboration space
+
+'''Wiki Tab:'''
+* Project documentation
+* Collaborative editing
+* Markdown support
+* Version history
+
+'''Security Tab:'''
+* Security advisories
+* Vulnerability alerts
+* Dependency scanning results
+* Security policy information
+
+'''Insights Tab:'''
+* Repository analytics
+* Contributor statistics
+* Traffic and cloning data
+* Dependency graphs
+
+'''Settings Tab (Admins only):'''
+* Repository configuration
+* Collaborator management
+* Branch protection rules
+* Integration settings
+
+== File Browser ==
+
+=== Navigating Files ===
+
+The file browser shows:
+* '''Folder structure''' - Click folders to navigate
+* '''File types''' - Icons indicate file types
+* '''Last commit''' - When each file was last modified
+* '''Commit message''' - Description of last change
+
+'''File browser features:'''
+* '''Breadcrumb navigation''' - Click any folder in the path
+* '''Branch/tag switcher''' - View different versions
+* '''Download options''' - Clone or download ZIP
+* '''File finder''' - Press `t` to search files quickly
+
+=== Viewing Files ===
+
+When you click a file:
+* '''Syntax highlighting''' - Code is colour-coded
+* '''Line numbers''' - Click to get permalink to specific line
+* '''Raw view''' - See file without formatting
+* '''Blame view''' - See who changed each line
+* '''History view''' - See all changes to the file
+* '''Edit button''' - Modify file directly (if you have permission)
+
+'''File view shortcuts:'''
+* Press `l` to jump to a specific line number
+* Press `b` to view blame information
+* Press `y` to get a permalink to the current version
+
+=== README Files ===
+
+README files are special:
+* '''Automatically displayed''' on repository homepage
+* '''Markdown formatting''' - Rich text with images and links
+* '''Project overview''' - Description, installation, usage
+* '''Getting started guide''' - How to use the project
+
+## Issues and Project Management ==
+
+=== Issues Overview ===
+
+Issues are GitHub's task tracking system:
+* '''Bug reports''' - Problems with the code
+* '''Feature requests''' - Suggestions for improvements
+* '''Questions''' - Discussion and support
+* '''Tasks''' - Work items and to-dos
+
+=== Creating Issues ===
+
+To create an issue:
+1. Go to the Issues tab
+2. Click '''New issue'''
+3. Choose a template (if available)
+4. Fill in title and description
+5. Add labels, assignees, and milestones
+6. Click '''Submit new issue'''
+
+'''Issue best practices:'''
+* Use clear, descriptive titles
+* Provide steps to reproduce bugs
+* Include screenshots or code examples
+* Use labels to categorise issues
+* Reference related issues or PRs
+
+=== Issue Features ===
+
+'''Labels:'''
+* Categorise issues (bug, enhancement, question)
+* Indicate priority or difficulty
+* Show status (in progress, blocked)
+* Custom labels for your workflow
+
+'''Assignees:'''
+* Who's responsible for the issue
+* Can assign multiple people
+* Helps distribute workload
+* Shows accountability
+
+'''Milestones:'''
+* Group issues for releases
+* Track progress toward goals
+* Set due dates
+* View completion percentage
+
+'''Projects:'''
+* Add issues to project boards
+* Organise work visually
+* Plan sprints and releases
+* Track team progress
+
+== Pull Requests ==
+
+=== Understanding Pull Requests ===
+
+Pull requests (PRs) are proposals to change code:
+* '''Merge changes''' from one branch to another
+* '''Code review''' process before integration
+* '''Discussion space''' for feedback and improvements
+* '''Testing ground''' for proposed changes
+
+=== Pull Request Interface ===
+
+'''Conversation Tab:'''
+* Discussion thread with comments
+* Review summaries and approvals
+* Merge status and checks
+* Timeline of all activity
+
+'''Commits Tab:'''
+* List of all commits in the PR
+* Click any commit to see changes
+* Author and timestamp information
+* Commit message details
+
+'''Files Changed Tab:'''
+* Diff view showing all modifications
+* Line-by-line comparison
+* Add comments to specific lines
+* Review and approve changes
+
+'''Checks Tab:'''
+* Automated test results
+* Build status and logs
+* Required status checks
+* Deployment previews
+
+=== Code Review Features ===
+
+'''Inline Comments:'''
+* Click line numbers to add comments
+* Discuss specific code changes
+* Suggest improvements
+* Ask questions about implementation
+
+'''Review Types:'''
+* '''Comment''' - General feedback without approval
+* '''Approve''' - Changes look good to merge
+* '''Request changes''' - Issues must be addressed first
+
+'''Suggestions:'''
+* Propose specific code changes
+* Reviewers can suggest improvements
+* Authors can apply suggestions with one click
+* Batch multiple suggestions together
+
+== GitHub Actions ==
+
+=== Workflows Overview ===
+
+GitHub Actions automate your development workflow:
+* '''Continuous Integration''' - Automatic testing
+* '''Continuous Deployment''' - Automatic releases
+* '''Code Quality''' - Linting and formatting
+* '''Security Scanning''' - Vulnerability detection
+
+=== Actions Interface ===
+
+'''Workflows List:'''
+* All configured workflows
+* Success/failure status
+* Recent run history
+* Manual trigger buttons
+
+'''Workflow Runs:'''
+* Individual execution details
+* Job and step breakdown
+* Logs and error messages
+* Artifacts and outputs
+
+'''Workflow Files:'''
+* YAML configuration files
+* Located in `.github/workflows/`
+* Version controlled with your code
+* Edit directly in GitHub interface
+
+== Profile and Settings ==
+
+=== Your Profile Page ===
+
+Your profile shows:
+* '''Overview''' - Activity and contribution graph
+* '''Repositories''' - Your public projects
+* '''Stars''' - Repositories you've starred
+* '''Followers/Following''' - Your GitHub network
+
+'''Contribution Graph:'''
+* Visual representation of your activity
+* Green squares show daily contributions
+* Includes commits, issues, PRs, and reviews
+* Motivational tool for consistent activity
+
+=== Repository Insights ===
+
+Understanding your project's health:
+* '''Traffic''' - Visitor and clone statistics
+* '''Contributors''' - Who's contributed to the project
+* '''Community''' - Health metrics and recommendations
+* '''Dependencies''' - What packages your project uses
+* '''Dependents''' - What projects depend on yours
+
+== Mobile Experience ==
+
+=== GitHub Mobile App ===
+
+Key features on mobile:
+* '''Notifications''' - Stay updated on the go
+* '''Code review''' - Review PRs from anywhere
+* '''Issue management''' - Triage and respond to issues
+* '''Repository browsing''' - View code and files
+
+'''Mobile-optimized features:'''
+* Swipe gestures for common actions
+* Offline reading capabilities
+* Push notifications
+* Quick access to starred repositories
+
+=== Responsive Web Interface ===
+
+GitHub's web interface adapts to mobile:
+* '''Simplified navigation''' - Collapsible menus
+* '''Touch-friendly''' - Larger tap targets
+* '''Essential features''' - Core functionality preserved
+* '''Fast loading''' - Optimised for mobile networks
+
+== Customization Options ==
+
+=== Theme and Appearance ===
+
+Personalise your GitHub experience:
+* '''Light/Dark themes''' - Choose your preference
+* '''High contrast''' - Accessibility option
+* '''Colour blind friendly''' - Alternative colour schemes
+
+'''Setting your theme:'''
+1. Click your profile picture
+2. Go to Settings
+3. Select Appearance
+4. Choose theme preference
+
+=== Dashboard Customization ===
+
+Control what you see:
+* '''Repository recommendations''' - Toggle suggestions
+* '''Activity feed''' - Choose what appears
+* '''Sidebar shortcuts''' - Pin important repositories
+* '''Notification preferences''' - Control what alerts you
+
+== Search and Discovery ==
+
+=== Advanced Search ===
+
+GitHub's search supports complex queries:
+{{Code|text|
+repo:facebook/react                    # Specific repository
+user:octocat language:javascript       # User's JS repositories  
+org:google created:>2023-01-01        # Recent Google repositories
+is:issue is:open label:bug             # Open bug reports
+is:pr is:merged author:username        # Merged PRs by user
+}}
+
+=== Explore and Trending ===
+
+Discover new projects:
+* '''Explore''' - Curated collections and topics
+* '''Trending''' - Popular repositories this week
+* '''Topics''' - Browse by technology or subject
+* '''Awesome lists''' - Community-curated resources
+
+=== Following and Social Features ===
+
+Build your network:
+* '''Follow developers''' - See their activity in your feed
+* '''Watch repositories''' - Get notified of updates
+* '''Star repositories''' - Show appreciation and bookmark
+* '''Fork projects''' - Create your own version
+
+== Productivity Tips ==
+
+=== Keyboard Shortcuts ===
+
+Essential shortcuts for efficiency:
+* `?` - Show available shortcuts
+* `s` or `/` - Focus search bar
+* `g n` - Go to notifications  
+* `g i` - Go to issues
+* `g p` - Go to pull requests
+* `t` - File finder (in repositories)
+
+For complete shortcuts, see [[GitHub Keyboard Shortcuts]].
+
+=== Browser Bookmarks ===
+
+Useful URLs to bookmark:
+* `github.com/notifications` - Your notifications
+* `github.com/issues` - Issues assigned to you
+* `github.com/pulls` - Your pull requests
+* `github.com/settings` - Account settings
+
+=== GitHub CLI ===
+
+Command-line interface for power users:
+{{Code|bash|
+gh repo view                    # View repository details
+gh issue list                   # List issues
+gh pr create                    # Create pull request
+gh workflow run                 # Trigger workflow
+}}
+
+== Accessibility Features ==
+
+=== Keyboard Navigation ===
+
+GitHub supports full keyboard navigation:
+* Tab through interactive elements
+* Arrow keys for navigation
+* Enter to activate buttons
+* Escape to close dialogs
+
+=== Screen Reader Support ===
+
+GitHub works with screen readers:
+* Semantic HTML structure
+* ARIA labels and descriptions
+* Skip navigation links
+* High contrast mode
+
+=== Visual Accommodations ===
+
+Options for visual accessibility:
+* High contrast themes
+* Customizable font sizes
+* Colour blind friendly palettes
+* Reduced motion options
+
+## Getting Help ==
+
+=== Built-in Help ===
+
+GitHub provides extensive help:
+* `?` keyboard shortcut shows contextual help
+* Tooltips explain interface elements
+* Status indicators show system health
+* Error messages include helpful suggestions
+
+=== Documentation Links ===
+
+Quick access to help:
+* [https://docs.github.com GitHub Docs] - Comprehensive documentation
+* [https://github.community GitHub Community] - User forum
+* [https://support.github.com GitHub Support] - Official support
+* [[Project:Help]] - Internal help resources
+
+{{Success|Mastering GitHub's interface opens up a world of collaboration possibilities. Take time to explore and experiment with different features!}}
+
+== Next Steps ==
+
+Now that you know your way around GitHub:
+
+1. Practice with [[Creating Your First Repository]]
+2. Learn [[Basic Git Commands]] for command-line work
+3. Try [[Creating Your First Pull Request]]
+4. Explore [[GitHub Actions Fundamentals]] for automation
+
+== Related Resources ==
+
+* [[GitHub Keyboard Shortcuts]] - Navigate faster with shortcuts
+* [[Creating Your GitHub Account]] - Initial account setup  
+* [[Basic Repository Operations]] - Working with repositories
+* [[GitHub Glossary]] - Understanding GitHub terminology
+
+[[Category:Beginner Tutorials]]
+[[Category:GitHub]]
+[[Category:Interface]]
+[[Category:Navigation]]

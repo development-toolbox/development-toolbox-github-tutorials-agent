@@ -1,0 +1,372 @@
+{{Tutorial
+|title = Creating Your GitHub Account
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 10 minutes
+|prerequisites = Email address, web browser
+|topics = Account creation, Profile setup, Initial configuration
+}}
+
+{{TOC limit|3}}
+
+= Creating Your GitHub Account =
+
+Your GitHub account is your identity in the world's largest code hosting platform. This guide walks you through creating and configuring your account for success.
+
+== Before You Begin ==
+
+=== What You'll Need ===
+
+* Valid email address (preferably your work email)
+* Strong password
+* Mobile device for two-factor authentication (recommended)
+* Username ideas (GitHub usernames are unique globally)
+
+{{Note|If your organisation provides GitHub Enterprise, check with your IT department before creating a personal account.}}
+
+== Account Creation Process ==
+
+=== Step 1: Visit GitHub ===
+
+1. Go to [https://github.com github.com]
+2. Click '''Sign up''' in the top-right corner
+3. You'll see the account creation form
+
+=== Step 2: Choose Your Username ===
+
+Your username will be part of your GitHub URL: `github.com/yourusername`
+
+'''Best practices for usernames:'''
+* Use your real name or professional alias
+* Keep it professional and memorable
+* Avoid special characters and numbers if possible
+* Consider using the same username across platforms
+
+'''Examples:'''
+* ✅ `john-smith`, `johnsmith`, `j-smith`
+* ❌ `coolcoder123`, `xXx_dev_xXx`, `temp-user`
+
+{{Good|Choose a username you'll be comfortable using professionally for years to come.}}
+
+=== Step 3: Email and Password ===
+
+'''Email address:'''
+* Use your primary email (work email for professional use)
+* You can add additional emails later
+* This email will receive GitHub notifications
+
+'''Password requirements:'''
+* At least 8 characters long
+* Include mix of letters, numbers, and symbols
+* Avoid common passwords
+* Use a password manager for best security
+
+=== Step 4: Verify You're Human ===
+
+Complete the verification challenge (usually a puzzle or CAPTCHA).
+
+=== Step 5: Email Verification ===
+
+1. Check your email for verification message
+2. Click the verification link
+3. Return to GitHub to continue setup
+
+== Initial Account Setup ==
+
+=== Choose Your Plan ===
+
+'''Free Plan includes:'''
+* Unlimited public repositories
+* Unlimited private repositories
+* GitHub Actions (2,000 minutes/month)
+* GitHub Packages (500MB storage)
+* Community support
+
+'''Pro Plan adds:'''
+* Advanced tools and insights
+* Protected branches on private repos
+* Multiple reviewers for pull requests
+* More GitHub Actions minutes
+
+{{Info|Most users start with the free plan and upgrade later as needed.}}
+
+=== Profile Information ===
+
+Complete your profile to make a good first impression:
+
+'''Profile Picture:'''
+* Upload a professional photo or use an avatar
+* Square images work best (400x400 pixels recommended)
+* Avoid logos unless you represent that organisation
+
+'''Bio:'''
+* Brief description of your role or interests
+* Keep it professional and concise
+* Examples: "Software Developer at XYZ Corp", "Full-stack developer passionate about open source"
+
+'''Location and Company:'''
+* Add your city/country if comfortable
+* Include your company name
+* These help others find and connect with you
+
+=== Contact Information ===
+
+Add ways for people to reach you:
+* Website or portfolio URL
+* Twitter handle
+* LinkedIn profile
+* Professional email (if different from GitHub email)
+
+{{Warning|Only share contact information you're comfortable making public.}}
+
+== Security Configuration ==
+
+=== Enable Two-Factor Authentication ===
+
+Two-factor authentication (2FA) is crucial for account security:
+
+1. Go to Settings → Password and authentication
+2. Click '''Enable two-factor authentication'''
+3. Choose your method:
+   * '''Authenticator app''' (recommended): Google Authenticator, Authy, 1Password
+   * '''SMS''': Less secure but better than nothing
+
+'''Setting up authenticator app:'''
+1. Install authenticator app on your phone
+2. Scan QR code with the app
+3. Enter the 6-digit code to verify
+4. Save recovery codes in a secure location
+
+{{Critical|Store your 2FA recovery codes in a secure location. Without them, you could lose access to your account.}}
+
+=== SSH Keys Setup ===
+
+SSH keys provide secure, password-free authentication:
+
+'''Generating SSH keys:'''
+{{Code|bash|
+# Generate new SSH key
+ssh-keygen -t ed25519 -C "your.email@example.com"
+
+# Start SSH agent
+eval "$(ssh-agent -s)"
+
+# Add SSH key to agent
+ssh-add ~/.ssh/id_ed25519
+
+# Copy public key to clipboard (macOS)
+pbcopy < ~/.ssh/id_ed25519.pub
+
+# Copy public key to clipboard (Windows)
+clip < ~/.ssh/id_ed25519.pub
+
+# Copy public key to clipboard (Linux)
+cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+}}
+
+'''Adding SSH key to GitHub:'''
+1. Go to Settings → SSH and GPG keys
+2. Click '''New SSH key'''
+3. Give it a descriptive title (e.g., "Work Laptop - MacBook Pro")
+4. Paste your public key
+5. Click '''Add SSH key'''
+
+'''Testing SSH connection:'''
+{{Code|bash|
+ssh -T git@github.com
+}}
+
+You should see: "Hi username! You've successfully authenticated..."
+
+=== Personal Access Tokens ===
+
+For HTTPS authentication and API access:
+
+1. Go to Settings → Developer settings → Personal access tokens
+2. Click '''Generate new token'''
+3. Give it a descriptive name
+4. Select appropriate scopes:
+   * `repo` - Full repository access
+   * `user` - User profile access
+   * `notifications` - Notification access
+5. Set expiration date (recommended: 90 days)
+6. Copy token and store securely
+
+{{Warning|Treat personal access tokens like passwords. Never commit them to repositories or share them.}}
+
+== Privacy and Notifications ==
+
+=== Privacy Settings ===
+
+Configure what information is public:
+
+'''Profile visibility:'''
+* Email address privacy
+* Activity visibility
+* Contribution graph visibility
+* Achievement visibility
+
+'''Repository visibility:'''
+* Default repository visibility (public/private)
+* Fork visibility settings
+
+=== Notification Preferences ===
+
+Customise how GitHub communicates with you:
+
+'''Email notifications:'''
+* Comments on issues and pull requests
+* Pull request reviews
+* Push notifications
+* Security alerts
+
+'''Web notifications:'''
+* Browser notifications
+* Mobile app notifications
+* GitHub Desktop notifications
+
+'''Notification frequency:'''
+* Immediate - Real-time notifications
+* Hourly - Batched notifications
+* Daily - Daily digest
+* Weekly - Weekly summary
+
+{{Good|Start with default notification settings and adjust based on your workflow preferences.}}
+
+== Exploring GitHub ==
+
+=== First Steps ===
+
+Once your account is set up:
+
+1. '''Explore trending repositories''' - See what's popular
+2. '''Follow interesting developers''' - Build your network
+3. '''Star repositories''' - Bookmark projects you find useful
+4. '''Join organisations''' - Connect with your company or communities
+
+=== Learning Resources ===
+
+GitHub provides excellent learning materials:
+* [https://skills.github.com/ GitHub Skills] - Interactive tutorials
+* [https://docs.github.com/ GitHub Docs] - Comprehensive documentation
+* [https://github.blog/ GitHub Blog] - Latest features and best practices
+
+== Account Types ==
+
+=== Personal Accounts ===
+
+'''Best for:'''
+* Individual developers
+* Personal projects
+* Open source contributions
+* Learning and experimentation
+
+'''Features:'''
+* Unlimited public repositories
+* Unlimited private repositories (with limits)
+* GitHub Actions minutes
+* Community support
+
+=== Organisation Accounts ===
+
+'''Best for:'''
+* Companies and teams
+* Collaborative projects
+* Managing multiple repositories
+* Advanced permission controls
+
+'''Additional features:'''
+* Team management
+* Advanced security features
+* Audit logs
+* SAML/LDAP integration
+
+=== GitHub Enterprise ===
+
+'''Best for:'''
+* Large organisations
+* Strict compliance requirements
+* On-premises deployment needs
+* Enterprise-grade security
+
+'''Additional features:'''
+* Advanced security and compliance
+* 24/7 support
+* On-premises option
+* Advanced analytics
+
+== Best Practices ==
+
+=== Professional Profile ===
+
+* Use a professional profile picture
+* Write a clear, concise bio
+* Keep contact information up-to-date
+* Showcase your best work with pinned repositories
+
+=== Security Hygiene ===
+
+* Enable two-factor authentication
+* Use SSH keys for command-line access
+* Regularly review authorised applications
+* Keep recovery codes secure
+* Use strong, unique passwords
+
+=== Active Participation ===
+
+* Contribute to open source projects
+* Engage in discussions on issues and pull requests
+* Share knowledge through repositories and gists
+* Follow GitHub's community guidelines
+
+{{Success|A well-configured GitHub account opens doors to collaboration, learning, and career opportunities in the global developer community.}}
+
+== Troubleshooting ==
+
+=== Common Issues ===
+
+'''Username already taken:'''
+* Try variations of your preferred name
+* Add hyphens or underscores
+* Include your profession or location
+* Consider using your full name
+
+'''Email verification not received:'''
+* Check spam/junk folders
+* Verify email address is correct
+* Try resending verification email
+* Contact GitHub support if persistent
+
+'''Two-factor authentication problems:'''
+* Ensure device clock is accurate
+* Try generating new codes
+* Use recovery codes if available
+* Contact GitHub support for account recovery
+
+=== Getting Help ===
+
+* [https://support.github.com/ GitHub Support] - Official help
+* [https://github.community/ GitHub Community] - Community forum
+* [[Project:Support]] - Internal company support
+* [[Troubleshooting Guide]] - Common solutions
+
+== Next Steps ==
+
+After creating your account:
+
+1. Complete [[Getting Started with GitHub]] tutorial
+2. Create [[First Repository|your first repository]]
+3. Learn [[Basic Git Commands]] for command-line usage
+4. Explore [[GitHub Web Interface Tour]] to understand the platform
+
+== Related Resources ==
+
+* [[Getting Started with GitHub]] - Next steps after account creation
+* [[SSH Keys Setup]] - Detailed SSH configuration guide
+* [[Security Best Practices]] - Advanced security configurations
+* [[GitHub Web Interface Tour]] - Navigate GitHub like a pro
+
+[[Category:Beginner Tutorials]]
+[[Category:Account Setup]]
+[[Category:Getting Started]]
+[[Category:Security]]

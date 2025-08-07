@@ -1,0 +1,995 @@
+{{Tutorial
+|title = GitHub Actions Basics
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 45 minutes
+|prerequisites = Git and GitHub knowledge, YAML familiarity, basic CI/CD concepts
+|topics = Automation, CI/CD, Workflows, Testing, Deployment
+}}
+
+{{TOC limit|3}}
+
+= GitHub Actions Basics =
+
+GitHub Actions is a powerful automation platform that lets you build, test, and deploy your code directly from GitHub repositories using custom workflows.
+
+== What are GitHub Actions? ==
+
+GitHub Actions provides event-driven automation for your software development lifecycle:
+* '''Continuous Integration''' - Automatically build and test code changes
+* '''Continuous Deployment''' - Deploy applications when code is pushed
+* '''Workflow Automation''' - Automate repetitive tasks and processes
+* '''Custom Actions''' - Create reusable automation components
+* '''Integrated Platform''' - Built directly into GitHub with no external setup
+
+{{Note|GitHub Actions is included with GitHub and provides generous free usage limits for public repositories and GitHub Free accounts.}}
+
+=== Key Benefits ===
+
+'''Seamless Integration:'''
+* Built into GitHub - no external CI/CD service needed
+* Direct access to repository code and metadata
+* Integrated with GitHub features like Issues and Pull Requests
+* Native support for GitHub's authentication and permissions
+
+'''Flexibility and Power:'''
+* Support for multiple operating systems and environments
+* Extensive marketplace of pre-built actions
+* Matrix builds for testing across multiple configurations
+* Secret management for secure deployment
+
+== Core Concepts ==
+
+=== Workflows ===
+
+Workflows are automated processes defined in YAML files:
+* Stored in `.github/workflows/` directory
+* Triggered by events (push, pull request, schedule, etc.)
+* Contain one or more jobs that run in sequence or parallel
+* Can be shared and reused across repositories
+
+=== Events ===
+
+Events trigger workflow execution:
+* '''Repository events''' - push, pull_request, release
+* '''Scheduled events''' - cron-based triggers
+* '''Manual events''' - workflow_dispatch for manual triggering
+* '''External events''' - webhooks from external services
+
+=== Jobs ===
+
+Jobs are groups of steps that execute on the same runner:
+* Run in parallel by default
+* Can depend on other jobs
+* Execute on virtual machines (runners)
+* Share data through artifacts
+
+=== Steps ===
+
+Steps are individual tasks within a job:
+* Run commands or actions
+* Execute sequentially within a job
+* Can use pre-built actions from marketplace
+* Access to workflow context and environment
+
+=== Actions ===
+
+Actions are reusable units of code:
+* Pre-built actions from GitHub Marketplace
+* Custom actions you create
+* Can be written in JavaScript, Docker, or composite
+* Packaged and versioned for reuse
+
+=== Runners ===
+
+Runners are virtual machines that execute workflows:
+* '''GitHub-hosted runners''' - Managed by GitHub
+* '''Self-hosted runners''' - Your own infrastructure
+* Support Linux, Windows, and macOS
+* Different machine sizes available
+
+== Creating Your First Workflow ==
+
+=== Basic Workflow Structure ===
+
+Create `.github/workflows/ci.yml`:
+
+{{Code|yaml|
+name: CI
+
+# Trigger events
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+# Workflow jobs
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+}}
+
+=== Workflow Breakdown ===
+
+'''Workflow metadata:'''
+{{Code|yaml|
+name: CI  # Workflow name shown in GitHub UI
+}}
+
+'''Event triggers:'''
+{{Code|yaml|
+on:
+  push:
+    branches: [ main, develop ]    # Trigger on push to these branches
+  pull_request:
+    branches: [ main ]             # Trigger on PRs to main
+  schedule:
+    - cron: '0 0 * * *'           # Daily at midnight UTC
+  workflow_dispatch:               # Manual trigger
+}}
+
+'''Job configuration:'''
+{{Code|yaml|
+jobs:
+  test:                           # Job ID
+    runs-on: ubuntu-latest        # Runner type
+    timeout-minutes: 10           # Job timeout
+    strategy:                     # Matrix strategy
+      matrix:
+        node-version: [16, 18, 20]
+}}
+
+'''Step definitions:'''
+{{Code|yaml|
+steps:
+- name: Step name               # Human-readable step name
+  uses: actions/checkout@v4     # Use pre-built action
+  with:                         # Action inputs
+    fetch-depth: 0
+    
+- name: Run command
+  run: |                        # Multi-line shell command
+    echo "Hello World"
+    npm install
+  env:                          # Environment variables
+    NODE_ENV: test
+}}
+
+== Common Workflow Patterns ==
+
+=== Node.js CI Workflow ===
+
+Complete Node.js testing and building:
+
+{{Code|yaml|
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run linting
+      run: npm run lint
+    
+    - name: Run tests
+      run: npm test
+    
+    - name: Run build
+      run: npm run build
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      if: matrix.node-version == '18'
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+}}
+
+=== Python CI Workflow ===
+
+Testing Python applications:
+
+{{Code|yaml|
+name: Python CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, "3.10", "3.11"]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Lint with flake8
+      run: |
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Test with pytest
+      run: |
+        pytest --cov=./ --cov-report=xml
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
+}}
+
+=== Multi-Job Workflow ===
+
+Workflows with dependencies and parallel execution:
+
+{{Code|yaml|
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run tests
+      run: npm test
+  
+  build:
+    needs: test                    # Wait for test job to complete
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build application
+      run: npm run build
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-files
+        path: dist/
+  
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging           # Deployment environment
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-files
+        path: dist/
+    - name: Deploy to staging
+      run: echo "Deploying to staging..."
+  
+  deploy-production:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'  # Only deploy from main
+    steps:
+    - name: Deploy to production
+      run: echo "Deploying to production..."
+}}
+
+== Working with Actions ==
+
+=== Popular Actions from Marketplace ===
+
+'''Setup actions:'''
+{{Code|yaml|
+# Checkout repository code
+- uses: actions/checkout@v4
+  with:
+    fetch-depth: 0              # Full history
+    token: ${{ secrets.PAT }}   # Custom token
+
+# Setup Node.js
+- uses: actions/setup-node@v4
+  with:
+    node-version: '18'
+    cache: 'npm'
+    registry-url: 'https://registry.npmjs.org'
+
+# Setup Python
+- uses: actions/setup-python@v4
+  with:
+    python-version: '3.11'
+    cache: 'pip'
+
+# Setup Java
+- uses: actions/setup-java@v3
+  with:
+    distribution: 'temurin'
+    java-version: '17'
+    cache: 'maven'
+}}
+
+'''Utility actions:'''
+{{Code|yaml|
+# Upload artifacts
+- uses: actions/upload-artifact@v3
+  with:
+    name: test-results
+    path: test-results/
+    retention-days: 30
+
+# Download artifacts
+- uses: actions/download-artifact@v3
+  with:
+    name: test-results
+
+# Cache dependencies
+- uses: actions/cache@v3
+  with:
+    path: ~/.npm
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-node-
+}}
+
+'''Deployment actions:'''
+{{Code|yaml|
+# Deploy to Azure
+- uses: azure/webapps-deploy@v2
+  with:
+    app-name: my-app
+    publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+
+# Deploy to AWS
+- uses: aws-actions/configure-aws-credentials@v2
+  with:
+    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    aws-region: us-east-1
+
+# Deploy to GitHub Pages
+- uses: peaceiris/actions-gh-pages@v3
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    publish_dir: ./dist
+}}
+
+=== Using Secrets ===
+
+Store sensitive information securely:
+
+'''Repository secrets setup:'''
+1. Go to repository Settings
+2. Click Secrets and variables → Actions
+3. Click "New repository secret"
+4. Add name and value
+5. Use in workflows with `${{ secrets.SECRET_NAME }}`
+
+'''Using secrets in workflows:'''
+{{Code|yaml|
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy with API key
+      run: |
+        curl -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+             -d '{"version": "1.0.0"}' \
+             https://api.example.com/deploy
+      env:
+        API_TOKEN: ${{ secrets.API_TOKEN }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+}}
+
+'''Environment-specific secrets:'''
+{{Code|yaml|
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production        # Use environment-specific secrets
+    steps:
+    - name: Deploy to production
+      run: deploy.sh
+      env:
+        DEPLOY_KEY: ${{ secrets.PRODUCTION_DEPLOY_KEY }}
+}}
+
+=== Matrix Strategies ===
+
+Test across multiple configurations:
+
+'''Basic matrix:'''
+{{Code|yaml|
+strategy:
+  matrix:
+    os: [ubuntu-latest, windows-latest, macos-latest]
+    node-version: [16, 18, 20]
+
+runs-on: ${{ matrix.os }}
+steps:
+- name: Use Node.js ${{ matrix.node-version }}
+  uses: actions/setup-node@v4
+  with:
+    node-version: ${{ matrix.node-version }}
+}}
+
+'''Advanced matrix with includes/excludes:'''
+{{Code|yaml|
+strategy:
+  fail-fast: false
+  matrix:
+    os: [ubuntu-latest, windows-latest]
+    node-version: [16, 18, 20]
+    include:
+      - os: ubuntu-latest
+        node-version: 20
+        experimental: true
+    exclude:
+      - os: windows-latest
+        node-version: 16
+
+runs-on: ${{ matrix.os }}
+continue-on-error: ${{ matrix.experimental == true }}
+}}
+
+== Conditional Execution ==
+
+=== Using If Conditions ===
+
+Control when steps and jobs run:
+
+{{Code|yaml|
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Only on main branch
+    steps:
+    - name: Deploy to production
+      if: success()                      # Only if previous steps succeeded
+      run: deploy.sh
+    
+    - name: Notify on failure
+      if: failure()                      # Only if any step failed
+      run: notify-failure.sh
+    
+    - name: Always run cleanup
+      if: always()                       # Always run regardless of status
+      run: cleanup.sh
+}}
+
+'''Common conditions:'''
+{{Code|yaml|
+# Branch conditions
+if: github.ref == 'refs/heads/main'
+if: startsWith(github.ref, 'refs/heads/feature/')
+
+# Event conditions
+if: github.event_name == 'push'
+if: github.event_name == 'pull_request'
+
+# Status conditions
+if: success()        # Previous steps succeeded
+if: failure()        # Any previous step failed
+if: cancelled()      # Workflow was cancelled
+if: always()         # Always run
+
+# File change conditions
+if: contains(github.event.head_commit.message, '[skip ci]')
+if: github.event.pull_request.draft == false
+
+# Environment conditions
+if: runner.os == 'Linux'
+if: env.ENVIRONMENT == 'production'
+}}
+
+=== Path-based Triggers ===
+
+Only run workflows when specific files change:
+
+{{Code|yaml|
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - '.github/workflows/**'
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run tests
+      run: npm test
+}}
+
+== Advanced Features ==
+
+=== Reusable Workflows ===
+
+Create workflows that can be called by other workflows:
+
+'''Reusable workflow (`.github/workflows/reusable-test.yml`):'''
+{{Code|yaml|
+name: Reusable Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+      environment:
+        required: false
+        type: string
+        default: 'test'
+    secrets:
+      API_TOKEN:
+        required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+    - run: npm test
+      env:
+        API_TOKEN: ${{ secrets.API_TOKEN }}
+}}
+
+'''Calling reusable workflow:'''
+{{Code|yaml|
+name: Main CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: '18'
+      environment: 'staging'
+    secrets:
+      API_TOKEN: ${{ secrets.API_TOKEN }}
+
+  test-multiple:
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: ${{ matrix.node-version }}
+    secrets: inherit  # Pass all secrets
+}}
+
+=== Custom Actions ===
+
+Create your own actions for reusability:
+
+'''JavaScript action (`action.yml`):'''
+{{Code|yaml|
+name: 'Hello World Action'
+description: 'Greet someone and record the time'
+inputs:
+  who-to-greet:
+    description: 'Who to greet'
+    required: true
+    default: 'World'
+outputs:
+  time:
+    description: 'The time we greeted you'
+runs:
+  using: 'node16'
+  main: 'index.js'
+}}
+
+'''JavaScript implementation (`index.js`):'''
+{{Code|javascript|
+const core = require('@actions/core');
+const github = require('@actions/github');
+
+try {
+  const nameToGreet = core.getInput('who-to-greet');
+  console.log(`Hello ${nameToGreet}!`);
+  
+  const time = (new Date()).toTimeString();
+  core.setOutput("time", time);
+  
+  const payload = JSON.stringify(github.context.payload, undefined, 2);
+  console.log(`The event payload: ${payload}`);
+} catch (error) {
+  core.setFailed(error.message);
+}
+}}
+
+'''Using custom action:'''
+{{Code|yaml|
+steps:
+- name: Hello world action step
+  id: hello
+  uses: ./.github/actions/hello-world-action
+  with:
+    who-to-greet: 'GitHub Actions'
+
+- name: Get the output time
+  run: echo "The time was ${{ steps.hello.outputs.time }}"
+}}
+
+=== Composite Actions ===
+
+Combine multiple steps into a single action:
+
+{{Code|yaml|
+name: 'Setup Node.js with Cache'
+description: 'Setup Node.js and restore/save npm cache'
+
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: true
+  working-directory:
+    description: 'Working directory'
+    required: false
+    default: '.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+    
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+    
+    - name: Cache node_modules
+      uses: actions/cache@v3
+      with:
+        path: ${{ inputs.working-directory }}/node_modules
+        key: ${{ runner.os }}-node-${{ inputs.node-version }}-${{ hashFiles(format('{0}/package-lock.json', inputs.working-directory)) }}
+}}
+
+== Monitoring and Debugging ==
+
+=== Workflow Logs ===
+
+Understanding workflow execution:
+
+'''Add debug information:'''
+{{Code|yaml|
+steps:
+- name: Debug information
+  run: |
+    echo "Runner OS: ${{ runner.os }}"
+    echo "GitHub event: ${{ github.event_name }}"
+    echo "GitHub ref: ${{ github.ref }}"
+    echo "Working directory: $(pwd)"
+    echo "Environment variables:"
+    env | sort
+}}
+
+'''Enable step debug logging:'''
+{{Code|yaml|
+steps:
+- name: Enable debug logging
+  run: echo "::debug::This is a debug message"
+
+- name: Set environment variable for debugging
+  run: echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+}}
+
+=== Workflow Status Badges ===
+
+Add status badges to your README:
+
+{{Code|markdown|
+![CI](https://github.com/username/repository/workflows/CI/badge.svg)
+![Deploy](https://github.com/username/repository/workflows/Deploy/badge.svg?branch=main)
+
+<!-- With specific workflow file -->
+![Tests](https://github.com/username/repository/actions/workflows/test.yml/badge.svg)
+}}
+
+=== Notifications ===
+
+Send notifications about workflow results:
+
+{{Code|yaml|
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: always()  # Run regardless of previous job status
+    needs: [test, build, deploy]
+    steps:
+    - name: Notify Slack on success
+      if: ${{ needs.test.result == 'success' && needs.build.result == 'success' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+    
+    - name: Notify Slack on failure
+      if: ${{ contains(needs.*.result, 'failure') }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        channel: '#alerts'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+}}
+
+== Best Practices ==
+
+=== Security Best Practices ===
+
+'''Protect sensitive data:'''
+{{Code|yaml|
+# Use secrets for sensitive information
+env:
+  API_KEY: ${{ secrets.API_KEY }}
+
+# Avoid logging secrets
+- name: Deploy
+  run: |
+    # Don't do this - exposes secret in logs
+    # echo "Deploying with key: $API_KEY"
+    
+    # Do this instead
+    echo "Deploying application..."
+    deploy --key "$API_KEY"
+  env:
+    API_KEY: ${{ secrets.API_KEY }}
+
+# Pin action versions
+- uses: actions/checkout@v4  # Good - specific version
+# - uses: actions/checkout@main  # Avoid - unpinned version
+}}
+
+'''Least privilege principle:'''
+{{Code|yaml|
+# Minimal permissions
+permissions:
+  contents: read          # Read repository contents
+  pull-requests: write    # Comment on PRs
+  
+# For deployment workflows
+permissions:
+  contents: read
+  deployments: write
+  id-token: write        # For OIDC authentication
+}}
+
+=== Performance Optimisation ===
+
+'''Efficient caching:'''
+{{Code|yaml|
+- name: Cache dependencies
+  uses: actions/cache@v3
+  with:
+    path: |
+      ~/.npm
+      ~/.cache/cypress
+      node_modules
+    key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-deps-
+
+- name: Cache build outputs
+  uses: actions/cache@v3
+  with:
+    path: |
+      .next/cache
+      dist/
+    key: ${{ runner.os }}-build-${{ github.sha }}
+    restore-keys: |
+      ${{ runner.os }}-build-
+}}
+
+'''Parallel execution:'''
+{{Code|yaml|
+jobs:
+  test:
+    strategy:
+      matrix:
+        shard: [1, 2, 3, 4]  # Split tests into parallel shards
+    steps:
+    - name: Run tests
+      run: npm test -- --shard=${{ matrix.shard }}/4
+}}
+
+=== Workflow Organisation ===
+
+'''Separate concerns:'''
+{{Code|text|
+.github/workflows/
+├── ci.yml              # Continuous integration
+├── cd.yml              # Continuous deployment
+├── security.yml        # Security scanning
+├── dependencies.yml    # Dependency updates
+└── cleanup.yml         # Maintenance tasks
+}}
+
+'''Use descriptive names:'''
+{{Code|yaml|
+name: CI/CD Pipeline
+
+jobs:
+  code-quality:
+    name: Code Quality Checks
+    steps:
+    - name: Run ESLint with auto-fix
+      run: npm run lint:fix
+    
+    - name: Check TypeScript compilation
+      run: npm run type-check
+    
+    - name: Verify code formatting
+      run: npm run format:check
+}}
+
+== Troubleshooting ==
+
+=== Common Issues ===
+
+'''Workflow not triggering:'''
+* Check YAML syntax with a validator
+* Verify trigger conditions match your events
+* Ensure workflow file is in `.github/workflows/`
+* Check if paths/branches filters are too restrictive
+
+'''Job failures:'''
+{{Code|yaml|
+# Add debugging steps
+- name: Debug environment
+  run: |
+    echo "PWD: $(pwd)"
+    echo "Files: $(ls -la)"
+    echo "Node version: $(node --version)"
+    echo "NPM version: $(npm --version)"
+
+# Check exit codes
+- name: Run tests with error handling
+  run: |
+    npm test
+    echo "Test exit code: $?"
+  continue-on-error: true
+}}
+
+'''Permission errors:'''
+{{Code|yaml|
+# Set explicit permissions
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+# Or use specific tokens
+- name: Create comment
+  uses: actions/github-script@v6
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    script: |
+      github.rest.issues.createComment({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: 'Hello from GitHub Actions!'
+      });
+}}
+
+=== Debugging Strategies ===
+
+'''Local testing with act:'''
+{{Code|bash|
+# Install act (GitHub Actions runner)
+curl https://raw.githubusercontent.com/nektos/act/master/install.sh | bash
+
+# Run workflows locally
+act                    # Run all workflows
+act push              # Simulate push event
+act -j test           # Run specific job
+
+# Use custom runner image
+act -P ubuntu-latest=node:16-buster-slim
+}}
+
+'''Step-by-step debugging:'''
+{{Code|yaml|
+steps:
+- name: Checkout
+  uses: actions/checkout@v4
+
+- name: Debug - List files
+  run: find . -type f -name "*.json" | head -10
+
+- name: Debug - Environment
+  run: |
+    echo "Node: $(which node)"
+    echo "NPM: $(which npm)"
+    echo "PATH: $PATH"
+
+- name: Install dependencies
+  run: npm ci
+
+- name: Debug - Installed packages
+  run: npm list --depth=0
+}}
+
+{{Success|GitHub Actions provides powerful automation capabilities that scale from simple CI/CD to complex multi-stage deployments. Start simple and gradually add more sophisticated features as your needs grow.}}
+
+== Related Resources ==
+
+* [[Git Hooks]] - Local automation and quality control
+* [[Advanced Pull Requests]] - Automated PR workflows
+* [[Code Review Process]] - Integrating Actions with reviews
+* [[Release Management]] - Automated versioning and releases
+* [[Security Best Practices]] - Securing your automation workflows
+
+[[Category:Intermediate Tutorials]]
+[[Category:GitHub Actions]]
+[[Category:CI/CD]]
+[[Category:Automation]]
+[[Category:Workflow]]

@@ -1,0 +1,35 @@
+<includeonly><div style="background: #f3e5f5; border: 2px solid #9c27b0; border-radius: 5px; padding: 15px; margin: 20px 0;">
+<div style="display: flex; align-items: center; margin-bottom: 10px;">
+<div style="margin-right: 10px; font-size: 20px;">🏃‍♂️</div>
+<div style="font-size: 16px; font-weight: bold; color: #9c27b0;">Hands-on Exercise</div>
+</div>
+<div>{{{1|}}}</div>
+</div></includeonly><noinclude>
+== Template:Exercise ==
+
+This template creates a purple exercise box for hands-on practice.
+
+=== Usage ===
+
+<pre>
+{{Exercise|
+Your exercise instructions here.
+Can include multiple steps:
+# Step one
+# Step two
+# Step three
+}}
+</pre>
+
+=== Example ===
+
+{{Exercise|
+Try creating a new branch called "feature/hello-world":
+# Create and switch to the new branch
+# Add a new file called hello.txt
+# Commit your changes
+# Push the branch to GitHub
+}}
+
+[[Category:Templates]]
+</noinclude>

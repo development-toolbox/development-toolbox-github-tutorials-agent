@@ -1,0 +1,121 @@
+= Beginner Tutorials =
+
+Welcome to the beginner-friendly GitHub tutorials! These guides are designed for users who are new to version control, Git, and GitHub. Each tutorial builds upon the previous ones, so we recommend following them in order.
+
+== Getting Started ==
+
+If you're completely new to GitHub, start with these foundational tutorials:
+
+=== Essential First Steps ===
+* [[Getting Started with GitHub]] - Your first introduction to GitHub
+* [[Creating Your GitHub Account]] - Account setup and initial configuration
+* [[GitHub Web Interface Tour]] - Navigate GitHub's web interface
+* [[Understanding Git and Version Control]] - Core concepts explained
+
+=== Basic Operations ===
+* [[Creating Your First Repository]] - Set up your first project
+* [[Basic Git Commands]] - Essential command-line operations
+* [[Understanding Commits]] - Learn about Git commits and history
+* [[Working with Files]] - Add, edit, and delete files
+
+== Core GitHub Skills ==
+
+=== Repository Management ===
+* [[Cloning Repositories]] - Download projects to your computer
+* [[Forking Repositories]] - Create your own copy of projects
+* [[Repository Settings]] - Configure your repositories
+* [[README Files]] - Document your projects effectively
+
+=== Collaboration Basics ===
+* [[Creating Your First Pull Request]] - Propose changes to projects
+* [[Reviewing Pull Requests]] - Provide feedback on changes
+* [[Working with Issues]] - Track bugs and feature requests
+* [[Basic GitHub Flow]] - Simple collaboration workflow
+
+=== File Management ===
+* [[Using .gitignore]] - Exclude files from version control
+* [[File Upload and Management]] - Manage files through GitHub
+* [[Markdown Basics]] - Format documentation and README files
+* [[Linking and Cross-Referencing]] - Connect issues and pull requests
+
+== Development Workflow ==
+
+=== Branching for Beginners ===
+* [[Introduction to Branching]] - Understand Git branches
+* [[Creating and Switching Branches]] - Basic branch operations
+* [[Merging Changes]] - Combine work from different branches
+* [[Resolving Simple Conflicts]] - Handle merge conflicts
+
+=== GitHub Desktop ===
+* [[GitHub Desktop Installation]] - Set up the visual interface
+* [[GitHub Desktop Workflow]] - Use GitHub without command line
+* [[Syncing with GitHub Desktop]] - Keep your work up to date
+* [[GitHub Desktop vs Command Line]] - Choose the right tool
+
+== Best Practices for Beginners ==
+
+=== Good Habits ===
+* [[Commit Message Guidelines]] - Write clear commit messages
+* [[When to Commit]] - Develop good commit habits
+* [[Organising Your Work]] - Structure repositories effectively
+* [[Backup and Sync Strategies]] - Keep your work safe
+
+=== Common Mistakes ===
+* [[Avoiding Common Git Mistakes]] - Learn from typical errors
+* [[Recovery Techniques]] - Fix common problems
+* [[Security Basics]] - Keep your code and account secure
+* [[GitHub Etiquette]] - Collaborate respectfully
+
+== Tools and Setup ==
+
+=== Development Environment ===
+* [[Installing Git]] - Set up Git on your system
+* [[Configuring Git]] - Essential Git configuration
+* [[SSH Keys Setup]] - Secure authentication
+* [[IDE Integration]] - Connect your code editor
+
+=== Useful Tools ===
+* [[GitHub Mobile App]] - GitHub on your phone
+* [[Browser Extensions]] - Enhance your GitHub experience
+* [[Git GUI Clients]] - Visual Git interfaces
+* [[Command Line Basics]] - Terminal/command prompt essentials
+
+== Practice Projects ==
+
+=== Hands-On Learning ===
+* [[Your First GitHub Pages Site]] - Create a simple website
+* [[Contributing to Open Source]] - Make your first contribution
+* [[Personal Portfolio Project]] - Showcase your work
+* [[Documentation Project]] - Practice with Markdown and wikis
+
+== Getting Help ==
+
+=== Support Resources ===
+* [[GitHub Help and Documentation]] - Official resources
+* [[Community Forums]] - Get help from other users
+* [[Common Error Messages]] - Understand Git error messages
+* [[Where to Ask Questions]] - Find the right support channels
+
+=== Learning Path ===
+
+{{Note|Follow this recommended learning sequence:}}
+
+# Complete "Getting Started" section
+# Practice with "Core GitHub Skills"
+# Learn basic "Development Workflow"
+# Adopt "Best Practices"
+# Set up your "Tools and Setup"
+# Work on "Practice Projects"
+
+Each tutorial includes hands-on exercises and real-world examples to help you learn by doing.
+
+== What's Next? ==
+
+Once you're comfortable with these beginner tutorials, you're ready to move on to:
+
+* [[Category:Intermediate Tutorials|Intermediate Tutorials]] - Advanced workflows and collaboration
+* [[Category:GitHub Actions|GitHub Actions]] - Automate your workflows
+* [[Category:Security|Security]] - Protect your code and data
+
+[[Category:Tutorials]]
+[[Category:Navigation]]

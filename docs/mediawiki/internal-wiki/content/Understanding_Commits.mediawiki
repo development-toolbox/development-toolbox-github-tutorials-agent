@@ -1,0 +1,562 @@
+{{Tutorial
+|title = Understanding Commits
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 15 minutes
+|prerequisites = Basic Git knowledge, GitHub account
+|topics = Commits, Git history, Best practices, Collaboration
+}}
+
+{{TOC limit|3}}
+
+= Understanding Commits =
+
+Commits are the building blocks of Git and the foundation of effective version control. Master commits, and you'll master Git.
+
+== What is a Commit? ==
+
+A commit is a snapshot of your project at a specific point in time. Think of it as:
+* '''A save point''' in a video game
+* '''A photograph''' of your project's current state  
+* '''A diary entry''' documenting what changed
+* '''A checkpoint''' you can return to later
+
+{{Note|Each commit contains the complete state of all tracked files, not just the changes. Git is smart about storing this efficiently.}}
+
+=== Anatomy of a Commit ===
+
+Every commit contains:
+* '''Unique identifier (SHA)''' - A long string like `a1b2c3d4...`
+* '''Author information''' - Name and email of who made the commit
+* '''Timestamp''' - Exactly when the commit was created
+* '''Commit message''' - Human-readable description of changes
+* '''Parent commit(s)''' - Link to previous commit(s)
+* '''Tree''' - Snapshot of all files and directories
+* '''Changes (diff)''' - What actually changed from parent
+
+=== Commit Hash (SHA) ===
+
+Each commit gets a unique 40-character identifier:
+{{Code|text|
+a1b2c3d4e5f6789012345678901234567890abcd
+}}
+
+'''Properties:'''
+* '''Globally unique''' - No two commits will ever have the same hash
+* '''Content-based''' - Hash changes if any commit content changes
+* '''Shortened forms''' - Usually shown as 7-8 characters: `a1b2c3d`
+* '''Cryptographically secure''' - Tampering with history is detectable
+
+{{Good|You can reference commits by their hash, making them permanent addresses for specific project states.}}
+
+== The Commit Process ==
+
+=== Three-Stage Workflow ===
+
+Git uses a three-stage process for creating commits:
+
+'''1. Working Directory'''
+* Files as they exist on your filesystem
+* Where you edit and modify code
+* May contain uncommitted changes
+* The "live" version of your project
+
+'''2. Staging Area (Index)'''
+* Preparation area for your next commit
+* Choose exactly which changes to include
+* Review changes before committing
+* Allows for focused, atomic commits
+
+'''3. Repository'''
+* Permanent storage of committed snapshots
+* Complete project history
+* Shared with collaborators
+* Your project's "official" record
+
+'''Visual workflow:'''
+{{Code|text|
+Working Directory  →  Staging Area  →  Repository
+    (modify)           (git add)        (git commit)
+      ↓                    ↓                ↓
+   edit files         stage changes    save snapshot
+}}
+
+=== Making Your First Commit ===
+
+Step-by-step commit process:
+
+'''1. Check repository status:'''
+{{Code|bash|
+git status
+}}
+
+'''2. See what changed:'''
+{{Code|bash|
+git diff
+}}
+
+'''3. Stage changes:'''
+{{Code|bash|
+# Stage specific files
+git add filename.txt
+
+# Stage all changes
+git add .
+
+# Stage by pattern
+git add *.js
+}}
+
+'''4. Review staged changes:'''
+{{Code|bash|
+git diff --staged
+}}
+
+'''5. Create commit:'''
+{{Code|bash|
+git commit -m "Add user authentication feature"
+}}
+
+=== The Staging Area in Detail ===
+
+The staging area is Git's "preparation room":
+
+'''Why use staging?'''
+* '''Review changes''' before committing
+* '''Create focused commits''' with related changes only
+* '''Exclude unwanted files''' from commits
+* '''Build commits incrementally''' as you work
+
+'''Staging examples:'''
+{{Code|bash|
+# You edited 3 files but only want to commit 2
+git add file1.txt file2.txt
+git commit -m "Implement user login"
+
+# Later commit the third file
+git add file3.txt  
+git commit -m "Add password validation"
+}}
+
+{{Info|The staging area lets you craft exact commits, even when you've made changes to multiple files for different reasons.}}
+
+== Commit Messages ==
+
+=== Why Good Messages Matter ===
+
+Commit messages are crucial because they:
+* '''Document project history''' for future developers
+* '''Explain the why''' behind changes, not just what
+* '''Enable effective searching''' through project history
+* '''Support code review''' and collaboration
+* '''Aid debugging''' when issues arise
+
+=== Commit Message Structure ===
+
+'''Standard format:'''
+{{Code|text|
+Short summary (50 characters or less)
+
+Longer description explaining the why and how of the 
+commit. Wrap lines at 72 characters. Use present tense
+and imperative mood: "Add feature" not "Added feature".
+
+- Bullet points are okay
+- Use hyphens or asterisks for bullets
+- Reference issues: Fixes #123, Closes #456
+}}
+
+'''Examples of good messages:'''
+{{Code|text|
+Add user authentication with OAuth2 integration
+
+Implement OAuth2 login flow using Google and GitHub providers.
+This addresses the security requirement for external authentication
+and reduces password management burden on users.
+
+- Add OAuth2 configuration
+- Create authentication middleware  
+- Update login UI with provider buttons
+- Add user session management
+
+Fixes #45, References #67
+}}
+
+=== Message Best Practices ===
+
+'''Do:'''
+* Use present tense, imperative mood ("Add" not "Added")
+* Keep first line under 50 characters
+* Capitalise first letter of summary
+* Use blank line between summary and body
+* Explain why, not just what
+* Reference relevant issues or tickets
+
+'''Don't:'''
+* End summary line with period
+* Use vague messages like "Fix bug" or "Update code"
+* Include file names in summary (Git tracks this)
+* Write novels (keep it concise but informative)
+
+'''Message examples:'''
+
+✅ '''Good messages:'''
+{{Code|text|
+Fix memory leak in image processing pipeline
+Add validation for user email addresses  
+Refactor database connection handling
+Update README with new installation steps
+Remove deprecated API endpoints
+}}
+
+❌ '''Poor messages:'''
+{{Code|text|
+Fixed stuff
+Updated files
+Work in progress  
+Changes
+Bug fix
+}}
+
+== Viewing Commit History ==
+
+=== Git Log Commands ===
+
+View your project's history:
+
+'''Basic log:'''
+{{Code|bash|
+git log
+}}
+
+'''One-line format:'''
+{{Code|bash|
+git log --oneline
+}}
+
+'''Graphical representation:'''
+{{Code|bash|
+git log --graph --oneline --all
+}}
+
+'''Show file changes:'''
+{{Code|bash|
+git log --stat
+}}
+
+'''Show actual code changes:'''
+{{Code|bash|
+git log --patch
+}}
+
+'''Filter by author:'''
+{{Code|bash|
+git log --author="John Doe"
+}}
+
+'''Filter by date:'''
+{{Code|bash|
+git log --since="2 weeks ago"
+git log --until="2023-12-31"
+}}
+
+'''Search commit messages:'''
+{{Code|bash|
+git log --grep="authentication"
+}}
+
+=== Understanding Log Output ===
+
+Typical `git log` output:
+{{Code|text|
+commit a1b2c3d4e5f6789012345678901234567890abcd (HEAD -> main, origin/main)
+Author: Jane Developer <jane@example.com>
+Date:   Mon Jan 15 14:30:22 2024 +0000
+
+    Add user authentication with OAuth2 integration
+    
+    Implement OAuth2 login flow using Google and GitHub providers.
+    This addresses the security requirement for external authentication.
+    
+    Fixes #45
+
+commit b2c3d4e5f6789012345678901234567890abcdef1
+Author: John Smith <john@example.com>  
+Date:   Sun Jan 14 09:15:33 2024 +0000
+
+    Fix memory leak in image processing pipeline
+    
+    Resolved issue where large images were not being properly
+    disposed after processing, causing memory usage to grow.
+    
+    References #38
+}}
+
+=== GitHub Web Interface ===
+
+View commits on GitHub:
+* '''Commits tab''' - List of all commits
+* '''Commit details''' - Click any commit to see changes
+* '''Blame view''' - See who changed each line
+* '''History view''' - Track changes to specific files
+
+## Working with Commits ==
+
+=== Viewing Specific Commits ===
+
+Examine individual commits:
+
+'''Show commit details:'''
+{{Code|bash|
+git show a1b2c3d
+}}
+
+'''Show specific file in commit:'''
+{{Code|bash|
+git show a1b2c3d:filename.txt
+}}
+
+'''Compare commits:'''
+{{Code|bash|
+git diff a1b2c3d b2c3d4e
+}}
+
+'''List files changed in commit:'''
+{{Code|bash|
+git diff-tree --no-commit-id --name-only -r a1b2c3d
+}}
+
+=== Referencing Commits ===
+
+Multiple ways to reference commits:
+
+'''By hash:'''
+{{Code|bash|
+git show a1b2c3d4    # Short hash
+git show a1b2c3d4e5f6789012345678901234567890abcd  # Full hash
+}}
+
+'''Relative references:'''
+{{Code|bash|
+git show HEAD        # Latest commit
+git show HEAD~1      # One commit before latest  
+git show HEAD~3      # Three commits before latest
+git show HEAD^       # Parent of latest commit
+}}
+
+'''By branch or tag:'''
+{{Code|bash|
+git show main        # Latest commit on main branch
+git show v1.0.0      # Commit tagged as v1.0.0
+}}
+
+=== Undoing Commits ===
+
+Sometimes you need to undo commits:
+
+'''Undo last commit, keep changes:'''
+{{Code|bash|
+git reset --soft HEAD~1
+}}
+
+'''Undo last commit, unstage changes:'''
+{{Code|bash|
+git reset HEAD~1
+}}
+
+'''Undo last commit, discard changes:'''
+{{Code|bash|
+git reset --hard HEAD~1  # Dangerous!
+}}
+
+'''Create new commit that undoes previous commit:'''
+{{Code|bash|
+git revert HEAD
+}}
+
+{{Warning|Be very careful with `git reset --hard` as it permanently discards changes. `git revert` is safer for shared repositories.}}
+
+== Commit Best Practices ==
+
+=== When to Commit ===
+
+'''Commit frequently:'''
+* At least once per day of work
+* After completing a logical unit of work
+* Before switching tasks or branches
+* Before risky operations like rebasing
+
+'''Don't commit:'''
+* Broken or non-working code
+* Temporary debugging code
+* Generated files or build artifacts
+* Sensitive information like passwords
+
+=== Atomic Commits ===
+
+Make commits '''atomic''' - each commit should represent one logical change:
+
+'''Good atomic commits:'''
+{{Code|text|
+Commit 1: Add user authentication endpoint
+Commit 2: Add authentication middleware  
+Commit 3: Update login UI to use new endpoint
+Commit 4: Add tests for authentication flow
+}}
+
+'''Poor non-atomic commit:'''
+{{Code|text|
+Commit 1: Add authentication, fix bug in payment system, 
+          update README, and refactor database queries
+}}
+
+=== Testing Before Committing ===
+
+Always test your changes:
+{{Code|bash|
+# Run tests
+npm test
+
+# Check code quality
+npm run lint
+
+# Build project
+npm run build
+
+# Only commit if everything passes
+git add .
+git commit -m "Add user preferences feature"
+}}
+
+=== Commit Size Guidelines ===
+
+'''Too small:'''
+* Every single character change
+* Incomplete thoughts or features
+* Test commits you plan to squash later
+
+'''Too large:'''
+* Multiple unrelated features
+* Massive refactors with functional changes
+* Everything you worked on this week
+
+'''Just right:'''
+* One complete feature or bug fix
+* Logical unit of work
+* Changes that belong together
+* Can be understood and reviewed easily
+
+== Collaboration and Commits ==
+
+=== Commits in Team Environments ===
+
+When working with others:
+* '''Never rewrite public history''' - Don't change commits others have
+* '''Write clear messages''' - Others need to understand your changes
+* '''Keep commits focused''' - Easier to review and understand
+* '''Follow team conventions''' - Consistent style across project
+
+=== Code Review and Commits ===
+
+Good commits make code review easier:
+* '''Reviewers can understand''' each change independently
+* '''Easier to provide feedback''' on focused changes
+* '''Simpler to revert''' problematic changes
+* '''Better discussion''' around specific improvements
+
+=== Commit Attribution ===
+
+Git tracks authorship:
+* '''Author''' - Who originally wrote the code
+* '''Committer''' - Who created the commit
+* '''Usually the same person''' but can differ
+* '''Important for recognition''' and responsibility
+
+## Advanced Commit Concepts ==
+
+=== Commit Objects ===
+
+Git stores commits as objects containing:
+* '''Tree object''' - Snapshot of files and directories
+* '''Parent commits''' - Links to previous commits
+* '''Metadata''' - Author, committer, timestamps, message
+
+=== Merge Commits ===
+
+Special commits with multiple parents:
+* '''Created when merging branches'''
+* '''Have two or more parent commits'''
+* '''Preserve branch history'''
+* '''Show integration points'''
+
+=== Commit Graph ===
+
+Commits form a directed acyclic graph:
+* '''Each commit points to its parent(s)'''
+* '''Branches diverge and converge'''
+* '''History is non-linear'''
+* '''Multiple valid paths through history'''
+
+{{Success|Understanding commits deeply makes you a more effective developer and collaborator. Every commit tells a story - make yours worth reading!}}
+
+== Common Commit Scenarios ==
+
+=== First Commit ===
+
+Every repository starts with an initial commit:
+{{Code|bash|
+git init
+echo "# My Project" > README.md
+git add README.md
+git commit -m "Initial commit"
+}}
+
+=== Feature Development ===
+
+Typical feature development commits:
+{{Code|bash|
+git commit -m "Add user model and database schema"
+git commit -m "Implement user registration endpoint"  
+git commit -m "Add user registration form"
+git commit -m "Add validation for user input"
+git commit -m "Add tests for user registration"
+}}
+
+=== Bug Fixes ===
+
+Bug fix commit example:
+{{Code|bash|
+git commit -m "Fix null pointer exception in user login
+
+The login handler was not checking for null username before
+processing. Added null check and appropriate error response.
+
+Fixes #123"
+}}
+
+=== Refactoring ===
+
+Refactoring commit example:
+{{Code|bash|
+git commit -m "Extract authentication logic into separate service
+
+Moved authentication code from controller into dedicated service
+class to improve testability and separation of concerns. No 
+functional changes to authentication behavior.
+
+References #45"
+}}
+
+== Related Resources ==
+
+* [[Basic Git Commands]] - Learn essential Git operations
+* [[Introduction to Version Control]] - Understanding the bigger picture
+* [[Pull Request Best Practices]] - How commits work in collaboration
+* [[Git Command Reference]] - Complete command reference
+
+{{Info|Commits are the atomic units of change in Git. Master them, and you'll have a solid foundation for all other Git operations.}}
+
+[[Category:Beginner Tutorials]]
+[[Category:Git]]
+[[Category:Version Control]]
+[[Category:Best Practices]]

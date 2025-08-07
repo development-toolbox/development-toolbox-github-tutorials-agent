@@ -1,0 +1,20 @@
+<noinclude>
+This template creates a "See also" section with related links.
+
+== Usage ==
+<pre>
+{{See also|
+* [[Related Page 1]]
+* [[Related Page 2]]
+* [https://example.com External Link]
+}}
+</pre>
+
+== Parameters ==
+* '''1''': List of related links (use wiki markup)
+
+</noinclude><includeonly><div style="background: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 5px; padding: 15px; margin: 10px 0;">
+<div style="font-weight: bold; margin-bottom: 8px; color: #333;">📚 See also</div>
+{{{1|}}}
+</div></includeonly>
+[[Category:Navigation templates]]

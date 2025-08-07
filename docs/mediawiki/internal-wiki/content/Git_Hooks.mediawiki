@@ -1,0 +1,820 @@
+{{Tutorial
+|title = Git Hooks
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 35 minutes
+|prerequisites = Intermediate Git knowledge, command line familiarity, scripting basics
+|topics = Automation, Workflow, Quality control, Pre-commit hooks, Post-commit hooks
+}}
+
+{{TOC limit|3}}
+
+= Git Hooks =
+
+Git hooks are scripts that run automatically at specific points in the Git workflow, allowing you to automate tasks, enforce policies, and maintain code quality.
+
+== What are Git Hooks? ==
+
+Git hooks are customisable scripts that Git executes before or after events such as commit, push, and receive:
+* '''Event-driven automation''' - Trigger actions at specific Git events
+* '''Quality enforcement''' - Prevent commits that don't meet standards
+* '''Workflow integration''' - Connect Git with external tools and services
+* '''Team consistency''' - Ensure all team members follow the same processes
+* '''Continuous integration''' - Automate testing and deployment processes
+
+{{Note|Hooks are stored in the `.git/hooks` directory and are not tracked by Git, making distribution to team members require additional setup.}}
+
+=== Hook Categories ===
+
+'''Client-side hooks:'''
+* Run on your local machine
+* Triggered by operations like commit and merge
+* Can be bypassed with `--no-verify` flag
+* Affect individual developer workflow
+
+'''Server-side hooks:'''
+* Run on the Git server (GitHub, GitLab, etc.)
+* Triggered by network operations like push
+* Cannot be bypassed by clients
+* Enforce team-wide policies
+
+== Available Git Hooks ==
+
+=== Pre-commit Hooks ===
+
+'''pre-commit:'''
+* Runs before commit message is created
+* Check code quality, run tests, format code
+* Exit non-zero to cancel commit
+
+'''prepare-commit-msg:'''
+* Runs after default commit message is created but before editor opens
+* Modify commit message template
+* Add issue numbers, branch names, etc.
+
+'''commit-msg:'''
+* Runs after commit message is entered
+* Validate commit message format
+* Enforce conventional commit standards
+
+=== Post-commit Hooks ===
+
+'''post-commit:'''
+* Runs after commit is completed
+* Cannot change commit outcome
+* Send notifications, update documentation
+
+'''pre-push:'''
+* Runs before push to remote
+* Run comprehensive tests
+* Prevent pushes that would break remote
+
+'''post-receive:'''
+* Runs on server after receiving push
+* Deploy code, send notifications
+* Update issue trackers
+
+== Setting Up Git Hooks ==
+
+=== Basic Hook Creation ===
+
+Create executable scripts in `.git/hooks`:
+
+{{Code|bash|
+# Navigate to hooks directory
+cd .git/hooks
+
+# Create pre-commit hook
+touch pre-commit
+chmod +x pre-commit
+
+# Edit the hook
+nano pre-commit
+}}
+
+'''Example pre-commit hook:'''
+{{Code|bash|
+#!/bin/sh
+# Simple pre-commit hook
+
+echo "Running pre-commit checks..."
+
+# Check for debugging statements
+if grep -r "console.log\|debugger\|print(" --include="*.js" --include="*.py" .; then
+    echo "❌ Found debugging statements. Please remove before committing."
+    exit 1
+fi
+
+echo "✅ Pre-commit checks passed!"
+exit 0
+}}
+
+=== Hook Languages ===
+
+Hooks can be written in any executable language:
+
+'''Shell script:'''
+{{Code|bash|
+#!/bin/sh
+echo "Shell script hook"
+}}
+
+'''Python:'''
+{{Code|python|
+#!/usr/bin/env python3
+import sys
+print("Python hook")
+sys.exit(0)
+}}
+
+'''Node.js:'''
+{{Code|javascript|
+#!/usr/bin/env node
+console.log("Node.js hook");
+process.exit(0);
+}}
+
+'''Ruby:'''
+{{Code|ruby|
+#!/usr/bin/env ruby
+puts "Ruby hook"
+exit 0
+}}
+
+== Common Hook Examples ==
+
+=== Code Quality Hooks ===
+
+'''Linting pre-commit hook:'''
+{{Code|bash|
+#!/bin/sh
+# Run linter before commit
+
+echo "Running ESLint..."
+npx eslint . --ext .js,.jsx,.ts,.tsx
+
+if [ $? -ne 0 ]; then
+    echo "❌ ESLint found issues. Please fix before committing."
+    exit 1
+fi
+
+echo "✅ ESLint passed!"
+}}
+
+'''Format checking hook:'''
+{{Code|bash|
+#!/bin/sh
+# Check code formatting
+
+echo "Checking code formatting..."
+npm run format:check
+
+if [ $? -ne 0 ]; then
+    echo "❌ Code formatting issues found."
+    echo "Run 'npm run format' to fix automatically."
+    exit 1
+fi
+
+echo "✅ Code formatting is correct!"
+}}
+
+=== Testing Hooks ===
+
+'''Pre-push testing hook:'''
+{{Code|bash|
+#!/bin/sh
+# Run tests before push
+
+echo "Running tests before push..."
+npm test
+
+if [ $? -ne 0 ]; then
+    echo "❌ Tests failed. Push cancelled."
+    exit 1
+fi
+
+echo "✅ All tests passed!"
+}}
+
+'''Coverage checking hook:'''
+{{Code|bash|
+#!/bin/sh
+# Check test coverage
+
+echo "Checking test coverage..."
+npm run test:coverage
+
+# Check if coverage meets minimum threshold
+COVERAGE=$(npm run test:coverage 2>&1 | grep -o '[0-9]*%' | head -1 | sed 's/%//')
+THRESHOLD=80
+
+if [ "$COVERAGE" -lt "$THRESHOLD" ]; then
+    echo "❌ Test coverage ($COVERAGE%) below threshold ($THRESHOLD%)"
+    exit 1
+fi
+
+echo "✅ Test coverage ($COVERAGE%) meets threshold!"
+}}
+
+=== Commit Message Hooks ===
+
+'''Conventional commits hook:'''
+{{Code|bash|
+#!/bin/sh
+# Validate conventional commit format
+
+commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,50}'
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "❌ Invalid commit message format."
+    echo "Format: type(scope): description"
+    echo "Types: feat, fix, docs, style, refactor, test, chore"
+    echo "Example: feat(auth): add user login functionality"
+    exit 1
+fi
+
+echo "✅ Commit message format is valid!"
+}}
+
+'''Issue linking hook:'''
+{{Code|bash|
+#!/bin/sh
+# Ensure commit references an issue
+
+commit_msg=$(cat "$1")
+
+if ! echo "$commit_msg" | grep -qE "#[0-9]+|fixes #[0-9]+|closes #[0-9]+"; then
+    echo "❌ Commit must reference an issue (e.g., #123, fixes #456)"
+    exit 1
+fi
+
+echo "✅ Commit references an issue!"
+}}
+
+=== Security Hooks ===
+
+'''Secret detection hook:'''
+{{Code|bash|
+#!/bin/sh
+# Check for potential secrets
+
+echo "Scanning for secrets..."
+
+# Check for common secret patterns
+if git diff --cached --name-only | xargs grep -l "password\|secret\|key\|token" 2>/dev/null; then
+    echo "❌ Potential secrets found in staged files:"
+    git diff --cached --name-only | xargs grep -n "password\|secret\|key\|token" 2>/dev/null
+    echo "Please review and remove sensitive data."
+    exit 1
+fi
+
+echo "✅ No secrets detected!"
+}}
+
+'''File size check hook:'''
+{{Code|bash|
+#!/bin/sh
+# Prevent large files from being committed
+
+MAX_SIZE=10485760  # 10MB in bytes
+
+large_files=$(git diff --cached --name-only | while read file; do
+    if [ -f "$file" ]; then
+        size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null)
+        if [ "$size" -gt "$MAX_SIZE" ]; then
+            echo "$file ($size bytes)"
+        fi
+    fi
+done)
+
+if [ -n "$large_files" ]; then
+    echo "❌ Large files detected:"
+    echo "$large_files"
+    echo "Files larger than 10MB should not be committed to Git."
+    exit 1
+fi
+
+echo "✅ No large files detected!"
+}}
+
+== Advanced Hook Management ==
+
+=== Hook Templates ===
+
+Create reusable hook templates for teams:
+
+{{Code|bash|
+# Create hooks directory in repository
+mkdir -p .githooks
+
+# Create template hook
+cat > .githooks/pre-commit << 'EOF'
+#!/bin/sh
+# Team pre-commit hook template
+
+# Run linting
+npm run lint
+
+# Run tests
+npm run test:unit
+
+# Check formatting
+npm run format:check
+
+echo "✅ All pre-commit checks passed!"
+EOF
+
+chmod +x .githooks/pre-commit
+}}
+
+'''Install hooks for team:'''
+{{Code|bash|
+# Configure Git to use custom hooks directory
+git config core.hooksPath .githooks
+
+# Or copy to .git/hooks
+cp .githooks/* .git/hooks/
+}}
+
+=== Multi-language Hook ===
+
+Handle projects with multiple languages:
+
+{{Code|bash|
+#!/bin/sh
+# Multi-language pre-commit hook
+
+echo "Running multi-language checks..."
+
+# JavaScript/TypeScript
+if ls *.js *.ts *.jsx *.tsx 1> /dev/null 2>&1; then
+    echo "Checking JavaScript/TypeScript..."
+    npm run lint && npm run test:js
+fi
+
+# Python
+if ls *.py 1> /dev/null 2>&1; then
+    echo "Checking Python..."
+    python -m flake8 .
+    python -m pytest tests/
+fi
+
+# Go
+if ls *.go 1> /dev/null 2>&1; then
+    echo "Checking Go..."
+    go fmt ./...
+    go test ./...
+fi
+
+echo "✅ Multi-language checks completed!"
+}}
+
+=== Conditional Hooks ===
+
+Run different checks based on changed files:
+
+{{Code|bash|
+#!/bin/sh
+# Conditional pre-commit hook
+
+changed_files=$(git diff --cached --name-only)
+
+# Check if any JavaScript files changed
+if echo "$changed_files" | grep -q "\.js$\|\.jsx$\|\.ts$\|\.tsx$"; then
+    echo "JavaScript files changed, running JS checks..."
+    npm run lint:js
+    npm run test:js
+fi
+
+# Check if any Python files changed
+if echo "$changed_files" | grep -q "\.py$"; then
+    echo "Python files changed, running Python checks..."
+    python -m flake8 .
+    python -m pytest
+fi
+
+# Check if documentation changed
+if echo "$changed_files" | grep -q "\.md$\|docs/"; then
+    echo "Documentation changed, running doc checks..."
+    npm run lint:docs
+fi
+
+echo "✅ Conditional checks completed!"
+}}
+
+== Hook Management Tools ==
+
+=== Pre-commit Framework ===
+
+Popular tool for managing Git hooks:
+
+'''Installation:'''
+{{Code|bash|
+# Install pre-commit
+pip install pre-commit
+
+# Create configuration file
+cat > .pre-commit-config.yaml << 'EOF'
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+EOF
+
+# Install hooks
+pre-commit install
+}}
+
+'''Custom hooks in pre-commit:'''
+{{Code|yaml|
+repos:
+  - repo: local
+    hooks:
+      - id: custom-check
+        name: Custom Quality Check
+        entry: ./scripts/quality-check.sh
+        language: script
+        files: \.(js|py)$
+        
+      - id: security-scan
+        name: Security Scanner
+        entry: npm run security:scan
+        language: node
+        pass_filenames: false
+}}
+
+=== Husky (Node.js) ===
+
+Popular hook manager for Node.js projects:
+
+'''Installation:'''
+{{Code|bash|
+# Install husky
+npm install --save-dev husky
+
+# Enable Git hooks
+npx husky install
+
+# Add to package.json
+npm set-script prepare "husky install"
+
+# Create pre-commit hook
+npx husky add .husky/pre-commit "npm run lint && npm test"
+}}
+
+'''package.json configuration:'''
+{{Code|json|
+{
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint .",
+    "test": "jest",
+    "format": "prettier --write ."
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  }
+}}
+
+=== Commitizen ===
+
+Standardise commit messages:
+
+{{Code|bash|
+# Install commitizen
+npm install -g commitizen
+npm install --save-dev cz-conventional-changelog
+
+# Configure
+echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
+
+# Use interactive commit
+git cz
+}}
+
+== Server-side Hooks ==
+
+=== GitHub Actions as Hooks ===
+
+Use GitHub Actions for server-side automation:
+
+{{Code|yaml|
+# .github/workflows/quality-check.yml
+name: Quality Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run linting
+      run: npm run lint
+    
+    - name: Run tests
+      run: npm test
+    
+    - name: Check formatting
+      run: npm run format:check
+}}
+
+=== Webhook Integration ===
+
+Connect Git events to external services:
+
+{{Code|javascript|
+// Express webhook handler
+app.post('/webhook', (req, res) => {
+    const event = req.headers['x-github-event'];
+    const payload = req.body;
+    
+    if (event === 'push') {
+        // Handle push event
+        console.log(`Push to ${payload.ref}`);
+        
+        // Trigger deployment
+        if (payload.ref === 'refs/heads/main') {
+            triggerDeployment(payload);
+        }
+    }
+    
+    if (event === 'pull_request') {
+        // Handle PR event
+        console.log(`PR ${payload.action}: ${payload.number}`);
+        
+        // Run additional checks
+        runPRChecks(payload);
+    }
+    
+    res.status(200).send('OK');
+});
+}}
+
+== Hook Debugging and Testing ==
+
+=== Testing Hooks Locally ===
+
+Test hooks without triggering Git events:
+
+{{Code|bash|
+# Test pre-commit hook directly
+.git/hooks/pre-commit
+
+# Test with specific files
+git add some-file.js
+.git/hooks/pre-commit
+
+# Test commit-msg hook
+echo "test commit message" | .git/hooks/commit-msg
+}}
+
+=== Hook Debugging ===
+
+Add debugging to hooks:
+
+{{Code|bash|
+#!/bin/sh
+# Debug-enabled hook
+
+# Enable debugging
+set -x  # Print commands as they execute
+set -e  # Exit on first error
+
+echo "DEBUG: Hook starting at $(date)"
+echo "DEBUG: Working directory: $(pwd)"
+echo "DEBUG: Git status:"
+git status --porcelain
+
+# Your hook logic here
+echo "Running checks..."
+
+echo "DEBUG: Hook completed successfully"
+}}
+
+=== Hook Output Capture ===
+
+Capture hook output for analysis:
+
+{{Code|bash|
+#!/bin/sh
+# Hook with logging
+
+LOG_FILE=".git/hooks.log"
+
+{
+    echo "=== Pre-commit hook - $(date) ==="
+    
+    # Run your checks
+    npm run lint 2>&1
+    npm run test 2>&1
+    
+    echo "Hook completed successfully"
+    echo ""
+} >> "$LOG_FILE"
+}}
+
+== Best Practices ==
+
+=== Hook Performance ===
+
+Keep hooks fast to maintain developer productivity:
+
+'''Optimisation strategies:'''
+* Run only relevant checks based on changed files
+* Use parallel execution where possible
+* Cache results when appropriate
+* Implement incremental checks
+
+{{Code|bash|
+#!/bin/sh
+# Optimised pre-commit hook
+
+# Only check changed files
+changed_js_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.js$')
+
+if [ -n "$changed_js_files" ]; then
+    echo "Linting changed JavaScript files..."
+    echo "$changed_js_files" | xargs npx eslint
+else
+    echo "No JavaScript files to check"
+fi
+}}
+
+=== Error Handling ===
+
+Provide clear error messages and recovery instructions:
+
+{{Code|bash|
+#!/bin/sh
+# Hook with good error handling
+
+run_check() {
+    local check_name="$1"
+    local command="$2"
+    
+    echo "Running $check_name..."
+    
+    if ! $command; then
+        echo "❌ $check_name failed!"
+        echo "To fix: $3"
+        echo "To skip this check: git commit --no-verify"
+        return 1
+    fi
+    
+    echo "✅ $check_name passed!"
+    return 0
+}
+
+# Run checks with helpful error messages
+run_check "ESLint" "npm run lint" "Run 'npm run lint:fix' to auto-fix issues" || exit 1
+run_check "Tests" "npm test" "Fix failing tests or update snapshots" || exit 1
+run_check "Formatting" "npm run format:check" "Run 'npm run format' to fix formatting" || exit 1
+
+echo "🎉 All checks passed!"
+}}
+
+=== Team Distribution ===
+
+Ensure all team members use the same hooks:
+
+'''Strategies:'''
+* Include hooks in repository (outside .git)
+* Document hook setup in README
+* Use automation tools like pre-commit or husky
+* Provide setup scripts
+
+{{Code|bash|
+#!/bin/sh
+# setup-hooks.sh - Team hook setup script
+
+echo "Setting up Git hooks for this project..."
+
+# Copy hooks to .git/hooks
+cp -r .githooks/* .git/hooks/
+
+# Make hooks executable
+chmod +x .git/hooks/*
+
+# Configure Git settings
+git config core.hooksPath .githooks
+
+echo "✅ Git hooks setup complete!"
+echo "Hooks installed:"
+ls -la .git/hooks/
+}}
+
+== Troubleshooting Hooks ==
+
+=== Common Issues ===
+
+'''Hook not executing:'''
+* Check file permissions (`chmod +x`)
+* Verify shebang line is correct
+* Ensure hook name matches exactly (no file extension)
+
+'''Path issues:'''
+{{Code|bash|
+#!/bin/sh
+# Fix PATH issues in hooks
+
+# Add common paths
+export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"
+
+# Add Node.js path if needed
+if [ -f ~/.nvm/nvm.sh ]; then
+    source ~/.nvm/nvm.sh
+    nvm use node
+fi
+
+# Your hook logic here
+npm run lint
+}}
+
+'''Environment differences:'''
+{{Code|bash|
+#!/bin/sh
+# Handle different environments
+
+# Check if we're in CI
+if [ "$CI" = "true" ]; then
+    echo "Running in CI environment"
+    # CI-specific logic
+else
+    echo "Running in local environment"
+    # Local-specific logic
+fi
+
+# Load environment variables
+if [ -f .env ]; then
+    export $(cat .env | xargs)
+fi
+}}
+
+=== Hook Bypassing ===
+
+Sometimes you need to bypass hooks:
+
+{{Code|bash|
+# Skip pre-commit hooks
+git commit --no-verify -m "Emergency fix"
+
+# Skip pre-push hooks
+git push --no-verify
+
+# Skip specific hook temporarily
+mv .git/hooks/pre-commit .git/hooks/pre-commit.disabled
+git commit -m "Commit without pre-commit check"
+mv .git/hooks/pre-commit.disabled .git/hooks/pre-commit
+}}
+
+{{Success|Git hooks are powerful automation tools that improve code quality and team consistency. Start with simple hooks and gradually build more sophisticated automation as your team grows.}}
+
+== Related Resources ==
+
+* [[GitHub Actions Basics]] - Server-side automation and CI/CD
+* [[Code Review Process]] - Quality assurance workflows
+* [[Security Best Practices]] - Protecting repositories with hooks
+* [[Collaborative Workflows]] - Team development processes
+* [[Basic Git Commands]] - Foundation for understanding hooks
+
+[[Category:Intermediate Tutorials]]
+[[Category:Git]]
+[[Category:Automation]]
+[[Category:Quality Control]]
+[[Category:Workflow]]

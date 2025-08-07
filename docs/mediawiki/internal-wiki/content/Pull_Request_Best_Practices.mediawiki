@@ -1,0 +1,532 @@
+{{Tutorial
+|title = Pull Request Best Practices
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 25 minutes
+|prerequisites = Basic Git knowledge, GitHub account
+|topics = Pull requests, Code review, Collaboration
+}}
+
+{{TOC limit|3}}
+
+= Pull Request Best Practices =
+
+Pull requests (PRs) are the cornerstone of collaborative development on GitHub. They enable teams to review, discuss, and refine code before it becomes part of the main codebase.
+
+== What is a Pull Request? ==
+
+A '''pull request''' is a proposal to merge changes from one branch into another. It provides:
+* A platform for code review and discussion
+* Visibility into proposed changes
+* Quality control before code integration
+* Documentation of why changes were made
+
+{{Note|Pull requests are called "merge requests" in some platforms like GitLab, but the concept is identical.}}
+
+== Creating Effective Pull Requests ==
+
+=== Before Creating a PR ===
+
+'''Ensure your branch is ready:'''
+{{Code|bash|
+# Update your local main branch
+git checkout main
+git pull origin main
+
+# Rebase your feature branch (optional but recommended)
+git checkout feature-branch
+git rebase main
+
+# Push your branch
+git push origin feature-branch
+}}
+
+'''Pre-submission checklist:'''
+* ✅ Code compiles without errors
+* ✅ Tests pass
+* ✅ Code follows project style guidelines
+* ✅ Documentation is updated
+* ✅ Commit messages are clear and descriptive
+
+=== Writing a Great PR Title ===
+
+Your PR title should be:
+* '''Concise''' - Under 50 characters when possible
+* '''Descriptive''' - Explains what the PR does
+* '''Present tense''' - "Add feature" not "Added feature"
+
+{{Good|Great PR titles}}
+* "Add user authentication with OAuth2"
+* "Fix memory leak in image processing"
+* "Refactor database connection handling"
+
+❌ '''Poor PR titles:'''
+* "Fix stuff"
+* "Update code"
+* "Changes"
+
+=== Writing Comprehensive Descriptions ===
+
+A great PR description includes:
+
+'''What & Why:'''
+* What changes were made?
+* Why were these changes necessary?
+* What problem does this solve?
+
+'''How:'''
+* Brief explanation of the approach
+* Any architectural decisions
+* Trade-offs considered
+
+'''Testing:'''
+* How were changes tested?
+* Are there any manual testing steps?
+* Screenshots for UI changes
+
+'''Impact:'''
+* Breaking changes?
+* Performance implications?
+* Dependencies affected?
+
+{{Code|markdown|
+## Summary
+Adds user authentication system using OAuth2 with Google and GitHub providers.
+
+## Problem
+Users currently cannot save their preferences or access personalised features.
+
+## Solution
+- Implemented OAuth2 authentication flow
+- Added user session management
+- Created protected routes for authenticated users
+- Added user profile management
+
+## Testing
+- Unit tests for auth service (95% coverage)
+- Integration tests for OAuth flow
+- Manual testing with multiple providers
+- Cross-browser testing completed
+
+## Screenshots
+![Login page](link-to-screenshot)
+![User profile](link-to-screenshot)
+
+## Breaking Changes
+None
+
+## Checklist
+- [x] Tests passing
+- [x] Documentation updated
+- [x] Breaking changes documented
+- [x] Security review completed
+}}
+
+== Pull Request Workflow ==
+
+=== Standard Workflow ===
+
+# '''Create feature branch''' from main
+# '''Make changes''' with clear commits
+# '''Push branch''' to GitHub
+# '''Open pull request''' with good description
+# '''Request reviews''' from relevant team members
+# '''Address feedback''' through discussion and commits
+# '''Merge''' when approved and all checks pass
+# '''Delete branch''' after successful merge
+
+=== Draft Pull Requests ===
+
+Use draft PRs when:
+* Work is incomplete but you want early feedback
+* Setting up CI/CD pipelines
+* Collaborating on complex features
+
+{{Code|bash|
+# Create draft PR via GitHub CLI
+gh pr create --draft --title "WIP: Add user authentication"
+}}
+
+=== Converting Draft to Ready ===
+Click "Ready for review" when:
+* All functionality is complete
+* Tests are passing
+* Documentation is updated
+* You're ready for thorough review
+
+== Code Review Best Practices ==
+
+=== For Authors (PR Creators) ===
+
+'''Before requesting review:'''
+* Self-review your own PR first
+* Ensure CI checks are passing
+* Add comments explaining complex logic
+* Keep PRs reasonably sized (< 400 lines when possible)
+
+'''Responding to feedback:'''
+* Respond promptly to reviews
+* Ask for clarification if feedback is unclear
+* Thank reviewers for their time
+* Address all feedback or explain why you disagree
+
+{{Good|When addressing feedback, explain your changes in a comment so reviewers can easily see what was updated.}}
+
+=== For Reviewers ===
+
+'''Review approach:'''
+* Review the description first
+* Check out the branch locally for complex changes
+* Look for both functional and non-functional issues
+* Consider security, performance, and maintainability
+
+'''Giving feedback:'''
+* Be constructive and specific
+* Suggest solutions, not just problems
+* Distinguish between blocking issues and suggestions
+* Use GitHub's review tools effectively
+
+'''Types of feedback:'''
+* '''Blocking''' - Must be fixed before merge
+* '''Non-blocking''' - Nice to have improvements
+* '''Praise''' - Acknowledge good work
+* '''Questions''' - Seek clarification
+
+{{Code|markdown|
+**Blocking:** This introduces a potential security vulnerability. Consider using parameterised queries instead.
+
+**Suggestion:** You might want to extract this logic into a separate function for better testability.
+
+**Question:** Why did you choose this approach over the existing pattern in the codebase?
+
+**Praise:** Great error handling here! This will make debugging much easier.
+}}
+
+== Managing Large Pull Requests ==
+
+=== Keeping PRs Small ===
+
+'''Strategies for smaller PRs:'''
+* Break features into logical chunks
+* Use feature flags for incremental delivery
+* Submit infrastructure changes separately
+* Create preparatory refactoring PRs
+
+'''When large PRs are unavoidable:'''
+* Provide detailed descriptions
+* Use GitHub's file tree to organise review
+* Add inline comments explaining complex sections
+* Consider pair programming sessions
+
+=== Stacked Pull Requests ===
+
+For dependent changes:
+{{Code|bash|
+# Create base feature branch
+git checkout -b feature/base
+# ... make changes and create PR
+
+# Create dependent branch
+git checkout -b feature/dependent
+# ... make changes and create PR targeting feature/base
+}}
+
+== Handling Merge Conflicts ==
+
+=== Preventing Conflicts ===
+* Keep feature branches short-lived
+* Regularly rebase against main
+* Communicate with team about overlapping work
+* Use smaller, focused PRs
+
+=== Resolving Conflicts ===
+
+'''Via command line:'''
+{{Code|bash|
+# Update main and rebase
+git checkout main
+git pull origin main
+git checkout feature-branch
+git rebase main
+
+# Resolve conflicts in your editor
+# Look for conflict markers: <<<<<<<, =======, >>>>>>>
+
+# Add resolved files
+git add resolved-file.js
+
+# Continue rebase
+git rebase --continue
+
+# Force push (safe with --force-with-lease)
+git push --force-with-lease origin feature-branch
+}}
+
+'''Via GitHub web interface:'''
+* Click "Resolve conflicts" button
+* Edit files directly in browser
+* Mark as resolved and commit
+
+{{Warning|Always test your code after resolving merge conflicts to ensure functionality wasn't broken.}}
+
+== Advanced PR Features ==
+
+=== GitHub PR Templates ===
+
+Create `.github/pull_request_template.md`:
+{{Code|markdown|
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+
+## Checklist
+- [ ] Code follows style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] No new warnings
+}}
+
+=== Auto-linking Issues ===
+
+Link PRs to issues using keywords:
+* "Fixes #123" - Closes issue when PR merges
+* "Resolves #123" - Same as fixes
+* "Closes #123" - Same as fixes
+* "Related to #123" - Links without closing
+
+=== PR Labels and Projects ===
+
+Use labels to categorise PRs:
+* `bug` - Bug fixes
+* `feature` - New functionality
+* `documentation` - Documentation changes
+* `breaking-change` - Breaking changes
+* `needs-review` - Ready for review
+* `work-in-progress` - Not ready for review
+
+== Branch Protection Rules ==
+
+Set up protection for important branches:
+
+'''Required settings:'''
+* Require PR reviews before merging
+* Require status checks to pass
+* Require branches to be up to date
+* Restrict pushes to matching branches
+
+'''Optional but recommended:'''
+* Require review from code owners
+* Dismiss stale reviews when new commits are pushed
+* Require signed commits
+* Include administrators in restrictions
+
+{{Code|yaml|
+# Example branch protection via GitHub API
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": ["ci/tests", "ci/lint"]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 2,
+    "dismiss_stale_reviews": true,
+    "require_code_owner_reviews": true
+  },
+  "restrictions": null
+}
+}}
+
+== Measuring PR Success ==
+
+=== Key Metrics ===
+
+'''Quality metrics:'''
+* Number of bugs caught in review
+* Post-merge issues
+* Review thoroughness
+* Time to first review
+
+'''Velocity metrics:'''
+* PR cycle time (creation to merge)
+* Review time
+* Time to address feedback
+* Merge frequency
+
+'''Team health metrics:'''
+* Review participation
+* Feedback quality
+* Knowledge sharing
+* Developer satisfaction
+
+=== Tools for Measurement ===
+
+* GitHub Insights
+* Third-party analytics (LinearB, Waydev)
+* Custom dashboards
+* Team retrospectives
+
+== Common Anti-Patterns ==
+
+{{Warning|Avoid these common mistakes that make PRs less effective.}}
+
+=== Anti-Patterns to Avoid ===
+
+'''Massive PRs'''
+* Difficult to review thoroughly
+* Increase risk of bugs
+* Block other work
+
+'''Vague descriptions'''
+* Reviewers waste time understanding context
+* Important details get missed
+* Poor documentation for future reference
+
+'''Ignoring feedback'''
+* Damages team relationships
+* Reduces review quality over time
+* Misses opportunities for improvement
+
+'''Rubber stamp reviews'''
+* Approve without actually reviewing
+* False sense of security
+* Defeats the purpose of code review
+
+=== Recovery Strategies ===
+
+'''For massive PRs:'''
+* Break into smaller, logical commits
+* Provide very detailed descriptions
+* Schedule review sessions
+* Consider pair programming
+
+'''For poor descriptions:'''
+* Edit the PR description
+* Add comments to complex code sections
+* Schedule a walkthrough session
+
+== Team Collaboration Patterns ==
+
+=== Code Ownership Models ===
+
+'''Shared ownership:'''
+* Anyone can review any PR
+* Promotes knowledge sharing
+* May lack deep expertise
+
+'''Area ownership:'''
+* Specific people own specific areas
+* Deep expertise in reviews
+* May create bottlenecks
+
+'''Hybrid approach:'''
+* Area owners for critical components
+* Shared ownership for common code
+* Rotating review assignments
+
+=== Review Assignment Strategies ===
+
+'''Automatic assignment:'''
+* Use CODEOWNERS file
+* GitHub auto-assignment rules
+* Bot-based assignment
+
+'''Manual assignment:'''
+* Author chooses reviewers
+* Consider expertise needed
+* Balance review workload
+
+{{Code|text|
+# CODEOWNERS file example
+# Global owners
+* @team-leads
+
+# Frontend files
+/src/frontend/ @frontend-team
+
+# API files
+/src/api/ @backend-team @security-team
+
+# Documentation
+/docs/ @tech-writers
+
+# CI/CD
+/.github/ @devops-team
+}}
+
+== Automation and Tools ==
+
+=== GitHub Actions for PRs ===
+
+'''Automated checks:'''
+* Linting and formatting
+* Test execution
+* Security scanning
+* Performance testing
+* Documentation generation
+
+'''Example workflow:'''
+{{Code|yaml|
+name: PR Checks
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: npm test
+      
+      - name: Lint code
+        run: npm run lint
+      
+      - name: Security scan
+        run: npm audit
+}}
+
+=== Bot Integration ===
+
+Popular bots for PR workflow:
+* '''Dependabot''' - Dependency updates
+* '''CodeClimate''' - Code quality analysis
+* '''Snyk''' - Security vulnerability scanning
+* '''Stale''' - Manage stale PRs and issues
+
+{{See also|
+* [[GitHub Actions Workflows]] - Automate your PR process
+* [[Branch Protection Rules]] - Secure your main branches
+* [[Code Review Guidelines]] - Detailed review practices
+* [[Collaborative Development]] - Team workflow strategies
+* [[Managing Issues and Projects]] - Link PRs to project management
+}}
+
+== Next Steps ==
+
+After mastering PR best practices:
+
+# Set up [[Branch Protection Rules]] for your repositories
+# Implement [[GitHub Actions Workflows]] for automated testing
+# Explore [[Advanced GitHub Actions]] for complex workflows
+# Learn about [[Security Best Practices]] for code review
+# Study [[GitHub Enterprise Administration]] for organisation-wide policies
+
+{{Success|Effective pull requests are the foundation of high-quality, collaborative software development. Master these practices to improve your team's code quality and development velocity.}}
+
+[[Category:Intermediate Tutorials]]
+[[Category:Collaboration]]
+[[Category:Code Review]]
+[[Category:GitHub]]
+[[Category:Best Practices]]

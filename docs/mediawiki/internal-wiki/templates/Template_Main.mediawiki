@@ -1,0 +1,18 @@
+<noinclude>
+This template creates a "Main article" hatnote to direct readers to the main article on a topic.
+
+== Usage ==
+<pre>
+{{Main|Main Article Title}}
+{{Main|Article 1|Article 2}}
+</pre>
+
+== Parameters ==
+* '''1''': Main article page name
+* '''2''' (optional): Second main article page name
+* '''3''' (optional): Third main article page name
+
+</noinclude><includeonly><div style="background: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 3px; padding: 8px 12px; margin-bottom: 15px; font-style: italic;">
+📄 Main {{#if: {{{2|}}}|articles|article}}: {{#if: {{{1|}}}|[[{{{1}}}]]}}{{#if: {{{2|}}}|, [[{{{2}}}]]}}{{#if: {{{3|}}}|, [[{{{3}}}]]}}
+</div></includeonly>
+[[Category:Hatnote templates]]

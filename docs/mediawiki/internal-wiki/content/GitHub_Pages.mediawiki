@@ -1,0 +1,1298 @@
+{{Tutorial
+|title = GitHub Pages
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 35 minutes
+|prerequisites = Git basics, HTML/CSS knowledge, GitHub repository management
+|topics = Static sites, Deployment, Jekyll, Custom domains, GitHub Actions
+}}
+
+{{TOC limit|3}}
+
+= GitHub Pages =
+
+GitHub Pages is a static site hosting service that lets you publish websites directly from your GitHub repositories, perfect for documentation, portfolios, project sites, and blogs.
+
+== What is GitHub Pages? ==
+
+GitHub Pages provides free static website hosting with the following features:
+* '''Direct repository integration''' - Deploy straight from your GitHub repository
+* '''Automatic building''' - Jekyll integration for dynamic site generation
+* '''Custom domains''' - Use your own domain name
+* '''HTTPS support''' - Secure hosting with SSL certificates
+* '''Version control''' - Full Git history for your website
+* '''Free hosting''' - No cost for public repositories
+
+{{Note|GitHub Pages is designed for static websites only - no server-side code like PHP, Ruby, or Python can be executed.}}
+
+=== Use Cases for GitHub Pages ===
+
+'''Documentation Sites:'''
+* Project documentation
+* API references
+* User guides and tutorials
+* Technical specifications
+
+'''Personal and Professional Sites:'''
+* Portfolio websites
+* Personal blogs
+* Academic pages
+* Company landing pages
+
+'''Project Sites:'''
+* Open source project websites
+* Demo sites and prototypes
+* Conference or event sites
+* Community resources
+
+== Setting Up GitHub Pages ==
+
+=== Basic Setup ===
+
+Enable GitHub Pages for your repository:
+
+'''Method 1: Repository Settings'''
+1. Navigate to your repository on GitHub
+2. Click **Settings** tab
+3. Scroll down to **Pages** section
+4. Under **Source**, select **Deploy from a branch**
+5. Choose your branch (usually `main` or `gh-pages`)
+6. Select folder (`/ (root)` or `/docs`)
+7. Click **Save**
+
+'''Method 2: GitHub CLI'''
+{{Code|bash|
+# Enable Pages for current repository
+gh api repos/:owner/:repo/pages \
+  --method POST \
+  --field source='{"branch":"main","path":"/"}'
+
+# Check Pages status
+gh api repos/:owner/:repo/pages
+}}
+
+'''Method 3: GitHub Actions (recommended for advanced setups)'''
+{{Code|yaml|
+# .github/workflows/pages.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+    
+    - name: Build site
+      run: |
+        # Your build commands here
+        mkdir -p _site
+        cp -r * _site/ 2>/dev/null || true
+        rm -rf _site/.git _site/.github
+    
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '_site'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+}}
+
+=== Repository Structure ===
+
+Organize your Pages site effectively:
+
+'''Simple HTML Site:'''
+{{Code|text|
+my-site/
+├── index.html          # Homepage
+├── about.html          # About page
+├── contact.html        # Contact page
+├── css/
+│   ├── style.css
+│   └── responsive.css
+├── js/
+│   ├── main.js
+│   └── utils.js
+├── images/
+│   ├── logo.png
+│   └── hero.jpg
+└── README.md
+}}
+
+'''Jekyll Site Structure:'''
+{{Code|text|
+jekyll-site/
+├── _config.yml         # Jekyll configuration
+├── _layouts/           # Page layouts
+│   ├── default.html
+│   ├── page.html
+│   └── post.html
+├── _includes/          # Reusable components
+│   ├── header.html
+│   ├── footer.html
+│   └── navigation.html
+├── _posts/             # Blog posts
+│   ├── 2024-01-01-welcome.md
+│   └── 2024-01-15-first-post.md
+├── _sass/              # Sass stylesheets
+│   ├── _variables.scss
+│   └── _base.scss
+├── assets/
+│   ├── css/
+│   ├── js/
+│   └── images/
+├── index.md            # Homepage
+└── about.md            # About page
+}}
+
+== Working with Jekyll ==
+
+=== Jekyll Basics ===
+
+Jekyll is a static site generator that GitHub Pages supports natively:
+
+'''_config.yml configuration:'''
+{{Code|yaml|
+# Site settings
+title: My GitHub Pages Site
+description: A demonstration of GitHub Pages with Jekyll
+baseurl: "/my-repository-name"  # Repository name
+url: "https://username.github.io"  # Your GitHub Pages URL
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /:collection/:name/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Your Name"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+}}
+
+'''Basic layout template:'''
+{{Code|html|
+<!-- _layouts/default.html -->
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  
+  <!-- SEO and social media meta tags -->
+  {% seo %}
+</head>
+<body>
+  <header>
+    {% include navigation.html %}
+  </header>
+  
+  <main>
+    {{ content }}
+  </main>
+  
+  <footer>
+    {% include footer.html %}
+  </footer>
+  
+  <!-- JavaScript -->
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>
+}}
+
+'''Blog post template:'''
+{{Code|html|
+<!-- _layouts/post.html -->
+---
+layout: default
+---
+
+<article class="post">
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+    <div class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">
+        {{ page.date | date: "%B %-d, %Y" }}
+      </time>
+      {% if page.author %}
+        • <span>{{ page.author }}</span>
+      {% endif %}
+      {% if page.tags.size > 0 %}
+        • 
+        {% for tag in page.tags %}
+          <span class="tag">{{ tag }}</span>{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  <footer class="post-footer">
+    {% if page.categories.size > 0 %}
+      <div class="post-categories">
+        Categories: 
+        {% for category in page.categories %}
+          <a href="{{ site.baseurl }}/categories/{{ category | slugify }}">{{ category }}</a>{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    <div class="post-nav">
+      {% if page.previous.url %}
+        <a class="prev" href="{{ page.previous.url | relative_url }}">← {{ page.previous.title }}</a>
+      {% endif %}
+      {% if page.next.url %}
+        <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>
+      {% endif %}
+    </div>
+  </footer>
+</article>
+}}
+
+=== Creating Content ===
+
+'''Markdown pages:'''
+{{Code|markdown|
+---
+layout: page
+title: About
+permalink: /about/
+---
+
+# About This Site
+
+This is my GitHub Pages site built with Jekyll. It demonstrates various features:
+
+## Features
+
+- Responsive design
+- Blog functionality
+- Custom layouts
+- SEO optimization
+
+## Contact
+
+Feel free to reach out:
+
+- Email: [your-email@example.com](mailto:your-email@example.com)
+- GitHub: [@your-username](https://github.com/your-username)
+- Twitter: [@your-handle](https://twitter.com/your-handle)
+}}
+
+'''Blog posts:'''
+{{Code|markdown|
+---
+layout: post
+title: "Getting Started with GitHub Pages"
+date: 2024-01-15 10:00:00 +0000
+categories: tutorial github
+tags: [github-pages, jekyll, tutorial]
+author: Your Name
+description: "Learn how to create your first GitHub Pages site"
+---
+
+# Getting Started with GitHub Pages
+
+GitHub Pages is an excellent way to host static websites for free. In this post, I'll walk through the basics of setting up your first site.
+
+## What You'll Learn
+
+- How to enable GitHub Pages
+- Basic Jekyll configuration  
+- Creating your first pages
+- Customizing your site
+
+## Prerequisites
+
+Before starting, make sure you have:
+
+1. A GitHub account
+2. Basic knowledge of Git
+3. Familiarity with Markdown
+
+## Step 1: Create a Repository
+
+First, create a new repository for your site...
+
+```bash
+git clone https://github.com/username/repository-name.git
+cd repository-name
+```
+
+## Conclusion
+
+GitHub Pages provides a powerful platform for hosting static sites. With Jekyll's features, you can create professional websites with minimal effort.
+}}
+
+=== Custom Themes ===
+
+'''Using existing themes:'''
+{{Code|yaml|
+# _config.yml - Using a gem-based theme
+theme: minima
+
+# Or using a GitHub-supported theme
+remote_theme: pages-themes/minimal@v0.2.0
+}}
+
+'''Creating custom themes:'''
+{{Code|scss|
+// assets/css/style.scss
+---
+---
+
+@import "{{ site.theme }}";
+
+// Custom variables
+$primary-color: #2c3e50;
+$secondary-color: #3498db;
+$accent-color: #e74c3c;
+
+// Custom styles
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.header {
+  background: linear-gradient(135deg, $primary-color, $secondary-color);
+  color: white;
+  padding: 2rem 0;
+  
+  h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 300;
+  }
+}
+
+.navigation {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+  
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    
+    li {
+      margin: 0 1rem;
+      
+      a {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 3px;
+        transition: background 0.3s;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+  }
+}
+
+.post {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  
+  .post-header {
+    border-bottom: 2px solid $primary-color;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    
+    .post-title {
+      color: $primary-color;
+      margin-bottom: 0.5rem;
+    }
+    
+    .post-meta {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .navigation ul {
+    flex-direction: column;
+    align-items: center;
+    
+    li {
+      margin: 0.25rem 0;
+    }
+  }
+}
+}}
+
+== Advanced GitHub Pages Features ==
+
+=== Custom Domains ===
+
+Set up a custom domain for your site:
+
+'''DNS Configuration:'''
+{{Code|text|
+# For apex domain (example.com)
+# Add A records pointing to:
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+
+# For subdomain (www.example.com or blog.example.com)
+# Add CNAME record pointing to:
+username.github.io
+}}
+
+'''Repository configuration:'''
+{{Code|text|
+# Create CNAME file in repository root
+echo "www.example.com" > CNAME
+git add CNAME
+git commit -m "Add custom domain"
+git push
+}}
+
+'''GitHub Settings:'''
+1. Go to repository Settings > Pages
+2. Enter your custom domain
+3. Check "Enforce HTTPS" (recommended)
+4. Wait for DNS check to complete
+
+=== Environment Variables and Secrets ===
+
+Handle configuration securely:
+
+{{Code|yaml|
+# .github/workflows/pages-advanced.yml
+name: Advanced Pages Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        npm install
+        bundle install
+    
+    - name: Build site with environment variables
+      env:
+        JEKYLL_ENV: production
+        GOOGLE_ANALYTICS_ID: ${{ secrets.GOOGLE_ANALYTICS_ID }}
+        CONTACT_FORM_ENDPOINT: ${{ secrets.CONTACT_FORM_ENDPOINT }}
+      run: |
+        # Generate config with secrets
+        cat > _config_production.yml << EOF
+        google_analytics: $GOOGLE_ANALYTICS_ID
+        contact_form_endpoint: $CONTACT_FORM_ENDPOINT
+        EOF
+        
+        # Build site
+        bundle exec jekyll build --config _config.yml,_config_production.yml
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_site
+        cname: www.example.com
+}}
+
+=== Multiple Sites from One Repository ===
+
+Host multiple sites using subdirectories:
+
+{{Code|text|
+multi-site-repo/
+├── main-site/          # Main site at username.github.io/repo
+├── docs/               # Documentation at username.github.io/repo/docs
+├── blog/               # Blog at username.github.io/repo/blog
+└── .github/
+    └── workflows/
+        └── deploy-all.yml
+}}
+
+'''Multi-site deployment workflow:'''
+{{Code|yaml|
+name: Deploy Multiple Sites
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Build all sites
+      run: |
+        # Build main site
+        cd main-site
+        npm install
+        npm run build
+        cd ..
+        
+        # Build documentation
+        cd docs
+        npm install
+        npm run build
+        cd ..
+        
+        # Build blog
+        cd blog
+        bundle install
+        bundle exec jekyll build
+        cd ..
+        
+        # Combine all sites
+        mkdir -p _site
+        cp -r main-site/dist/* _site/
+        cp -r docs/dist _site/docs
+        cp -r blog/_site _site/blog
+    
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_site
+}}
+
+=== Performance Optimization ===
+
+Optimize your Pages site for speed:
+
+'''Jekyll optimization:'''
+{{Code|yaml|
+# _config.yml
+# Performance settings
+incremental: true
+profile: false
+
+# Compression
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Plugin configuration
+plugins:
+  - jekyll-minifier
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-feed
+
+# Minifier settings
+jekyll-minifier:
+  uglifier_args:
+    harmony: true
+  compress_css: true
+  compress_javascript: true
+  compress_json: true
+  simple_doctype: false
+  remove_spaces_inside_tags: true
+  remove_multi_spaces: true
+  remove_comments: true
+  remove_intertag_spaces: true
+  remove_quotes: false
+  compress_css: true
+  compress_javascript: true
+  simple_boolean_attributes: true
+  remove_script_attributes: true
+  remove_style_attributes: true
+  remove_link_attributes: true
+  remove_form_attributes: true
+  remove_input_attributes: true
+  remove_javascript_protocol: true
+  remove_http_protocol: false
+  remove_https_protocol: false
+  preserve_line_breaks: false
+}}
+
+'''Asset optimization workflow:'''
+{{Code|yaml|
+name: Optimized Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Optimize images
+      run: |
+        # Install image optimization tools
+        npm install -g imagemin-cli imagemin-webp imagemin-mozjpeg imagemin-pngquant
+        
+        # Optimize images
+        imagemin assets/images/*.jpg --out-dir=_site/assets/images --plugin=mozjpeg
+        imagemin assets/images/*.png --out-dir=_site/assets/images --plugin=pngquant
+        
+        # Generate WebP versions
+        imagemin assets/images/*.{jpg,png} --out-dir=_site/assets/images --plugin=webp
+    
+    - name: Build and minify CSS/JS
+      run: |
+        # Build CSS
+        npx sass assets/scss:_site/assets/css --style=compressed
+        
+        # Minify JavaScript
+        npx uglify-js assets/js/*.js -c -m -o _site/assets/js/main.min.js
+        
+        # Generate critical CSS
+        npx critical --base _site --src index.html --dest index.html --inline
+    
+    - name: Generate Service Worker
+      run: |
+        cat > _site/sw.js << 'EOF'
+        const CACHE_NAME = 'site-cache-v1';
+        const urlsToCache = [
+          '/',
+          '/assets/css/main.css',
+          '/assets/js/main.min.js'
+        ];
+        
+        self.addEventListener('install', event => {
+          event.waitUntil(
+            caches.open(CACHE_NAME)
+              .then(cache => cache.addAll(urlsToCache))
+          );
+        });
+        
+        self.addEventListener('fetch', event => {
+          event.respondWith(
+            caches.match(event.request)
+              .then(response => response || fetch(event.request))
+          );
+        });
+        EOF
+    
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_site
+}}
+
+== Modern Frameworks with GitHub Pages ==
+
+=== React Applications ===
+
+Deploy React apps to GitHub Pages:
+
+{{Code|json|
+{
+  "name": "react-github-pages",
+  "homepage": "https://username.github.io/repository-name",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
+  }
+}
+}}
+
+'''GitHub Actions for React deployment:'''
+{{Code|yaml|
+name: Deploy React App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build React app
+      run: npm run build
+      env:
+        PUBLIC_URL: /repository-name
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build
+}}
+
+=== Vue.js Applications ===
+
+Deploy Vue.js apps with GitHub Actions:
+
+{{Code|javascript|
+// vue.config.js
+module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/repository-name/'
+    : '/',
+  outputDir: 'dist',
+  assetsDir: 'assets'
+}
+}}
+
+{{Code|yaml|
+name: Deploy Vue App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build Vue app
+      run: npm run build
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
+}}
+
+=== Next.js Static Export ===
+
+Deploy Next.js as a static site:
+
+{{Code|javascript|
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
+  basePath: process.env.NODE_ENV === 'production' ? '/repository-name' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/repository-name/' : ''
+}
+
+module.exports = nextConfig
+}}
+
+{{Code|yaml|
+name: Deploy Next.js Static
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build Next.js app
+      run: npm run build
+      env:
+        NODE_ENV: production
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./out
+}}
+
+== Analytics and SEO ==
+
+=== Google Analytics Integration ===
+
+Add analytics to your Jekyll site:
+
+{{Code|html|
+<!-- _includes/google-analytics.html -->
+{% if site.google_analytics %}
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site.google_analytics }}', {
+      anonymize_ip: true,
+      cookie_flags: 'SameSite=None;Secure'
+    });
+  </script>
+{% endif %}
+}}
+
+'''Privacy-focused analytics:'''
+{{Code|html|
+<!-- _includes/privacy-analytics.html -->
+<script>
+  // Simple privacy-focused analytics
+  (function() {
+    // Check if user has opted out
+    if (localStorage.getItem('analytics-opt-out') === 'true') {
+      return;
+    }
+    
+    // Basic page view tracking
+    const analytics = {
+      track: function(event, data) {
+        fetch('/analytics-endpoint', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            event: event,
+            data: data,
+            timestamp: new Date().toISOString(),
+            url: window.location.href,
+            referrer: document.referrer
+          })
+        }).catch(() => {}); // Fail silently
+      }
+    };
+    
+    // Track page view
+    analytics.track('page_view', {
+      title: document.title,
+      path: window.location.pathname
+    });
+    
+    // Track outbound links
+    document.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A' && e.target.hostname !== location.hostname) {
+        analytics.track('outbound_link', {
+          url: e.target.href,
+          text: e.target.textContent
+        });
+      }
+    });
+    
+    // Make analytics available globally
+    window.analytics = analytics;
+  })();
+</script>
+}}
+
+=== SEO Optimization ===
+
+Optimize your Pages site for search engines:
+
+{{Code|html|
+<!-- _includes/seo.html -->
+{% assign seo_title = page.title | default: site.title %}
+{% assign seo_description = page.description | default: page.excerpt | default: site.description %}
+{% assign seo_url = page.url | absolute_url %}
+{% assign seo_image = page.image | default: site.image | absolute_url %}
+
+<title>{{ seo_title }}</title>
+<meta name="description" content="{{ seo_description | strip_html | truncate: 160 }}">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+<meta property="og:url" content="{{ seo_url }}">
+<meta property="og:title" content="{{ seo_title }}">
+<meta property="og:description" content="{{ seo_description | strip_html | truncate: 300 }}">
+<meta property="og:image" content="{{ seo_image }}">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ seo_url }}">
+<meta property="twitter:title" content="{{ seo_title }}">
+<meta property="twitter:description" content="{{ seo_description | strip_html | truncate: 300 }}">
+<meta property="twitter:image" content="{{ seo_image }}">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ seo_url }}">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{% if page.layout == 'post' %}BlogPosting{% else %}WebPage{% endif %}",
+  "headline": "{{ seo_title }}",
+  "description": "{{ seo_description | strip_html }}",
+  "url": "{{ seo_url }}",
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ page.author | default: site.author.name }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ site.title }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ site.logo | absolute_url }}"
+    }
+  }
+}
+</script>
+}}
+
+'''XML Sitemap generation:'''
+{{Code|xml|
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% for page in site.pages %}
+    {% unless page.noindex %}
+      <url>
+        <loc>{{ page.url | absolute_url }}</loc>
+        {% if page.last_modified_at %}
+          <lastmod>{{ page.last_modified_at | date_to_xmlschema }}</lastmod>
+        {% elsif page.date %}
+          <lastmod>{{ page.date | date_to_xmlschema }}</lastmod>
+        {% endif %}
+        <changefreq>{% if page.changefreq %}{{ page.changefreq }}{% else %}monthly{% endif %}</changefreq>
+        <priority>{% if page.priority %}{{ page.priority }}{% else %}0.5{% endif %}</priority>
+      </url>
+    {% endunless %}
+  {% endfor %}
+  
+  {% for post in site.posts %}
+    <url>
+      <loc>{{ post.url | absolute_url }}</loc>
+      <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.8</priority>
+    </url>
+  {% endfor %}
+</urlset>
+}}
+
+== Troubleshooting Common Issues ==
+
+=== Build Failures ===
+
+Debug common Jekyll build issues:
+
+{{Code|yaml|
+# Add debugging to workflow
+- name: Debug Jekyll build
+  run: |
+    echo "Jekyll version: $(bundle exec jekyll --version)"
+    echo "Ruby version: $(ruby --version)"
+    echo "Bundler version: $(bundle --version)"
+    
+    # Check for common issues
+    echo "Checking for problematic files..."
+    find . -name "*.md" -exec grep -l $'\t' {} \; | head -5
+    
+    # Verbose build
+    bundle exec jekyll build --verbose --trace
+  continue-on-error: true
+}}
+
+'''Common solutions:'''
+{{Code|yaml|
+# Fix timezone issues
+env:
+  TZ: UTC
+
+# Handle file permissions
+- name: Fix permissions
+  run: |
+    chmod -R 755 _site/
+    find _site/ -type f -exec chmod 644 {} \;
+
+# Clear Jekyll cache
+- name: Clear Jekyll cache
+  run: |
+    bundle exec jekyll clean
+    rm -rf .jekyll-cache/
+}}
+
+=== Custom Domain Issues ===
+
+Troubleshoot domain configuration:
+
+{{Code|bash|
+# Check DNS configuration
+dig +short example.com
+dig +short www.example.com
+
+# Verify GitHub Pages configuration
+curl -I https://username.github.io/repository-name
+
+# Test SSL certificate
+openssl s_client -connect example.com:443 -servername example.com
+}}
+
+=== Performance Issues ===
+
+Monitor and improve site performance:
+
+{{Code|html|
+<!-- Add performance monitoring -->
+<script>
+  // Measure page load time
+  window.addEventListener('load', function() {
+    const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+    console.log('Page load time:', loadTime + 'ms');
+    
+    // Report to analytics
+    if (window.analytics) {
+      window.analytics.track('performance', {
+        load_time: loadTime,
+        dom_content_loaded: performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart
+      });
+    }
+  });
+  
+  // Measure Core Web Vitals
+  if ('web-vital' in window) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(console.log);
+      getFID(console.log);
+      getFCP(console.log);
+      getLCP(console.log);
+      getTTFB(console.log);
+    });
+  }
+</script>
+}}
+
+== Best Practices ==
+
+=== Content Management ===
+
+'''Organize content effectively:'''
+* Use clear file naming conventions
+* Implement proper categorization and tagging
+* Create content templates for consistency
+* Maintain a content calendar for regular updates
+
+'''File structure best practices:'''
+{{Code|text|
+_posts/
+├── 2024/
+│   ├── 01/
+│   │   ├── 2024-01-15-getting-started.md
+│   │   └── 2024-01-30-advanced-tips.md
+│   └── 02/
+│       └── 2024-02-10-troubleshooting.md
+└── drafts/
+    └── upcoming-features.md
+}}
+
+=== Security Considerations ===
+
+'''Protect sensitive information:'''
+* Never commit secrets or API keys
+* Use environment variables for configuration
+* Implement Content Security Policy headers
+* Regular dependency updates
+
+'''Security headers configuration:'''
+{{Code|html|
+<!-- Add to head section -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://www.google-analytics.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: https:;
+  connect-src 'self' https://www.google-analytics.com;
+">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+}}
+
+=== Accessibility ===
+
+'''Ensure your site is accessible:'''
+{{Code|html|
+<!-- Semantic HTML structure -->
+<nav aria-label="Main navigation">
+  <ul>
+    <li><a href="/" aria-current="page">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/blog">Blog</a></li>
+  </ul>
+</nav>
+
+<main id="main-content">
+  <h1>{{ page.title }}</h1>
+  {{ content }}
+</main>
+
+<!-- Skip navigation link -->
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
+<!-- Alt text for images -->
+<img src="chart.png" alt="Sales increased 25% from Q1 to Q2 2024">
+
+<!-- Proper form labels -->
+<label for="email">Email Address (required)</label>
+<input type="email" id="email" name="email" required aria-describedby="email-help">
+<div id="email-help">We'll never share your email with anyone else.</div>
+}}
+
+{{Success|GitHub Pages provides a powerful, free platform for hosting static websites with excellent integration into your development workflow. Start with simple sites and gradually add more sophisticated features as needed.}}
+
+== Related Resources ==
+
+* [[GitHub Actions Basics]] - Automating Pages deployment
+* [[Repository Templates]] - Creating site templates
+* [[Creating Your First Repository]] - Repository fundamentals
+* [[Basic Repository Operations]] - Repository management
+* [[Markdown Basics]] - Content formatting for Jekyll
+
+[[Category:Intermediate Tutorials]]
+[[Category:GitHub Pages]]
+[[Category:Static Sites]]
+[[Category:Jekyll]]
+[[Category:Deployment]]

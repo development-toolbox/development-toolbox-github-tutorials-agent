@@ -1,0 +1,326 @@
+= Help Pages =
+
+Welcome to the GitHub Enterprise Wiki help centre. Find assistance, support resources, and guidance for using this wiki and GitHub effectively.
+
+== Getting Started ==
+
+=== New to GitHub? ===
+If you're completely new to GitHub, start with these essential guides:
+
+* [[Getting Started with GitHub]] - Your first introduction to GitHub
+* [[Creating Your GitHub Account]] - Account setup and configuration  
+* [[GitHub Web Interface Tour]] - Navigate GitHub's interface
+* [[First Repository]] - Create and manage your first repository
+
+=== New to This Wiki? ===
+Learn how to use this internal wiki effectively:
+
+* Browse [[Category:Beginner Tutorials]] for fundamental concepts
+* Check the [[Main Page]] for an overview of all available content
+* Use the search functionality to find specific topics
+* Follow the recommended learning paths in each category
+
+== Navigation and Organisation ==
+
+=== Finding Content ===
+
+'''By Skill Level:'''
+* [[Category:Beginner Tutorials]] - New to GitHub
+* [[Category:Intermediate Tutorials]] - Building on basics
+* [[Category:Advanced Tutorials]] - Expert-level topics
+
+'''By Topic:'''
+* [[Category:GitHub Actions]] - Automation and CI/CD
+* [[Category:Security]] - Security best practices
+* [[Category:Collaboration]] - Team development
+* [[Category:Enterprise]] - Organisation-level features
+
+'''By Content Type:'''
+* [[Category:Tutorials]] - Step-by-step guides
+* [[Category:Reference]] - Quick reference materials
+* [[Category:Best Practices]] - Recommended approaches
+
+=== Search Tips ===
+
+'''Effective search strategies:'''
+* Use specific terms: "pull request review" instead of "review"
+* Try variations: "branch protection" or "protected branches"
+* Use categories to narrow results
+* Check related articles at the bottom of pages
+
+== Getting Help ==
+
+=== Internal Support ===
+
+'''For GitHub-related issues:'''
+* Check [[Troubleshooting Guide]] for common problems
+* Review [[GitHub Glossary]] for terminology
+* Contact your team's GitHub administrator
+* Create an issue in your team's support repository
+
+'''For wiki-related issues:'''
+* Contact the Developer Experience Team
+* Email: devex-team@company.com
+* Slack: #github-help
+* Create a ticket in the IT support system
+
+=== External Resources ===
+
+'''Official GitHub Support:'''
+* [https://docs.github.com/ GitHub Documentation] - Comprehensive official docs
+* [https://github.community/ GitHub Community] - Community forum
+* [https://support.github.com/ GitHub Support] - Enterprise support portal
+* [https://githubstatus.com/ GitHub Status] - Service status updates
+
+'''Community Resources:'''
+* [https://stackoverflow.com/questions/tagged/github Stack Overflow] - Technical Q&A
+* [https://github.blog/ GitHub Blog] - Latest features and best practices
+* [https://github.com/topics GitHub Topics] - Discover projects and trends
+
+== Contributing to This Wiki ==
+
+=== How to Contribute ===
+
+'''Everyone can help improve this wiki:'''
+* Report errors or outdated information
+* Suggest new tutorial topics
+* Share your expertise by writing content
+* Improve existing articles with better examples
+
+'''Contribution process:'''
+# Identify areas for improvement
+# Contact the Developer Experience Team
+# Follow the contribution guidelines
+# Submit your changes for review
+
+=== Content Guidelines ===
+
+'''When contributing content:'''
+* Follow UK English conventions
+* Use clear, concise language
+* Include practical examples
+* Test all code snippets
+* Add appropriate categories and links
+
+'''Quality standards:'''
+* Content must be accurate and current
+* Screenshots should be up-to-date
+* Links should work and be relevant
+* Code examples should be tested
+
+== Troubleshooting ==
+
+=== Common Wiki Issues ===
+
+'''Page not loading:'''
+* Check your network connection
+* Try refreshing the page
+* Clear your browser cache
+* Contact IT support if issues persist
+
+'''Search not working:'''
+* Try different search terms
+* Use the category navigation instead
+* Browse the main page for topic lists
+* Check if content exists in related sections
+
+'''Links not working:'''
+* Some content may still be in development
+* Check for typos in the URL
+* Use the search function to find moved content
+* Report broken links to the development team
+
+=== GitHub Access Issues ===
+
+'''Cannot access repositories:'''
+* Verify you're signed in to the correct GitHub account
+* Check if you have the necessary permissions
+* Contact your team lead or repository administrator
+# Try accessing through the GitHub web interface first
+
+'''Authentication problems:'''
+* Verify your username and password/token
+* Check if two-factor authentication is enabled
+* Ensure SSH keys are configured correctly
+* Contact IT support for account issues
+
+== Training and Development ==
+
+=== Learning Paths ===
+
+'''Structured learning options:'''
+* Follow the recommended paths in each tutorial category
+* Join internal GitHub training sessions
+* Participate in hands-on workshops
+* Practice with personal or team projects
+
+'''Skill Development:'''
+* Start with beginner tutorials even if you have some experience
+* Practice regularly with real projects
+* Seek mentoring from experienced team members
+* Share knowledge with colleagues
+
+=== Internal Training Programs ===
+
+'''Available programs:'''
+* Monthly GitHub workshop series
+* Quarterly advanced topics sessions
+* One-on-one mentoring program
+* Team-specific training sessions
+
+'''How to join:'''
+* Check the learning portal for schedules
+* Register through the HR system
+* Contact the Developer Experience Team
+* Discuss with your manager about training needs
+
+== Feedback and Improvement ==
+
+=== Providing Feedback ===
+
+'''We value your input:'''
+* Rate tutorial usefulness
+* Suggest missing topics
+* Report errors or outdated content
+* Share success stories
+
+'''Feedback channels:'''
+* Email: wiki-feedback@company.com
+* Slack: #github-wiki
+* Quarterly feedback surveys
+* Direct contact with content authors
+
+=== Content Requests ===
+
+'''How to request new content:'''
+# Check if the topic already exists
+# Provide specific details about what you need
+# Explain how it would help your work
+# Consider contributing the content yourself
+
+'''Priority topics:'''
+* Commonly asked questions
+* New GitHub features
+* Company-specific workflows
+* Integration with internal tools
+
+== Technical Support ==
+
+=== GitHub Enterprise Support ===
+
+'''For GitHub Enterprise issues:'''
+* Check [[GitHub Enterprise Administration]] documentation
+* Contact your organisation's GitHub administrators
+* Use the enterprise support portal
+* Escalate through proper channels
+
+'''Common enterprise issues:'''
+* User access and permissions
+* Repository creation limits
+* Integration problems
+* Performance issues
+
+=== IT Support ===
+
+'''For technical infrastructure:'''
+* Network connectivity issues
+* Authentication system problems
+* Integration with company systems
+* Security policy questions
+
+'''Contact information:'''
+* IT Helpdesk: ext. 5555
+* Email: it-support@company.com
+* Emergency support: available 24/7
+* Self-service portal: it.company.com
+
+== Frequently Asked Questions ==
+
+=== General Questions ===
+
+'''Q: How often is this wiki updated?'''
+A: Content is continuously updated. Major updates occur monthly, and new features are documented as they're released.
+
+'''Q: Can I access this wiki from outside the company network?'''
+A: Yes, through the VPN connection. Contact IT for VPN setup assistance.
+
+'''Q: Are there mobile-friendly versions of the tutorials?'''
+A: The wiki is responsive and works on mobile devices. For best experience, use a tablet or desktop.
+
+=== Content Questions ===
+
+'''Q: Why can't I find information about a specific GitHub feature?'''
+A: Some newer features may not be documented yet. Check the GitHub official documentation or request content creation.
+
+'''Q: How do I know if information is current?'''
+A: Each page shows the last update date. If information seems outdated, please report it.
+
+'''Q: Can I print tutorials for offline reference?'''
+A: Yes, use your browser's print function. Consider environmental impact before printing.
+
+=== Account and Access Questions ===
+
+'''Q: I can't access certain repositories mentioned in tutorials.'''
+A: Repository access depends on your role and permissions. Contact your team lead for access requests.
+
+'''Q: My GitHub account is locked. What should I do?'''
+A: Contact IT support immediately. Do not attempt to create new accounts.
+
+'''Q: How do I change my GitHub username?'''
+A: Follow company policy for username changes. Contact HR and IT support.
+
+== Additional Resources ==
+
+=== Quick Reference ===
+* [[Git Command Reference]] - Essential Git commands
+* [[GitHub Keyboard Shortcuts]] - Productivity shortcuts
+* [[GitHub Glossary]] - Terms and definitions
+
+=== Best Practices ===
+* [[Security Best Practices]] - Secure development
+* [[Pull Request Best Practices]] - Code review excellence
+* [[Branch Protection Rules]] - Repository security
+
+=== Advanced Topics ===
+* [[Advanced GitHub Actions]] - Complex automation
+* [[GitHub Enterprise Administration]] - Organisation management
+* [[Custom GitHub Apps]] - Custom integrations
+
+== Contact Information ==
+
+=== Development Team Contacts ===
+
+'''Developer Experience Team:'''
+* Lead: Sarah Johnson (sarah.johnson@company.com)
+* GitHub Specialist: Michael Chen (michael.chen@company.com)
+* Documentation: Emma Wilson (emma.wilson@company.com)
+
+'''GitHub Administrators:'''
+* Primary: David Brown (david.brown@company.com)
+* Secondary: Lisa Davis (lisa.davis@company.com)
+* Emergency: github-admin@company.com
+
+=== Office Hours ===
+
+'''Developer Experience Team:'''
+* Monday-Friday: 9:00-17:00 GMT
+* Response time: Within 24 hours
+* Urgent issues: Slack for immediate response
+
+'''GitHub Administration:'''
+* Monday-Friday: 8:00-18:00 GMT
+* Emergency support: 24/7 on-call rotation
+* Weekend support: For critical issues only
+
+{{Info|This help page is regularly updated. Bookmark it for quick access to support resources and contact information.}}
+
+== Related Pages ==
+
+* [[Project:Support]] - Additional support resources
+* [[Project:FAQ]] - Frequently asked questions
+* [[Project:Community portal]] - Community guidelines and discussions
+* [[Troubleshooting Guide]] - Common technical issues
+
+[[Category:Help]]
+[[Category:Support]]
+[[Category:Project]]

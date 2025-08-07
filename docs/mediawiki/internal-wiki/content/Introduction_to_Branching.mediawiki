@@ -1,0 +1,668 @@
+{{Tutorial
+|title = Introduction to Branching
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 25 minutes
+|prerequisites = Basic Git knowledge, understanding of commits
+|topics = Branches, Git workflow, Parallel development, Merging
+}}
+
+{{TOC limit|3}}
+
+= Introduction to Branching =
+
+Branching is one of Git's most powerful features, allowing you to work on different features or experiments in parallel without affecting your main codebase.
+
+== What is a Branch? ==
+
+A branch in Git is like a parallel universe for your project:
+* '''Independent line of development''' - Changes don't affect other branches
+* '''Lightweight''' - Just a pointer to a specific commit
+* '''Fast to create''' - No copying of files, just a new pointer
+* '''Easy to switch between''' - Move between different versions instantly
+* '''Mergeable''' - Combine work from different branches
+
+{{Note|Think of branches like different save files in a video game - you can try different approaches without losing your main progress.}}
+
+=== Branch Analogies ===
+
+'''Book Writing:'''
+* Main branch = Published book
+* Feature branch = Draft chapter
+* You can work on new chapters without changing the published book
+* When a chapter is ready, you add it to the main book
+
+'''Software Development:'''
+* Main branch = Production code
+* Feature branch = New feature in development  
+* Bug fix branch = Fix for specific issue
+* Experiment branch = Testing new ideas
+
+=== Why Use Branches? ===
+
+'''Benefits:'''
+* '''Safe experimentation''' - Try ideas without breaking working code
+* '''Parallel development''' - Multiple features developed simultaneously
+* '''Code organization''' - Keep related changes together
+* '''Collaboration''' - Team members work on different features
+* '''Release management''' - Prepare releases while continuing development
+
+'''Without branches:'''
+* Everyone works on the same codebase
+* Breaking changes affect everyone
+* Hard to organize different features
+* Difficult to experiment safely
+* Release preparation blocks other work
+
+## Branch Basics ==
+
+=== Default Branch ===
+
+Every Git repository starts with a default branch:
+* Usually named '''main''' (modern standard) or '''master''' (legacy)
+* Contains the stable, production-ready code
+* The branch you see when visiting a repository
+* Protected in most professional workflows
+
+=== Branch Pointers ===
+
+Branches are just pointers to commits:
+{{Code|text|
+Commit History:
+A ← B ← C ← D
+            ↑
+          main
+
+New branch created:
+A ← B ← C ← D
+            ↑ ↑
+         main feature
+
+After new commit on feature:
+A ← B ← C ← D
+            ↑   ↑
+         main   E
+                ↑
+             feature
+}}
+
+=== HEAD Pointer ===
+
+'''HEAD''' points to your current branch:
+* Shows which branch you're currently on
+* Determines which branch receives new commits
+* Moves when you switch branches
+* Can be "detached" if pointing directly to a commit
+
+## Working with Branches ==
+
+=== Viewing Branches ===
+
+See all branches in your repository:
+
+{{Code|bash|
+# List local branches
+git branch
+
+# List all branches (local and remote)
+git branch -a
+
+# List remote branches only
+git branch -r
+
+# Show last commit on each branch
+git branch -v
+
+# Show merged branches
+git branch --merged
+
+# Show unmerged branches
+git branch --no-merged
+}}
+
+'''Example output:'''
+{{Code|text|
+$ git branch -v
+  feature/user-auth    a1b2c3d Add login form
+* main                 d4e5f6g Update README
+  bugfix/memory-leak   g7h8i9j Fix memory issue
+}}
+
+The asterisk (*) shows your current branch.
+
+=== Creating Branches ===
+
+Create new branches for your work:
+
+{{Code|bash|
+# Create new branch (but stay on current branch)
+git branch feature/new-login
+
+# Create and switch to new branch
+git checkout -b feature/new-login
+
+# Modern way to create and switch (Git 2.23+)
+git switch -c feature/new-login
+
+# Create branch from specific commit
+git branch feature/hotfix a1b2c3d
+
+# Create branch from another branch
+git checkout -b feature/enhancement develop
+}}
+
+=== Switching Branches ===
+
+Move between different branches:
+
+{{Code|bash|
+# Switch to existing branch
+git checkout main
+git switch main  # Modern alternative
+
+# Switch and create if doesn't exist
+git checkout -b new-branch
+git switch -c new-branch  # Modern alternative
+
+# Switch to previous branch
+git checkout -
+git switch -  # Modern alternative
+}}
+
+{{Good|Use `git switch` for switching branches and `git checkout` for other operations. This makes your intentions clearer.}}
+
+=== Branch Naming Conventions ===
+
+Use descriptive, consistent branch names:
+
+'''Good patterns:'''
+{{Code|text|
+feature/user-authentication
+feature/payment-integration
+bugfix/login-error
+bugfix/memory-leak
+hotfix/security-patch
+release/v2.1.0
+experiment/new-algorithm
+}}
+
+'''Avoid:'''
+{{Code|text|
+my-branch
+test
+fix
+new-stuff
+branch1
+}}
+
+'''Team conventions might include:'''
+* '''Username prefixes:''' `john/feature-login`
+* '''Issue numbers:''' `feature/123-user-auth`
+* '''Categories:''' `feat/`, `fix/`, `docs/`, `refactor/`
+
+## Branch Workflows ==
+
+=== Feature Branch Workflow ===
+
+The most common workflow for teams:
+
+'''Steps:'''
+1. Start from main branch
+2. Create feature branch
+3. Work on feature
+4. Push branch to GitHub
+5. Create pull request
+6. Review and merge
+7. Delete feature branch
+
+'''Example:'''
+{{Code|bash|
+# 1. Start from main and update
+git checkout main
+git pull origin main
+
+# 2. Create feature branch
+git checkout -b feature/user-dashboard
+
+# 3. Work on feature
+# ... make changes, stage, and commit ...
+git add .
+git commit -m "Add user dashboard component"
+
+# 4. Push to GitHub
+git push -u origin feature/user-dashboard
+
+# 5. Create pull request on GitHub web interface
+
+# 6. After merge, clean up
+git checkout main
+git pull origin main
+git branch -d feature/user-dashboard
+}}
+
+=== Git Flow ===
+
+More structured workflow for releases:
+
+'''Branch types:'''
+* '''main''' - Production-ready code
+* '''develop''' - Integration branch for features
+* '''feature/*''' - New features
+* '''release/*''' - Release preparation
+* '''hotfix/*''' - Critical production fixes
+
+'''Example Git Flow:'''
+{{Code|bash|
+# Start new feature from develop
+git checkout develop
+git pull origin develop
+git checkout -b feature/shopping-cart
+
+# Work on feature
+# ... make commits ...
+
+# Merge feature to develop
+git checkout develop
+git merge feature/shopping-cart
+git branch -d feature/shopping-cart
+
+# Create release branch
+git checkout -b release/v1.2.0
+
+# Prepare release, then merge to main
+git checkout main
+git merge release/v1.2.0
+git tag v1.2.0
+}}
+
+=== GitHub Flow ===
+
+Simpler workflow popular on GitHub:
+
+'''Principles:'''
+* Main branch is always deployable
+* Create descriptive branch names
+* Push frequently to GitHub
+* Use pull requests for discussion
+* Merge after review
+
+'''Workflow:'''
+{{Code|bash|
+# 1. Create and switch to new branch
+git checkout -b feature/awesome-feature
+
+# 2. Make changes and commit
+git add .
+git commit -m "Add awesome feature"
+
+# 3. Push and create pull request
+git push -u origin feature/awesome-feature
+
+# 4. After merge on GitHub, clean up locally
+git checkout main
+git pull origin main
+git branch -d feature/awesome-feature
+}}
+
+## Merging Branches ==
+
+=== Types of Merges ===
+
+'''Fast-forward merge:'''
+When target branch hasn't changed since branching:
+{{Code|text|
+Before merge:
+main:    A ← B ← C
+                 ↑
+feature: A ← B ← C ← D ← E
+
+After fast-forward merge:
+main: A ← B ← C ← D ← E
+}}
+
+'''Three-way merge:'''
+When both branches have new commits:
+{{Code|text|
+Before merge:
+main:    A ← B ← C ← F
+              ↙
+feature: A ← B ← D ← E
+
+After three-way merge:
+main: A ← B ← C ← F ← G
+           ↙       ↙
+feature: A ← B ← D ← E
+}}
+
+=== Merge Commands ===
+
+{{Code|bash|
+# Switch to target branch
+git checkout main
+
+# Merge feature branch
+git merge feature/user-login
+
+# Force merge commit (no fast-forward)
+git merge --no-ff feature/user-login
+
+# Merge with custom message
+git merge feature/user-login -m "Add user login feature"
+
+# Abort merge if conflicts occur
+git merge --abort
+}}
+
+=== Squash Merging ===
+
+Combine all feature branch commits into single commit:
+
+{{Code|bash|
+# Squash merge (GitHub also offers this option)
+git merge --squash feature/user-login
+git commit -m "Add user login feature
+
+- Add login form component
+- Implement authentication logic
+- Add error handling
+- Update tests"
+}}
+
+## Merge Conflicts ==
+
+=== Understanding Conflicts ===
+
+Conflicts occur when:
+* Same file modified in both branches
+* Same lines changed differently
+* One branch deletes file, another modifies it
+* Git can't automatically determine which version to keep
+
+=== Conflict Markers ===
+
+Git adds markers to show conflicts:
+{{Code|text|
+<<<<<<< HEAD (Current branch)
+console.log('Hello from main branch');
+=======
+console.log('Hello from feature branch');
+>>>>>>> feature/greeting-update
+}}
+
+=== Resolving Conflicts ===
+
+'''Step-by-step resolution:'''
+{{Code|bash|
+# 1. Attempt merge
+git merge feature/greeting-update
+# Auto-merging greeting.js
+# CONFLICT (content): Merge conflict in greeting.js
+# Automatic merge failed; fix conflicts and then commit the result.
+
+# 2. Check status
+git status
+# You have unmerged paths.
+# fix conflicts and run "git commit"
+
+# 3. Edit conflicted files
+# Remove conflict markers and choose desired content
+
+# 4. Stage resolved files
+git add greeting.js
+
+# 5. Complete merge
+git commit
+# Git will open editor with merge commit message
+}}
+
+'''Resolved file example:'''
+{{Code|javascript|
+// After resolving conflict:
+console.log('Hello from merged branches');
+}}
+
+=== Conflict Resolution Tools ===
+
+'''Built-in tools:'''
+{{Code|bash|
+# Use Git's merge tool
+git mergetool
+
+# Configure merge tool (one time setup)
+git config merge.tool vimdiff  # or meld, kdiff3, etc.
+}}
+
+'''Visual tools:'''
+* VS Code - Built-in merge conflict resolution
+* GitKraken - Visual merge conflict handling
+* Sourcetree - Graphical conflict resolution
+* Meld - Standalone diff/merge tool
+
+{{Good|Most modern editors have excellent built-in merge conflict resolution. VS Code and similar editors make this process much easier than command-line tools.}}
+
+## Advanced Branching ==
+
+=== Remote Branches ===
+
+Working with branches on GitHub:
+
+{{Code|bash|
+# See remote branches
+git branch -r
+
+# Create local branch tracking remote
+git checkout -b feature/remote-feature origin/feature/remote-feature
+
+# Simplified syntax for tracking
+git checkout feature/remote-feature
+
+# Push new branch to remote
+git push -u origin feature/new-feature
+
+# Delete remote branch
+git push origin --delete feature/old-feature
+}}
+
+=== Branch Comparison ===
+
+Compare branches to see differences:
+
+{{Code|bash|
+# See commits in feature branch not in main
+git log main..feature/user-auth
+
+# See all differences between branches
+git diff main..feature/user-auth
+
+# See just file names that differ
+git diff --name-only main..feature/user-auth
+
+# See commits in either branch but not both
+git log main...feature/user-auth --oneline
+}}
+
+=== Branch Housekeeping ===
+
+Keep your repository clean:
+
+{{Code|bash|
+# Delete merged local branches
+git branch -d feature/completed-feature
+
+# Force delete unmerged branch (careful!)
+git branch -D feature/abandoned-feature
+
+# Delete tracking info for deleted remote branches
+git remote prune origin
+
+# List branches that have been merged
+git branch --merged main
+
+# Clean up multiple merged branches
+git branch --merged main | grep -v "main" | xargs -n 1 git branch -d
+}}
+
+## GitHub Branch Features ==
+
+=== Branch Protection ===
+
+Protect important branches from direct pushes:
+* Require pull request reviews
+* Require status checks to pass
+* Enforce linear history
+* Restrict who can push
+
+See [[Branch Protection Rules]] for detailed configuration.
+
+=== Default Branch ===
+
+Configure repository's default branch:
+1. Go to repository Settings
+2. Click Branches in sidebar
+3. Change default branch
+4. Update local clones accordingly
+
+=== Branch Comparison on GitHub ===
+
+GitHub provides visual branch comparison:
+* Compare any two branches
+* See commits and file differences
+* Create pull requests from comparison
+* Share comparison URLs with team
+
+'''URL format:'''
+{{Code|text|
+https://github.com/owner/repo/compare/main...feature/branch-name
+}}
+
+## Best Practices ==
+
+=== Branch Lifecycle ===
+
+'''Good branch hygiene:'''
+1. '''Start from updated main''' - Always begin with latest changes
+2. '''Keep branches focused''' - One feature or fix per branch
+3. '''Use descriptive names''' - Make purpose clear from name
+4. '''Push regularly''' - Don't lose work if machine fails
+5. '''Create pull requests early''' - Get feedback during development
+6. '''Delete after merge''' - Keep repository clean
+
+=== Branch Size ===
+
+'''Keep branches manageable:'''
+* '''Small changes''' - Easier to review and test
+* '''Short-lived''' - Merge within days, not weeks
+* '''Focused scope''' - Single feature or bug fix
+* '''Regular updates''' - Merge main into feature branch regularly
+
+=== Team Coordination ===
+
+'''Avoid conflicts:'''
+* '''Communicate''' about overlapping work
+* '''Update frequently''' from main branch
+* '''Small, frequent commits''' - Easier to merge
+* '''Clear branch names''' - Others understand your work
+* '''Document approach''' in pull request descriptions
+
+## Troubleshooting Branches ==
+
+=== Common Issues ===
+
+'''Can't switch branches:'''
+{{Code|bash|
+# Uncommitted changes block branch switching
+git status
+# Solution: commit, stash, or discard changes
+git stash  # Save changes for later
+git checkout other-branch
+git stash pop  # Restore changes
+}}
+
+'''Branch not showing up:'''
+{{Code|bash|
+# Fetch latest branch information
+git fetch origin
+
+# List all branches including remote
+git branch -a
+}}
+
+'''Accidentally committed to wrong branch:'''
+{{Code|bash|
+# Move last commit to new branch
+git branch correct-branch
+git reset --hard HEAD~1
+git checkout correct-branch
+}}
+
+'''Lost branch after deletion:'''
+{{Code|bash|
+# Find deleted branch in reflog
+git reflog
+
+# Restore branch (use commit hash from reflog)
+git checkout -b recovered-branch a1b2c3d
+}}
+
+=== Branch Recovery ===
+
+If you accidentally delete a branch:
+{{Code|bash|
+# Find the branch in reflog
+git reflog --all
+
+# Look for entries like "checkout: moving from deleted-branch"
+# Note the commit hash
+
+# Recreate branch
+git branch recovered-branch a1b2c3d
+}}
+
+{{Success|Branching enables powerful workflows and safe experimentation. Start with simple feature branches and gradually adopt more sophisticated patterns as your team grows.}}
+
+== Quick Reference ==
+
+=== Essential Commands ===
+{{Code|bash|
+git branch                    # List branches
+git branch feature-name       # Create branch
+git checkout -b feature-name  # Create and switch
+git switch feature-name       # Switch branches
+git merge feature-name        # Merge branch
+git branch -d feature-name    # Delete branch
+git push -u origin branch     # Push new branch
+}}
+
+=== Branch Workflow ===
+{{Code|bash|
+# Start new feature
+git checkout main
+git pull origin main
+git checkout -b feature/awesome-feature
+
+# Work and commit
+git add .
+git commit -m "Add awesome feature"
+
+# Push and create PR
+git push -u origin feature/awesome-feature
+
+# After merge, clean up
+git checkout main
+git pull origin main
+git branch -d feature/awesome-feature
+}}
+
+== Related Resources ==
+
+* [[Creating and Switching Branches]] - Detailed branch operations
+* [[Pull Request Best Practices]] - Collaborating with branches
+* [[Branching Strategies]] - Advanced workflow patterns
+* [[Understanding Commits]] - Foundation for branching
+* [[Basic Git Commands]] - Essential Git operations
+
+[[Category:Beginner Tutorials]]
+[[Category:Git]]
+[[Category:Branches]]
+[[Category:Workflow]]
+[[Category:Collaboration]]

@@ -1,0 +1,516 @@
+= Git Command Reference =
+
+A comprehensive reference guide for Git commands, organised by category with practical examples and common use cases.
+
+{{Note|This reference assumes Git 2.20 or later. Some commands may not be available in older versions.}}
+
+== Configuration Commands ==
+
+=== Global Configuration ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git config --global user.name "Name"</code> || Set global username || <code>git config --global user.name "John Doe"</code>
+|-
+| <code>git config --global user.email "email"</code> || Set global email || <code>git config --global user.email "john@example.com"</code>
+|-
+| <code>git config --global core.editor "editor"</code> || Set default editor || <code>git config --global core.editor "code --wait"</code>
+|-
+| <code>git config --global init.defaultBranch main</code> || Set default branch name || <code>git config --global init.defaultBranch main</code>
+|-
+| <code>git config --list</code> || View all configuration || <code>git config --list --show-origin</code>
+|-
+| <code>git config --get key</code> || Get specific config value || <code>git config --get user.name</code>
+|}
+
+=== Repository Configuration ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git config user.name "Name"</code> || Set local username || <code>git config user.name "Work Name"</code>
+|-
+| <code>git config user.email "email"</code> || Set local email || <code>git config user.email "work@company.com"</code>
+|-
+| <code>git config --unset key</code> || Remove configuration || <code>git config --unset user.name</code>
+|}
+
+== Repository Commands ==
+
+=== Initialising and Cloning ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git init</code> || Initialise new repository || <code>git init my-project</code>
+|-
+| <code>git init --bare</code> || Create bare repository || <code>git init --bare server.git</code>
+|-
+| <code>git clone &lt;url&gt;</code> || Clone repository || <code>git clone https://github.com/user/repo.git</code>
+|-
+| <code>git clone &lt;url&gt; &lt;dir&gt;</code> || Clone to specific directory || <code>git clone https://github.com/user/repo.git my-folder</code>
+|-
+| <code>git clone --depth 1 &lt;url&gt;</code> || Shallow clone (latest commit only) || <code>git clone --depth 1 https://github.com/user/repo.git</code>
+|-
+| <code>git clone --branch &lt;branch&gt; &lt;url&gt;</code> || Clone specific branch || <code>git clone --branch develop https://github.com/user/repo.git</code>
+|}
+
+== File Operations ==
+
+=== Staging and Status ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git status</code> || Show repository status || <code>git status --short</code>
+|-
+| <code>git add &lt;file&gt;</code> || Stage specific file || <code>git add index.html</code>
+|-
+| <code>git add .</code> || Stage all changes in current directory || <code>git add .</code>
+|-
+| <code>git add --all</code> || Stage all changes in repository || <code>git add --all</code>
+|-
+| <code>git add --patch</code> || Interactively stage changes || <code>git add --patch file.js</code>
+|-
+| <code>git add --update</code> || Stage modified and deleted files only || <code>git add --update</code>
+|}
+
+=== Unstaging and Discarding Changes ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git restore --staged &lt;file&gt;</code> || Unstage file || <code>git restore --staged index.html</code>
+|-
+| <code>git restore &lt;file&gt;</code> || Discard changes in working directory || <code>git restore index.html</code>
+|-
+| <code>git restore .</code> || Discard all changes || <code>git restore .</code>
+|-
+| <code>git clean -f</code> || Remove untracked files || <code>git clean -fd</code> (include directories)
+|-
+| <code>git clean -n</code> || Show what would be removed || <code>git clean -n</code>
+|}
+
+=== File Management ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git rm &lt;file&gt;</code> || Remove file from Git and filesystem || <code>git rm old-file.txt</code>
+|-
+| <code>git rm --cached &lt;file&gt;</code> || Remove from Git but keep in filesystem || <code>git rm --cached config.json</code>
+|-
+| <code>git mv &lt;old&gt; &lt;new&gt;</code> || Rename/move file || <code>git mv old.txt new.txt</code>
+|}
+
+== Commit Commands ==
+
+=== Creating Commits ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git commit -m "message"</code> || Commit with message || <code>git commit -m "Add user authentication"</code>
+|-
+| <code>git commit -am "message"</code> || Stage and commit tracked files || <code>git commit -am "Fix navigation bug"</code>
+|-
+| <code>git commit --amend</code> || Modify last commit || <code>git commit --amend -m "New message"</code>
+|-
+| <code>git commit --amend --no-edit</code> || Add files to last commit || <code>git commit --amend --no-edit</code>
+|-
+| <code>git commit --allow-empty -m "message"</code> || Create empty commit || <code>git commit --allow-empty -m "Trigger build"</code>
+|}
+
+=== Viewing History ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git log</code> || Show commit history || <code>git log --oneline</code>
+|-
+| <code>git log --graph</code> || Show graphical history || <code>git log --graph --oneline</code>
+|-
+| <code>git log --stat</code> || Show files changed in commits || <code>git log --stat</code>
+|-
+| <code>git log --patch</code> || Show actual changes || <code>git log --patch -2</code>
+|-
+| <code>git log --author="name"</code> || Filter by author || <code>git log --author="John Doe"</code>
+|-
+| <code>git log --since="date"</code> || Filter by date || <code>git log --since="2 weeks ago"</code>
+|-
+| <code>git log --grep="pattern"</code> || Filter by commit message || <code>git log --grep="fix"</code>
+|-
+| <code>git log &lt;file&gt;</code> || Show history for file || <code>git log index.html</code>
+|}
+
+== Branch Commands ==
+
+=== Branch Management ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git branch</code> || List local branches || <code>git branch -v</code> (with last commit)
+|-
+| <code>git branch --all</code> || List all branches || <code>git branch --all</code>
+|-
+| <code>git branch &lt;name&gt;</code> || Create new branch || <code>git branch feature-login</code>
+|-
+| <code>git branch -d &lt;name&gt;</code> || Delete branch (safe) || <code>git branch -d feature-login</code>
+|-
+| <code>git branch -D &lt;name&gt;</code> || Force delete branch || <code>git branch -D broken-feature</code>
+|-
+| <code>git branch -m &lt;newname&gt;</code> || Rename current branch || <code>git branch -m new-feature-name</code>
+|}
+
+=== Switching Branches ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git switch &lt;branch&gt;</code> || Switch to branch || <code>git switch main</code>
+|-
+| <code>git switch -c &lt;branch&gt;</code> || Create and switch to branch || <code>git switch -c feature-api</code>
+|-
+| <code>git switch -</code> || Switch to previous branch || <code>git switch -</code>
+|-
+| <code>git checkout &lt;branch&gt;</code> || Switch to branch (old syntax) || <code>git checkout main</code>
+|-
+| <code>git checkout -b &lt;branch&gt;</code> || Create and switch (old syntax) || <code>git checkout -b feature-api</code>
+|}
+
+== Merging and Rebasing ==
+
+=== Merge Commands ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git merge &lt;branch&gt;</code> || Merge branch into current || <code>git merge feature-login</code>
+|-
+| <code>git merge --no-ff &lt;branch&gt;</code> || Force merge commit || <code>git merge --no-ff feature-login</code>
+|-
+| <code>git merge --squash &lt;branch&gt;</code> || Squash merge || <code>git merge --squash feature-login</code>
+|-
+| <code>git merge --abort</code> || Abort merge || <code>git merge --abort</code>
+|-
+| <code>git merge --continue</code> || Continue after resolving conflicts || <code>git merge --continue</code>
+|}
+
+=== Rebase Commands ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git rebase &lt;branch&gt;</code> || Rebase current branch || <code>git rebase main</code>
+|-
+| <code>git rebase -i &lt;commit&gt;</code> || Interactive rebase || <code>git rebase -i HEAD~3</code>
+|-
+| <code>git rebase --continue</code> || Continue rebase || <code>git rebase --continue</code>
+|-
+| <code>git rebase --abort</code> || Abort rebase || <code>git rebase --abort</code>
+|-
+| <code>git rebase --skip</code> || Skip current commit || <code>git rebase --skip</code>
+|}
+
+== Remote Commands ==
+
+=== Remote Management ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git remote</code> || List remotes || <code>git remote -v</code>
+|-
+| <code>git remote add &lt;name&gt; &lt;url&gt;</code> || Add remote || <code>git remote add origin https://github.com/user/repo.git</code>
+|-
+| <code>git remote remove &lt;name&gt;</code> || Remove remote || <code>git remote remove origin</code>
+|-
+| <code>git remote rename &lt;old&gt; &lt;new&gt;</code> || Rename remote || <code>git remote rename origin upstream</code>
+|-
+| <code>git remote set-url &lt;name&gt; &lt;url&gt;</code> || Change remote URL || <code>git remote set-url origin git@github.com:user/repo.git</code>
+|}
+
+=== Fetching and Pulling ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git fetch</code> || Fetch from default remote || <code>git fetch origin</code>
+|-
+| <code>git fetch --all</code> || Fetch from all remotes || <code>git fetch --all</code>
+|-
+| <code>git fetch --prune</code> || Remove stale remote branches || <code>git fetch --prune</code>
+|-
+| <code>git pull</code> || Fetch and merge || <code>git pull origin main</code>
+|-
+| <code>git pull --rebase</code> || Fetch and rebase || <code>git pull --rebase origin main</code>
+|-
+| <code>git pull --ff-only</code> || Only fast-forward pulls || <code>git pull --ff-only</code>
+|}
+
+=== Pushing ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git push</code> || Push to default remote/branch || <code>git push</code>
+|-
+| <code>git push &lt;remote&gt; &lt;branch&gt;</code> || Push specific branch || <code>git push origin main</code>
+|-
+| <code>git push -u &lt;remote&gt; &lt;branch&gt;</code> || Push and set upstream || <code>git push -u origin feature-api</code>
+|-
+| <code>git push --all</code> || Push all branches || <code>git push --all origin</code>
+|-
+| <code>git push --tags</code> || Push tags || <code>git push --tags</code>
+|-
+| <code>git push --force-with-lease</code> || Safe force push || <code>git push --force-with-lease</code>
+|}
+
+== Undoing Changes ==
+
+=== Reset Commands ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git reset &lt;commit&gt;</code> || Reset to commit (keep changes) || <code>git reset HEAD~1</code>
+|-
+| <code>git reset --soft &lt;commit&gt;</code> || Reset keeping staged changes || <code>git reset --soft HEAD~1</code>
+|-
+| <code>git reset --hard &lt;commit&gt;</code> || Reset discarding all changes || <code>git reset --hard HEAD~1</code>
+|-
+| <code>git reset HEAD &lt;file&gt;</code> || Unstage file || <code>git reset HEAD index.html</code>
+|}
+
+=== Revert Commands ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git revert &lt;commit&gt;</code> || Create commit that undoes changes || <code>git revert abc1234</code>
+|-
+| <code>git revert HEAD</code> || Revert last commit || <code>git revert HEAD</code>
+|-
+| <code>git revert &lt;commit1&gt;..&lt;commit2&gt;</code> || Revert range of commits || <code>git revert HEAD~3..HEAD</code>
+|-
+| <code>git revert --no-commit &lt;commit&gt;</code> || Revert without committing || <code>git revert --no-commit abc1234</code>
+|}
+
+== Stashing ==
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git stash</code> || Stash current changes || <code>git stash</code>
+|-
+| <code>git stash push -m "message"</code> || Stash with message || <code>git stash push -m "Work in progress"</code>
+|-
+| <code>git stash list</code> || List all stashes || <code>git stash list</code>
+|-
+| <code>git stash apply</code> || Apply most recent stash || <code>git stash apply</code>
+|-
+| <code>git stash apply stash@{n}</code> || Apply specific stash || <code>git stash apply stash@{2}</code>
+|-
+| <code>git stash pop</code> || Apply and remove stash || <code>git stash pop</code>
+|-
+| <code>git stash drop stash@{n}</code> || Delete specific stash || <code>git stash drop stash@{0}</code>
+|-
+| <code>git stash clear</code> || Delete all stashes || <code>git stash clear</code>
+|-
+| <code>git stash show -p</code> || Show stash contents || <code>git stash show -p stash@{0}</code>
+|}
+
+== Differences and Comparisons ==
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git diff</code> || Show unstaged changes || <code>git diff</code>
+|-
+| <code>git diff --staged</code> || Show staged changes || <code>git diff --staged</code>
+|-
+| <code>git diff &lt;commit&gt;</code> || Compare with commit || <code>git diff HEAD~1</code>
+|-
+| <code>git diff &lt;commit1&gt; &lt;commit2&gt;</code> || Compare commits || <code>git diff abc1234 def5678</code>
+|-
+| <code>git diff &lt;branch1&gt;..&lt;branch2&gt;</code> || Compare branches || <code>git diff main..feature</code>
+|-
+| <code>git diff &lt;file&gt;</code> || Show changes in file || <code>git diff index.html</code>
+|-
+| <code>git diff --name-only</code> || Show only file names || <code>git diff --name-only</code>
+|-
+| <code>git diff --stat</code> || Show file change statistics || <code>git diff --stat</code>
+|}
+
+== Searching and Information ==
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git grep &lt;pattern&gt;</code> || Search for text || <code>git grep "function"</code>
+|-
+| <code>git grep -n &lt;pattern&gt;</code> || Search with line numbers || <code>git grep -n "TODO"</code>
+|-
+| <code>git show &lt;commit&gt;</code> || Show commit details || <code>git show abc1234</code>
+|-
+| <code>git show &lt;commit&gt;:&lt;file&gt;</code> || Show file at commit || <code>git show HEAD~1:index.html</code>
+|-
+| <code>git blame &lt;file&gt;</code> || Show who changed each line || <code>git blame index.html</code>
+|-
+| <code>git log -S &lt;string&gt;</code> || Find commits that added/removed text || <code>git log -S "function"</code>
+|-
+| <code>git log --follow &lt;file&gt;</code> || Follow file through renames || <code>git log --follow old-name.txt</code>
+|}
+
+== Tagging ==
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git tag</code> || List tags || <code>git tag -l "v1.*"</code>
+|-
+| <code>git tag &lt;name&gt;</code> || Create lightweight tag || <code>git tag v1.0.0</code>
+|-
+| <code>git tag -a &lt;name&gt; -m "message"</code> || Create annotated tag || <code>git tag -a v1.0.0 -m "Release 1.0.0"</code>
+|-
+| <code>git tag -d &lt;name&gt;</code> || Delete local tag || <code>git tag -d v1.0.0</code>
+|-
+| <code>git push origin &lt;tag&gt;</code> || Push specific tag || <code>git push origin v1.0.0</code>
+|-
+| <code>git push origin --tags</code> || Push all tags || <code>git push origin --tags</code>
+|-
+| <code>git push origin :refs/tags/&lt;tag&gt;</code> || Delete remote tag || <code>git push origin :refs/tags/v1.0.0</code>
+|}
+
+== Advanced Commands ==
+
+=== Cherry-picking ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git cherry-pick &lt;commit&gt;</code> || Apply commit to current branch || <code>git cherry-pick abc1234</code>
+|-
+| <code>git cherry-pick &lt;commit1&gt;..&lt;commit2&gt;</code> || Cherry-pick range || <code>git cherry-pick abc1234..def5678</code>
+|-
+| <code>git cherry-pick --no-commit &lt;commit&gt;</code> || Cherry-pick without committing || <code>git cherry-pick --no-commit abc1234</code>
+|}
+
+=== Bisecting ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git bisect start</code> || Start bisecting || <code>git bisect start</code>
+|-
+| <code>git bisect bad</code> || Mark current commit as bad || <code>git bisect bad</code>
+|-
+| <code>git bisect good &lt;commit&gt;</code> || Mark commit as good || <code>git bisect good abc1234</code>
+|-
+| <code>git bisect reset</code> || End bisecting || <code>git bisect reset</code>
+|}
+
+=== Worktrees ===
+
+{| class="wikitable"
+! Command !! Description !! Example
+|-
+| <code>git worktree add &lt;path&gt; &lt;branch&gt;</code> || Create new worktree || <code>git worktree add ../hotfix hotfix-branch</code>
+|-
+| <code>git worktree list</code> || List worktrees || <code>git worktree list</code>
+|-
+| <code>git worktree remove &lt;path&gt;</code> || Remove worktree || <code>git worktree remove ../hotfix</code>
+|}
+
+== Git Aliases ==
+
+Common helpful aliases to add to your Git configuration:
+
+{{Code|bash|
+# Basic shortcuts
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm commit
+
+# Advanced shortcuts
+git config --global alias.unstage 'reset HEAD --'
+git config --global alias.last 'log -1 HEAD'
+git config --global alias.visual '!gitk'
+git config --global alias.graph 'log --graph --oneline --all'
+git config --global alias.aliases 'config --get-regexp alias'
+
+# Complex aliases
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+}}
+
+== Emergency Commands ==
+
+When things go wrong:
+
+{| class="wikitable"
+! Situation !! Command !! Description
+|-
+| Accidentally committed to wrong branch || <code>git reset --soft HEAD~1</code> || Undo commit, keep changes
+|-
+| Need to see all recent actions || <code>git reflog</code> || Show reference log
+|-
+| Repository seems corrupted || <code>git fsck</code> || Check repository integrity
+|-
+| Lost commits after reset || <code>git reflog</code> then <code>git reset --hard &lt;commit&gt;</code> || Recover from reflog
+|-
+| Merge conflict disaster || <code>git merge --abort</code> || Abort merge
+|-
+| Rebase went wrong || <code>git rebase --abort</code> || Abort rebase
+|-
+| Want to start over || <code>git reset --hard HEAD</code> || Discard all changes
+|}
+
+{{Warning|Use <code>git reset --hard</code> with extreme caution as it permanently discards changes.}}
+
+== Quick Reference Cards ==
+
+=== Daily Commands ===
+{{Code|bash|
+git status                  # Check status
+git add .                   # Stage all changes
+git commit -m "message"     # Commit
+git pull                    # Get latest changes
+git push                    # Push changes
+}}
+
+=== Branch Workflow ===
+{{Code|bash|
+git switch -c feature-name  # Create and switch to branch
+# ... make changes ...
+git add .                   # Stage changes  
+git commit -m "Add feature" # Commit
+git push -u origin feature-name # Push new branch
+git switch main             # Switch to main
+git pull                    # Update main
+git merge feature-name      # Merge feature
+git branch -d feature-name  # Delete feature branch
+}}
+
+=== Emergency Recovery ===
+{{Code|bash|
+git reflog                  # See all recent actions
+git reset --hard HEAD~1     # Undo last commit (destructive)
+git revert HEAD             # Undo last commit (safe)
+git stash                   # Save work in progress
+git clean -fd               # Remove untracked files/directories
+}}
+
+{{See also|
+* [[Basic Git Commands]] - Essential Git commands for beginners
+* [[GitHub Desktop Guide]] - Visual Git interface
+* [[Troubleshooting Guide]] - Solutions to common Git problems
+* [[Advanced GitHub Actions]] - Automate Git operations
+}}
+
+[[Category:Reference]]
+[[Category:Git]]
+[[Category:Command Line]]
+[[Category:Quick Reference]]

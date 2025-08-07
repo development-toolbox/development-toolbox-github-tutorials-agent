@@ -1,0 +1,22 @@
+<includeonly><div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 10px; margin: 15px 0;">
+<div style="display: flex; align-items: center;">
+<div style="margin-right: 10px; font-size: 18px;">ℹ️</div>
+<div><strong>Note:</strong> {{{1|}}}</div>
+</div>
+</div></includeonly><noinclude>
+== Template:Note ==
+
+This template creates a blue information note box.
+
+=== Usage ===
+
+<pre>
+{{Note|Your note text here}}
+</pre>
+
+=== Example ===
+
+{{Note|This is an example note with important information for users.}}
+
+[[Category:Templates]]
+</noinclude>

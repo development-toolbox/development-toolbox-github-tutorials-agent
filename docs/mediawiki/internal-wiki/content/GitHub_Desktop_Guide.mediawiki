@@ -1,0 +1,267 @@
+{{Tutorial
+|title = GitHub Desktop Guide
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 20 minutes
+|prerequisites = GitHub account
+|topics = GitHub Desktop, GUI, Visual Git
+}}
+
+{{TOC limit|3}}
+
+= GitHub Desktop Guide =
+
+GitHub Desktop is a free, visual interface for Git and GitHub that makes version control accessible to developers who prefer graphical interfaces over command-line tools.
+
+== What is GitHub Desktop? ==
+
+GitHub Desktop is an official GitHub application that provides:
+* Visual representation of your Git repositories
+* Point-and-click operations for common Git tasks
+* Seamless integration with GitHub.com
+* No need to memorise command-line syntax
+
+{{Note|GitHub Desktop is perfect for beginners or developers who prefer visual interfaces, but it's important to understand that it doesn't replace the need to learn Git concepts.}}
+
+== Installation ==
+
+=== Windows ===
+# Visit [https://desktop.github.com/ desktop.github.com]
+# Click "Download for Windows"
+# Run the installer and follow the setup wizard
+# Sign in with your GitHub account
+
+=== macOS ===
+# Visit [https://desktop.github.com/ desktop.github.com]
+# Click "Download for macOS"
+# Drag GitHub Desktop to your Applications folder
+# Sign in with your GitHub account
+
+=== Linux ===
+{{Info|GitHub Desktop is not officially supported on Linux, but community alternatives like GitKraken or Sublime Merge are available.}}
+
+== Getting Started ==
+
+=== First Launch ===
+When you first open GitHub Desktop:
+# '''Sign in''' to your GitHub account
+# '''Configure Git''' with your name and email
+# '''Choose your default editor''' (VS Code, Atom, etc.)
+# '''Scan for repositories''' on your computer
+
+=== Interface Overview ===
+The GitHub Desktop interface includes:
+* '''Repository list''' (left sidebar)
+* '''Changes panel''' (centre-left)
+* '''Diff viewer''' (centre-right)
+* '''History tab''' (view commit history)
+* '''Repository menu''' (clone, create, add)
+
+== Basic Operations ==
+
+=== Cloning a Repository ===
+{{Code|bash|
+1. Click "Clone a repository from the Internet"
+2. Choose "GitHub.com" tab
+3. Select the repository from your list
+4. Choose local path
+5. Click "Clone"
+}}
+
+=== Creating a New Repository ===
+# Click "Create a New Repository on your hard drive"
+# Fill in repository details:
+   * Name
+   * Description
+   * Local path
+   * Initialise with README
+   * Git ignore template
+   * Licence
+# Click "Create Repository"
+
+=== Making Changes ===
+# Edit files in your preferred editor
+# Return to GitHub Desktop
+# Review changes in the left panel
+# Write a descriptive commit message
+# Click "Commit to main"
+
+=== Publishing to GitHub ===
+For new repositories:
+# Click "Publish repository"
+# Choose visibility (public/private)
+# Add description
+# Click "Publish Repository"
+
+== Working with Branches ==
+
+=== Creating a Branch ===
+# Click "Current Branch" dropdown
+# Click "New Branch"
+# Enter branch name
+# Choose base branch
+# Click "Create Branch"
+
+=== Switching Branches ===
+# Click "Current Branch" dropdown
+# Select the branch you want to switch to
+# Click to switch
+
+=== Merging Branches ===
+# Switch to the target branch (usually main)
+# Go to Branch menu → Merge into current branch
+# Select source branch
+# Click "Merge"
+
+== Collaboration Features ==
+
+=== Pull Requests ===
+# Create a branch with changes
+# Push the branch to GitHub
+# Click "Preview Pull Request"
+# Add title and description
+# Click "Create Pull Request"
+
+=== Fetching and Pulling ===
+* '''Fetch origin''' - Download changes without merging
+* '''Pull origin''' - Download and merge changes automatically
+* GitHub Desktop shows when remote changes are available
+
+=== Resolving Conflicts ===
+When conflicts occur:
+# GitHub Desktop highlights conflicted files
+# Click "Open in [Editor]" to resolve conflicts manually
+# Edit files to resolve conflicts
+# Mark conflicts as resolved
+# Commit the merge
+
+== Advanced Features ==
+
+=== Stashing Changes ===
+{{Info|GitHub Desktop doesn't have built-in stashing, but you can create temporary branches to save work in progress.}}
+
+=== Cherry-picking ===
+# Go to History tab
+# Right-click on the commit
+# Select "Cherry-pick changes in main"
+
+=== Reverting Commits ===
+# Go to History tab
+# Right-click on the commit to revert
+# Select "Revert changes in main"
+
+== Keyboard Shortcuts ==
+
+{| class="wikitable"
+! Action !! Windows/Linux !! macOS
+|-
+| New repository || Ctrl+N || Cmd+N
+|-
+| Clone repository || Ctrl+Shift+O || Cmd+Shift+O
+|-
+| Show changes || Ctrl+1 || Cmd+1
+|-
+| Show history || Ctrl+2 || Cmd+2
+|-
+| Show repository list || Ctrl+T || Cmd+T
+|-
+| Create branch || Ctrl+Shift+N || Cmd+Shift+N
+|-
+| Switch branch || Ctrl+B || Cmd+B
+|-
+| Push || Ctrl+P || Cmd+P
+|-
+| Pull || Ctrl+Shift+P || Cmd+Shift+P
+|}
+
+== Best Practices ==
+
+{{Good|Write clear, descriptive commit messages that explain why changes were made, not just what was changed.}}
+
+=== Commit Messages ===
+* Use present tense ("Add feature" not "Added feature")
+* Keep first line under 50 characters
+* Add detailed description if needed
+
+=== Branch Naming ===
+* Use descriptive names (feature/user-authentication)
+* Use hyphens, not spaces
+* Include issue numbers if relevant
+
+=== Repository Organisation ===
+* Keep repositories focused on single projects
+* Use .gitignore files appropriately
+* Don't commit sensitive information
+
+== Troubleshooting ==
+
+=== Common Issues ===
+
+'''Authentication Problems'''
+* Sign out and sign back in
+* Check internet connection
+* Verify two-factor authentication settings
+
+'''Sync Issues'''
+* Try "Repository" → "Repository Settings" → "Remote"
+* Ensure you have permissions to the repository
+* Check for network connectivity
+
+'''Performance Issues'''
+* Large repositories may be slow
+* Consider using .gitignore for build artifacts
+* Split large repositories if necessary
+
+{{Warning|Always ensure you have backups before performing operations like rebasing or force pushing.}}
+
+== GitHub Desktop vs Command Line ==
+
+{| class="wikitable"
+! Feature !! GitHub Desktop !! Command Line
+|-
+| Learning curve || Gentle || Steep
+|-
+| Visual feedback || Excellent || Limited
+|-
+| Advanced operations || Limited || Full control
+|-
+| Merge conflict resolution || Good || Powerful
+|-
+| Performance || Good for small repos || Excellent
+|-
+| Automation || Limited || Full scripting
+|}
+
+== When to Use GitHub Desktop ==
+
+'''Perfect for:'''
+* Beginners learning Git concepts
+* Visual learners
+* Simple repository operations
+* Teams preferring GUI tools
+
+'''Consider alternatives for:'''
+* Complex merge scenarios
+* Automated workflows
+* Large repository operations
+* Advanced Git features
+
+{{See also|
+* [[Basic Git Commands]] - Command-line alternatives
+* [[GitHub Web Interface Tour]] - Browser-based Git operations  
+* [[IDE Integrations]] - Git integration in code editors
+* [[Creating Your First Repository]] - Repository basics
+}}
+
+== Next Steps ==
+
+Once comfortable with GitHub Desktop:
+# Learn [[Basic Git Commands]] for command-line operations
+# Explore [[GitHub Actions Workflows]] for automation
+# Try [[Collaborative Development]] workflows
+# Learn about [[Branch Protection Rules]] for team projects
+
+[[Category:Beginner Tutorials]]
+[[Category:Tools]]
+[[Category:Git]]
+[[Category:GitHub]]

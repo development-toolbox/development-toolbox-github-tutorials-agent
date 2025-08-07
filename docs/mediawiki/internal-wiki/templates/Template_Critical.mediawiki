@@ -1,0 +1,22 @@
+<includeonly><div style="background: #ffebee; border-left: 4px solid #f44336; padding: 10px; margin: 15px 0;">
+<div style="display: flex; align-items: center;">
+<div style="margin-right: 10px; font-size: 18px;">🚨</div>
+<div><strong>Critical:</strong> {{{1|}}}</div>
+</div>
+</div></includeonly><noinclude>
+== Template:Critical ==
+
+This template creates a red critical alert box.
+
+=== Usage ===
+
+<pre>
+{{Critical|Your critical message here}}
+</pre>
+
+=== Example ===
+
+{{Critical|This action will permanently delete all data and cannot be recovered.}}
+
+[[Category:Templates]]
+</noinclude>

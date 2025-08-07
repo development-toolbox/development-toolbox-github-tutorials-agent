@@ -1,0 +1,1227 @@
+{{Tutorial
+|title = Repository Templates
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 30 minutes
+|prerequisites = Repository management, GitHub organization knowledge, basic YAML understanding
+|topics = Templates, Repository setup, Standardization, Project initialization, Automation
+}}
+
+{{TOC limit|3}}
+
+= Repository Templates =
+
+Repository templates allow you to create standardised starting points for new projects, ensuring consistency across your organization and reducing setup time for new repositories.
+
+== What are Repository Templates? ==
+
+Repository templates are special repositories that serve as blueprints for creating new repositories:
+* '''Standardised structure''' - Consistent file and directory organisation
+* '''Pre-configured settings''' - Default branch protection, labels, and workflows
+* '''Boilerplate code''' - Common files, configurations, and initial implementations
+* '''Automation setup''' - CI/CD pipelines, testing frameworks, and deployment scripts
+* '''Documentation templates''' - README, contributing guidelines, and issue templates
+
+{{Note|Template repositories differ from forks - they create completely independent repositories without maintaining a connection to the original template.}}
+
+=== Benefits of Repository Templates ===
+
+'''For Development Teams:'''
+* Faster project setup and onboarding
+* Consistent code structure and standards
+* Reduced configuration errors
+* Standardised tooling and workflows
+* Better compliance with security and quality standards
+
+'''For Organizations:'''
+* Enforce architectural patterns and best practices
+* Reduce time-to-productivity for new projects
+* Maintain consistency across teams
+* Simplify maintenance of common configurations
+* Scale development practices effectively
+
+== Creating Repository Templates ==
+
+=== Basic Template Setup ===
+
+Convert an existing repository to a template:
+
+1. **Navigate to repository settings**
+2. **Scroll to "Template repository" section**
+3. **Check "Template repository" checkbox**
+4. **Save changes**
+
+'''Via GitHub CLI:'''
+{{Code|bash|
+# Mark repository as template
+gh api repos/owner/repo-name --method PATCH \
+  --field is_template=true
+
+# Verify template status
+gh repo view owner/repo-name --json isTemplate
+}}
+
+=== Template Repository Structure ===
+
+Recommended structure for a comprehensive template:
+
+{{Code|text|
+my-project-template/
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml
+│   │   ├── cd.yml
+│   │   └── security.yml
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.yml
+│   │   ├── feature_request.yml
+│   │   └── config.yml
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── CODEOWNERS
+│   └── dependabot.yml
+├── docs/
+│   ├── CONTRIBUTING.md
+│   ├── CODE_OF_CONDUCT.md
+│   ├── SECURITY.md
+│   └── api/
+├── src/
+│   ├── main/
+│   │   └── app.js
+│   └── test/
+│       └── app.test.js
+├── config/
+│   ├── development.yml
+│   ├── production.yml
+│   └── test.yml
+├── scripts/
+│   ├── setup.sh
+│   ├── test.sh
+│   └── deploy.sh
+├── .env.example
+├── .gitignore
+├── .editorconfig
+├── .eslintrc.json
+├── .prettierrc
+├── Dockerfile
+├── docker-compose.yml
+├── package.json
+├── README.md
+└── LICENSE
+}}
+
+=== Template Configuration Files ===
+
+'''Essential template files:'''
+
+'''README template:'''
+{{Code|markdown|
+# Project Name
+
+<!-- Replace with your project description -->
+Brief description of what this project does and why it exists.
+
+## 🚀 Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/your-project.git
+cd your-project
+
+# Install dependencies
+npm install
+
+# Setup environment
+cp .env.example .env
+# Edit .env with your configuration
+
+# Start development server
+npm start
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+├── pages/         # Application pages/routes
+├── services/      # Business logic and API calls
+├── utils/         # Utility functions
+└── styles/        # Global styles and themes
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+```
+
+## 🚀 Deployment
+
+<!-- Update with your deployment process -->
+Deployment instructions will depend on your hosting platform.
+
+## 🤝 Contributing
+
+Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- 📧 Email: [support@yourorg.com](mailto:support@yourorg.com)
+- 💬 Slack: [#project-support](https://yourorg.slack.com/channels/project-support)
+- 📝 Issues: [GitHub Issues](https://github.com/your-org/your-project/issues)
+}}
+
+'''Package.json template:'''
+{{Code|json|
+{
+  "name": "project-template",
+  "version": "1.0.0",
+  "description": "Template description - update this",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build": "webpack --mode production",
+    "docker:build": "docker build -t project-name .",
+    "docker:run": "docker run -p 3000:3000 project-name"
+  },
+  "keywords": [
+    "template",
+    "boilerplate",
+    "starter"
+  ],
+  "author": "Your Organization <contact@yourorg.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "nodemon": "^2.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^2.8.0",
+    "supertest": "^6.3.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
+}}
+
+'''Environment template (.env.example):'''
+{{Code|bash|
+# Application Configuration
+NODE_ENV=development
+PORT=3000
+APP_URL=http://localhost:3000
+
+# Database Configuration
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
+DATABASE_POOL_SIZE=10
+
+# Authentication
+JWT_SECRET=your-jwt-secret-here
+JWT_EXPIRES_IN=7d
+BCRYPT_ROUNDS=12
+
+# External Services
+REDIS_URL=redis://localhost:6379
+EMAIL_SERVICE_API_KEY=your-email-api-key
+STRIPE_SECRET_KEY=sk_test_your-stripe-key
+
+# Monitoring and Logging
+LOG_LEVEL=info
+SENTRY_DSN=https://your-sentry-dsn
+
+# Development Only
+DEBUG=app:*
+MOCK_EXTERNAL_APIS=true
+}}
+
+== Advanced Template Features ==
+
+=== Parameterised Templates ===
+
+Create dynamic templates with placeholders:
+
+'''Template with placeholders:'''
+{{Code|json|
+{
+  "name": "{{PROJECT_NAME}}",
+  "description": "{{PROJECT_DESCRIPTION}}",
+  "version": "1.0.0",
+  "author": "{{AUTHOR_NAME}} <{{AUTHOR_EMAIL}}>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/{{GITHUB_ORG}}/{{PROJECT_NAME}}.git"
+  },
+  "homepage": "https://{{GITHUB_ORG}}.github.io/{{PROJECT_NAME}}/"
+}
+}}
+
+'''Setup script for template customisation:'''
+{{Code|bash|
+#!/bin/bash
+# scripts/setup-template.sh
+
+echo "🚀 Setting up new project from template..."
+
+# Get project details
+read -p "Project name: " PROJECT_NAME
+read -p "Project description: " PROJECT_DESCRIPTION
+read -p "Author name: " AUTHOR_NAME
+read -p "Author email: " AUTHOR_EMAIL
+read -p "GitHub organization: " GITHUB_ORG
+
+# Replace placeholders in files
+find . -type f -name "*.json" -o -name "*.md" -o -name "*.yml" -o -name "*.js" | \
+  xargs sed -i.bak \
+    -e "s/{{PROJECT_NAME}}/$PROJECT_NAME/g" \
+    -e "s/{{PROJECT_DESCRIPTION}}/$PROJECT_DESCRIPTION/g" \
+    -e "s/{{AUTHOR_NAME}}/$AUTHOR_NAME/g" \
+    -e "s/{{AUTHOR_EMAIL}}/$AUTHOR_EMAIL/g" \
+    -e "s/{{GITHUB_ORG}}/$GITHUB_ORG/g"
+
+# Clean up backup files
+find . -name "*.bak" -delete
+
+# Initialize git repository
+git init
+git add .
+git commit -m "Initial commit from template"
+
+# Install dependencies
+if [ -f "package.json" ]; then
+  npm install
+fi
+
+if [ -f "requirements.txt" ]; then
+  pip install -r requirements.txt
+fi
+
+# Set up environment file
+if [ -f ".env.example" ]; then
+  cp .env.example .env
+  echo "📝 Don't forget to update .env with your configuration"
+fi
+
+echo "✅ Template setup complete!"
+echo "🎯 Next steps:"
+echo "   1. Update .env with your configuration"
+echo "   2. Review and update README.md"
+echo "   3. Set up your remote git repository"
+echo "   4. Configure any additional services"
+}}
+
+=== Template Workflows ===
+
+GitHub Actions workflow for template repositories:
+
+{{Code|yaml|
+# .github/workflows/template-sync.yml
+name: Template Sync
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday at 2 AM
+
+jobs:
+  sync-template:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout template
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.TEMPLATE_SYNC_TOKEN }}
+    
+    - name: Find repositories using this template
+      uses: actions/github-script@v6
+      id: find-repos
+      with:
+        github-token: ${{ secrets.TEMPLATE_SYNC_TOKEN }}
+        script: |
+          const { owner, repo } = context.repo;
+          
+          // Get repositories created from this template
+          const query = `template:${owner}/${repo}`;
+          
+          const searchResult = await github.rest.search.repos({
+            q: query,
+            sort: 'updated',
+            order: 'desc'
+          });
+          
+          const templateRepos = searchResult.data.items.map(repo => ({
+            owner: repo.owner.login,
+            name: repo.name
+          }));
+          
+          console.log(`Found ${templateRepos.length} repositories using this template`);
+          return templateRepos;
+    
+    - name: Create sync PRs
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.TEMPLATE_SYNC_TOKEN }}
+        script: |
+          const repos = ${{ steps.find-repos.outputs.result }};
+          
+          for (const repo of repos) {
+            try {
+              // Create a PR to sync template changes
+              await github.rest.pulls.create({
+                owner: repo.owner,
+                repo: repo.name,
+                title: 'chore: sync with template updates',
+                head: 'template-sync',
+                base: 'main',
+                body: `
+                ## 🔄 Template Sync
+                
+                This PR synchronizes the repository with the latest template updates.
+                
+                ### Changes Include:
+                - Updated GitHub Actions workflows
+                - Latest configuration files
+                - Security and dependency updates
+                - Documentation improvements
+                
+                ### Review Checklist:
+                - [ ] Verify no custom configurations are overwritten
+                - [ ] Test that existing functionality still works
+                - [ ] Update any project-specific customizations
+                
+                **Auto-generated by template sync workflow**
+                `,
+                draft: true
+              });
+              
+              console.log(`Created sync PR for ${repo.owner}/${repo.name}`);
+            } catch (error) {
+              console.log(`Failed to create PR for ${repo.owner}/${repo.name}: ${error.message}`);
+            }
+          }
+
+  validate-template:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Validate template structure
+      run: |
+        echo "🔍 Validating template structure..."
+        
+        # Check required files
+        required_files=(
+          "README.md"
+          "LICENSE"
+          ".gitignore"
+          ".github/workflows/ci.yml"
+          "package.json"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ Missing required file: $file"
+            exit 1
+          fi
+        done
+        
+        # Validate JSON files
+        find . -name "*.json" -type f -exec echo "Validating {}" \; -exec jq empty {} \;
+        
+        # Validate YAML files
+        find . -name "*.yml" -o -name "*.yaml" -type f -exec echo "Validating {}" \; -exec yamllint {} \;
+        
+        echo "✅ Template validation passed!"
+    
+    - name: Test template usage
+      run: |
+        echo "🧪 Testing template usage..."
+        
+        # Create a temporary directory for testing
+        mkdir -p /tmp/template-test
+        cp -r . /tmp/template-test/
+        cd /tmp/template-test
+        
+        # Run setup script if it exists
+        if [ -f "scripts/setup-template.sh" ]; then
+          echo "Testing setup script..."
+          bash scripts/setup-template.sh --test-mode
+        fi
+        
+        # Test if package installation works
+        if [ -f "package.json" ]; then
+          npm install --production
+        fi
+        
+        echo "✅ Template usage test passed!"
+}}
+
+=== Multi-language Templates ===
+
+Support for different programming languages and frameworks:
+
+'''Template selection workflow:'''
+{{Code|yaml|
+# .github/workflows/create-from-template.yml
+name: Create Project from Template
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: 'Project name'
+        required: true
+      project_type:
+        description: 'Project type'
+        required: true
+        type: choice
+        options:
+          - 'node-express'
+          - 'react-app'
+          - 'python-flask'
+          - 'java-spring'
+          - 'go-gin'
+      include_database:
+        description: 'Include database setup'
+        required: false
+        type: boolean
+        default: false
+      include_docker:
+        description: 'Include Docker configuration'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  create-project:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout template
+      uses: actions/checkout@v4
+    
+    - name: Setup project structure
+      run: |
+        echo "🏗️ Setting up ${{ github.event.inputs.project_type }} project..."
+        
+        PROJECT_NAME="${{ github.event.inputs.project_name }}"
+        PROJECT_TYPE="${{ github.event.inputs.project_type }}"
+        
+        # Copy base template
+        mkdir -p /tmp/$PROJECT_NAME
+        
+        # Copy common files
+        cp -r .github /tmp/$PROJECT_NAME/
+        cp README.md LICENSE .gitignore /tmp/$PROJECT_NAME/
+        
+        # Copy language-specific templates
+        case $PROJECT_TYPE in
+          "node-express")
+            cp -r templates/node-express/* /tmp/$PROJECT_NAME/
+            ;;
+          "react-app")
+            cp -r templates/react/* /tmp/$PROJECT_NAME/
+            ;;
+          "python-flask")
+            cp -r templates/python-flask/* /tmp/$PROJECT_NAME/
+            ;;
+          "java-spring")
+            cp -r templates/java-spring/* /tmp/$PROJECT_NAME/
+            ;;
+          "go-gin")
+            cp -r templates/go-gin/* /tmp/$PROJECT_NAME/
+            ;;
+        esac
+        
+        # Conditional additions
+        if [ "${{ github.event.inputs.include_database }}" = "true" ]; then
+          cp -r templates/database/* /tmp/$PROJECT_NAME/
+        fi
+        
+        if [ "${{ github.event.inputs.include_docker }}" = "true" ]; then
+          cp templates/docker/Dockerfile /tmp/$PROJECT_NAME/
+          cp templates/docker/docker-compose.yml /tmp/$PROJECT_NAME/
+        fi
+    
+    - name: Customize project files
+      run: |
+        cd /tmp/${{ github.event.inputs.project_name }}
+        
+        # Replace placeholders
+        find . -type f \( -name "*.json" -o -name "*.md" -o -name "*.yml" -o -name "*.py" -o -name "*.js" \) \
+          -exec sed -i "s/{{PROJECT_NAME}}/${{ github.event.inputs.project_name }}/g" {} \;
+        
+        # Generate project-specific configuration
+        echo "Project: ${{ github.event.inputs.project_name }}" > project.info
+        echo "Type: ${{ github.event.inputs.project_type }}" >> project.info
+        echo "Created: $(date)" >> project.info
+    
+    - name: Create repository
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const projectName = '${{ github.event.inputs.project_name }}';
+          
+          // Create new repository
+          const newRepo = await github.rest.repos.createInOrg({
+            org: context.repo.owner,
+            name: projectName,
+            description: `Generated from template - ${{ github.event.inputs.project_type }} project`,
+            private: false,
+            auto_init: false
+          });
+          
+          console.log(`Created repository: ${newRepo.data.html_url}`);
+}}
+
+== Template Categories ==
+
+=== Frontend Templates ===
+
+'''React Application Template:'''
+{{Code|json|
+{
+  "name": "react-app-template",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "storybook": "start-storybook -p 6006",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.0",
+    "axios": "^1.3.0",
+    "@mui/material": "^5.11.0"
+  },
+  "devDependencies": {
+    "react-scripts": "5.0.1",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^5.16.0",
+    "@storybook/react": "^6.5.0",
+    "cypress": "^12.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "prettier": "^2.8.0"
+  }
+}
+}}
+
+'''Vue.js Application Template:'''
+{{Code|json|
+{
+  "name": "vue-app-template",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "vue-cli-service test:e2e",
+    "lint": "vue-cli-service lint",
+    "storybook:serve": "vue-cli-service storybook:serve",
+    "storybook:build": "vue-cli-service storybook:build"
+  },
+  "dependencies": {
+    "vue": "^3.2.0",
+    "vue-router": "^4.1.0",
+    "vuex": "^4.1.0",
+    "axios": "^1.3.0",
+    "vuetify": "^3.1.0"
+  },
+  "devDependencies": {
+    "@vue/cli-service": "^5.0.0",
+    "@vue/test-utils": "^2.2.0",
+    "jest": "^29.0.0",
+    "cypress": "^12.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^2.8.0"
+  }
+}
+}}
+
+=== Backend Templates ===
+
+'''Node.js Express Template:'''
+{{Code|javascript|
+// src/app.js
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+
+const app = express();
+
+// Security middleware
+app.use(helmet());
+app.use(cors());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
+// Logging
+app.use(morgan('combined'));
+
+// Body parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// API routes
+app.use('/api/v1', require('./routes'));
+
+// Error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+module.exports = app;
+}}
+
+'''Python Flask Template:'''
+{{Code|python|
+# app.py
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+import logging
+from datetime import datetime
+
+app = Flask(__name__)
+CORS(app)
+
+# Rate limiting
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["100 per hour"]
+)
+
+# Logging
+logging.basicConfig(level=logging.INFO)
+
+@app.route('/health')
+def health_check():
+    return jsonify({
+        'status': 'OK',
+        'timestamp': datetime.utcnow().isoformat()
+    })
+
+@app.route('/api/v1/')
+def api_root():
+    return jsonify({
+        'message': 'API v1',
+        'version': '1.0.0'
+    })
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Route not found'}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({'error': 'Internal server error'}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
+}}
+
+=== Full-stack Templates ===
+
+'''MEAN Stack Template structure:'''
+{{Code|text|
+mean-stack-template/
+├── client/                 # Angular frontend
+│   ├── src/
+│   ├── angular.json
+│   └── package.json
+├── server/                 # Node.js backend
+│   ├── src/
+│   ├── package.json
+│   └── server.js
+├── database/              # MongoDB setup
+│   ├── models/
+│   └── migrations/
+├── docker-compose.yml     # Full stack deployment
+└── README.md
+}}
+
+'''Docker Compose for full-stack:'''
+{{Code|yaml|
+version: '3.8'
+
+services:
+  # Frontend
+  client:
+    build: ./client
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - server
+
+  # Backend API
+  server:
+    build: ./server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://database:27017/myapp
+      - JWT_SECRET=your-jwt-secret
+    depends_on:
+      - database
+
+  # Database
+  database:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mongodb_data:
+  redis_data:
+}}
+
+== Template Management ==
+
+=== Template Versioning ===
+
+Manage template versions for backwards compatibility:
+
+{{Code|bash|
+# Create version tags
+git tag -a v1.0.0 -m "Initial template release"
+git tag -a v1.1.0 -m "Added Docker support"
+git tag -a v2.0.0 -m "Breaking: Updated to Node 18"
+
+# Push tags
+git push origin --tags
+
+# Create version-specific branches
+git checkout -b template-v1.x
+git checkout -b template-v2.x
+}}
+
+'''Version matrix in CI:'''
+{{Code|yaml|
+name: Template Testing
+
+on: [push, pull_request]
+
+jobs:
+  test-template:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        template-version: [v1.0.0, v1.1.0, v2.0.0]
+        node-version: [16, 18, 20]
+        exclude:
+          - template-version: v1.0.0
+            node-version: 20
+    
+    steps:
+    - name: Checkout template
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ matrix.template-version }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Test template
+      run: |
+        npm install
+        npm test
+}}
+
+=== Template Analytics ===
+
+Track template usage and effectiveness:
+
+{{Code|javascript|
+// GitHub API script to analyze template usage
+const { Octokit } = require("@octokit/rest");
+
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN,
+});
+
+async function analyzeTemplateUsage() {
+  const templateOwner = 'your-org';
+  const templateName = 'your-template';
+  
+  // Find repositories created from this template
+  const searchResult = await octokit.rest.search.repos({
+    q: `template:${templateOwner}/${templateName}`,
+    sort: 'created',
+    order: 'desc',
+    per_page: 100
+  });
+  
+  console.log(`📊 Template Usage Analytics for ${templateName}`);
+  console.log(`Total repositories created: ${searchResult.data.total_count}`);
+  
+  const repos = searchResult.data.items;
+  
+  // Analyze by creation date
+  const creationDates = repos.map(repo => new Date(repo.created_at));
+  const monthlyUsage = {};
+  
+  creationDates.forEach(date => {
+    const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+    monthlyUsage[monthKey] = (monthlyUsage[monthKey] || 0) + 1;
+  });
+  
+  console.log('\n📅 Monthly Usage:');
+  Object.entries(monthlyUsage)
+    .sort()
+    .forEach(([month, count]) => {
+      console.log(`${month}: ${count} repositories`);
+    });
+  
+  // Analyze languages
+  const languages = {};
+  for (const repo of repos.slice(0, 50)) { // Limit API calls
+    try {
+      const languagesData = await octokit.rest.repos.listLanguages({
+        owner: repo.owner.login,
+        repo: repo.name
+      });
+      
+      Object.keys(languagesData.data).forEach(lang => {
+        languages[lang] = (languages[lang] || 0) + 1;
+      });
+    } catch (error) {
+      console.log(`Could not fetch languages for ${repo.full_name}`);
+    }
+  }
+  
+  console.log('\n🔤 Primary Languages:');
+  Object.entries(languages)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .forEach(([lang, count]) => {
+      console.log(`${lang}: ${count} repositories`);
+    });
+  
+  // Success metrics
+  const activeRepos = repos.filter(repo => {
+    const daysSinceUpdate = (Date.now() - new Date(repo.updated_at)) / (1000 * 60 * 60 * 24);
+    return daysSinceUpdate < 30; // Updated in last 30 days
+  });
+  
+  console.log(`\n✅ Success Metrics:`);
+  console.log(`Active repositories: ${activeRepos.length}/${repos.length} (${(activeRepos.length/repos.length*100).toFixed(1)}%)`);
+  
+  // Stars and forks
+  const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+  const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
+  
+  console.log(`Total stars across all repos: ${totalStars}`);
+  console.log(`Total forks across all repos: ${totalForks}`);
+}
+
+analyzeTemplateUsage().catch(console.error);
+}}
+
+=== Template Maintenance ===
+
+Keep templates updated and secure:
+
+{{Code|yaml|
+# .github/workflows/template-maintenance.yml
+name: Template Maintenance
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly on Mondays at 6 AM
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Update npm dependencies
+      run: |
+        # Update package.json dependencies
+        npx npm-check-updates -u
+        npm install
+        
+        # Run tests to ensure updates don't break anything
+        npm test
+    
+    - name: Update GitHub Actions
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Find all workflow files
+          const workflowDir = '.github/workflows';
+          const files = fs.readdirSync(workflowDir);
+          
+          for (const file of files) {
+            if (file.endsWith('.yml') || file.endsWith('.yaml')) {
+              const filePath = path.join(workflowDir, file);
+              let content = fs.readFileSync(filePath, 'utf8');
+              
+              // Update common action versions
+              const updates = {
+                'actions/checkout@v3': 'actions/checkout@v4',
+                'actions/setup-node@v3': 'actions/setup-node@v4',
+                'actions/cache@v3': 'actions/cache@v3'
+              };
+              
+              for (const [old, new_] of Object.entries(updates)) {
+                content = content.replace(new RegExp(old, 'g'), new_);
+              }
+              
+              fs.writeFileSync(filePath, content);
+            }
+          }
+    
+    - name: Security audit
+      run: |
+        npm audit --audit-level moderate
+        
+        # Fix automatically fixable vulnerabilities
+        npm audit fix
+    
+    - name: Create maintenance PR
+      uses: peter-evans/create-pull-request@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update dependencies and GitHub Actions'
+        title: '🔧 Automated Template Maintenance'
+        body: |
+          ## 🔧 Automated Template Maintenance
+          
+          This PR includes automated updates to keep the template current:
+          
+          ### Changes:
+          - 📦 Updated npm dependencies to latest versions
+          - 🔄 Updated GitHub Actions to latest versions
+          - 🔒 Applied security fixes
+          
+          ### Testing:
+          - [ ] All tests pass
+          - [ ] Template generation works correctly
+          - [ ] No breaking changes introduced
+          
+          **Auto-generated by template maintenance workflow**
+        branch: maintenance/auto-update
+        delete-branch: true
+
+  validate-template-health:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Template health check
+      run: |
+        echo "🏥 Running template health checks..."
+        
+        # Check for required files
+        required_files=(
+          "README.md"
+          "LICENSE"
+          ".gitignore"
+          "package.json"
+          ".github/workflows/ci.yml"
+        )
+        
+        missing_files=()
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            missing_files+=("$file")
+          fi
+        done
+        
+        if [ ${#missing_files[@]} -gt 0 ]; then
+          echo "❌ Missing required files:"
+          printf '%s\n' "${missing_files[@]}"
+          exit 1
+        fi
+        
+        # Check README quality
+        readme_size=$(wc -c < README.md)
+        if [ $readme_size -lt 500 ]; then
+          echo "⚠️ README.md seems too short (< 500 characters)"
+        fi
+        
+        # Check for outdated patterns
+        if grep -r "master" .github/ 2>/dev/null; then
+          echo "⚠️ Found references to 'master' branch - consider updating to 'main'"
+        fi
+        
+        echo "✅ Template health check passed!"
+}}
+
+== Best Practices ==
+
+=== Template Design Principles ===
+
+'''Keep templates focused:'''
+* Single responsibility - one template per project type
+* Minimal but complete - include essentials, avoid bloat
+* Configurable - allow customization without breaking
+* Well-documented - clear setup and usage instructions
+
+'''Maintain quality:'''
+* Regular updates for security and dependencies
+* Automated testing for template generation
+* Version compatibility documentation
+* Community feedback integration
+
+=== Template Organization ===
+
+'''File organization:'''
+{{Code|text|
+organization-templates/
+├── frontend/
+│   ├── react-typescript/
+│   ├── vue-composition/
+│   └── angular-standalone/
+├── backend/
+│   ├── node-express/
+│   ├── python-fastapi/
+│   └── java-spring-boot/
+├── mobile/
+│   ├── react-native/
+│   ├── flutter/
+│   └── ionic/
+├── fullstack/
+│   ├── next-js-full/
+│   └── django-react/
+└── infrastructure/
+    ├── terraform-aws/
+    └── kubernetes-helm/
+}}
+
+'''Template metadata:'''
+{{Code|json|
+{
+  "template": {
+    "name": "React TypeScript Template",
+    "description": "Production-ready React application with TypeScript",
+    "version": "2.1.0",
+    "category": "frontend",
+    "tags": ["react", "typescript", "jest", "eslint"],
+    "maintainers": ["frontend-team"],
+    "compatibility": {
+      "node": ">=16.0.0",
+      "npm": ">=8.0.0"
+    },
+    "features": [
+      "TypeScript configuration",
+      "ESLint and Prettier setup",
+      "Jest testing framework",
+      "GitHub Actions CI/CD",
+      "Docker containerization",
+      "Storybook integration"
+    ],
+    "documentation": "https://docs.company.com/templates/react-typescript"
+  }
+}
+}}
+
+=== Team Adoption ===
+
+'''Gradual rollout strategy:'''
+1. **Pilot phase** - Test with one team
+2. **Feedback collection** - Gather usage insights
+3. **Template refinement** - Address common issues
+4. **Training and documentation** - Educate teams
+5. **Organization-wide rollout** - Scale to all teams
+6. **Continuous improvement** - Regular updates and maintenance
+
+{{Success|Repository templates standardize project setup and accelerate development while maintaining consistency across your organization. Start with simple templates and evolve them based on team feedback and changing requirements.}}
+
+== Related Resources ==
+
+* [[GitHub Actions Basics]] - Automating template workflows
+* [[Creating Your First Repository]] - Repository fundamentals
+* [[Basic Repository Operations]] - Repository management
+* [[Collaborative Workflows]] - Team development processes
+* [[Issue Templates]] - Standardizing issue reporting
+
+[[Category:Intermediate Tutorials]]
+[[Category:Templates]]
+[[Category:Repository Management]]
+[[Category:Automation]]
+[[Category:Standardization]]

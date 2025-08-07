@@ -1,0 +1,133 @@
+__NOTOC__
+<div style="background: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 5px; padding: 20px; margin-bottom: 20px;">
+<div style="text-align: center;">
+[[File:GitHub-Mark.png|100px|link=]]
+
+= Welcome to the GitHub Enterprise Wiki =
+
+'''Your comprehensive guide to mastering GitHub in the enterprise environment'''
+</div>
+</div>
+
+<div style="display: flex; gap: 20px; margin-bottom: 30px;">
+<div style="flex: 1; background: #fff; border: 1px solid #a2a9b1; border-radius: 5px; padding: 15px;">
+== 🚀 Quick Start ==
+* [[Getting Started with GitHub|Getting Started]] - New to GitHub? Start here!
+* [[GitHub Desktop Guide|GitHub Desktop]] - Visual interface for Git
+* [[First Repository|Your First Repository]] - Create and manage your first repo
+* [[Basic Git Commands|Essential Git Commands]] - Command line basics
+</div>
+
+<div style="flex: 1; background: #fff; border: 1px solid #a2a9b1; border-radius: 5px; padding: 15px;">
+== 📚 Popular Tutorials ==
+* [[GitHub Actions Fundamentals|GitHub Actions]] - Automate your workflows
+* [[Pull Request Best Practices|Pull Requests]] - Collaboration essentials
+* [[Branch Protection Rules|Branch Protection]] - Secure your codebase
+* [[GitHub API Integration|API Integration]] - Automate with APIs
+</div>
+</div>
+
+<div style="display: flex; gap: 20px;">
+<div style="flex: 2;">
+== User Tutorials ==
+
+<div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 10px; margin-bottom: 20px;">
+=== 🌱 Beginner Level ===
+* [[Introduction to Version Control]] - Understanding Git and GitHub
+* [[Creating Your GitHub Account]] - Account setup and configuration
+* [[GitHub Web Interface Tour]] - Navigate GitHub like a pro
+* [[Basic Repository Operations]] - Clone, fork, and star
+* [[Understanding Commits]] - The building blocks of Git
+→ [[Category:Beginner Tutorials|View all beginner tutorials]]
+</div>
+
+<div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 10px; margin-bottom: 20px;">
+=== 🔧 Intermediate Level ===
+* [[Branching Strategies]] - GitFlow, GitHub Flow, and more
+* [[Collaborative Development]] - Working with teams
+* [[GitHub Actions Workflows]] - CI/CD pipeline creation
+* [[Managing Issues and Projects]] - Project management in GitHub
+* [[Code Review Guidelines]] - Effective pull request reviews
+→ [[Category:Intermediate Tutorials|View all intermediate tutorials]]
+</div>
+
+<div style="background: #fce4ec; border-left: 4px solid #e91e63; padding: 10px; margin-bottom: 20px;">
+=== 🏆 Advanced Level ===
+* [[Advanced GitHub Actions]] - Complex workflows and custom actions
+* [[GitHub Enterprise Administration]] - Managing your organisation
+* [[Security Best Practices]] - SAST, dependency scanning, and secrets
+* [[GitHub GraphQL API]] - Advanced API usage
+* [[Custom GitHub Apps]] - Building GitHub integrations
+→ [[Category:Advanced Tutorials|View all advanced tutorials]]
+</div>
+
+== 🛠️ Tools and Integrations ==
+* [[IDE Integrations]] - VS Code, IntelliJ, and more
+* [[CI/CD Tools]] - Jenkins, CircleCI, Travis CI integration
+* [[Project Management Tools]] - Jira, Trello, Asana connections
+* [[Security Tools]] - Snyk, SonarQube, and security scanning
+
+== 📖 Reference Documentation ==
+* [[Git Command Reference]] - Complete command listing
+* [[GitHub Glossary]] - Terms and definitions
+* [[Troubleshooting Guide]] - Common issues and solutions
+* [[GitHub Keyboard Shortcuts]] - Productivity tips
+
+</div>
+
+<div style="flex: 1;">
+<div style="background: #f3e5f5; border: 1px solid #ba68c8; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+== 👨‍💼 For Administrators ==
+{{#ifeq:{{#ifexist:Admin:Main Page|yes|no}}|yes|
+* [[Admin:Main Page|Administrator Portal]]
+* [[Admin:User Management|User Management]]
+* [[Admin:Security Configuration|Security Setup]]
+* [[Admin:Enterprise Settings|Enterprise Config]]
+|
+''Administrator content requires special permissions''
+}}
+</div>
+
+<div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+== 📢 Announcements ==
+* '''30 January 2025''' - Wiki launched!
+* '''Coming Soon''' - GitHub Copilot tutorials
+* '''Weekly''' - New tutorials every Wednesday
+
+[[Special:RecentChanges|Recent changes]] • [[Project:Community portal|Community]]
+</div>
+
+<div style="background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+== 🔍 Quick Search ==
+<inputbox>
+type=search
+width=30
+placeholder=Search tutorials...
+buttonlabel=Search
+</inputbox>
+
+'''Browse by Category:'''
+* [[:Category:Tutorials|All Tutorials]]
+* [[:Category:GitHub Actions|GitHub Actions]]
+* [[:Category:Security|Security]]
+* [[:Category:API|API & Integration]]
+* [[:Category:Enterprise|Enterprise]]
+</div>
+
+<div style="background: #fff8e1; border: 1px solid #ffc107; border-radius: 5px; padding: 15px;">
+== 💡 Did You Know? ==
+{{:Template:Did You Know}}
+
+[[GitHub Tips and Tricks|More tips →]]
+</div>
+</div>
+</div>
+
+<div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8f9fa; border-top: 1px solid #a2a9b1;">
+'''Need help?''' [[Project:Help|Help Pages]] • [[Project:Support|Contact Support]] • [[Project:FAQ|FAQ]]
+
+<small>This wiki is maintained by the Developer Experience Team</small>
+</div>
+
+__NOEDITSECTION__
+[[Category:Main]]

@@ -1,0 +1,398 @@
+= Contact Support =
+
+Get help with GitHub, this wiki, and related development tools. Choose the appropriate support channel based on your needs.
+
+== Quick Support Options ==
+
+=== Immediate Help ===
+* '''Slack''': #github-help (fastest response during business hours)
+* '''Emergency''': github-emergency@company.com (critical issues only)
+* '''Phone''': IT Helpdesk ext. 5555
+
+=== Standard Support ===
+* '''Email''': github-support@company.com
+* '''Ticket System''': [https://support.company.com Internal Support Portal]
+* '''Office Hours''': Book time with Developer Experience Team
+
+== Support Categories ==
+
+=== GitHub Platform Issues ===
+
+'''Account and Authentication:'''
+* Login problems
+* Password reset
+* Two-factor authentication issues
+* SSH key configuration
+* Permission errors
+
+'''Contact:''' IT Helpdesk or GitHub Administrators
+'''Response Time:''' 2-4 hours during business hours
+
+'''Repository Issues:'''
+* Cannot access repositories
+* Permission denied errors
+* Repository creation problems
+* Branch protection issues
+* Collaboration setup
+
+'''Contact:''' GitHub Administrators
+'''Response Time:''' 1-2 business days
+
+=== GitHub Enterprise Administration ===
+
+'''Organisation Management:'''
+* User provisioning and deprovisioning
+* Team and organisation setup
+* Enterprise policy configuration
+* Billing and licensing questions
+* Integration with company systems
+
+'''Contact:''' GitHub Enterprise Administrators
+'''Response Time:''' Same day for urgent issues
+
+'''Security and Compliance:'''
+* Security policy questions
+* Compliance requirements
+* Audit trail access
+* Security incident reporting
+* Data protection concerns
+
+'''Contact:''' Security Team (security@company.com)
+'''Response Time:''' Immediate for security incidents
+
+=== GitHub Actions and Automation ===
+
+'''Workflow Issues:'''
+* Workflow not running
+* Permission errors in actions
+* Secrets and environment variables
+* Runner configuration problems
+* Performance optimization
+
+'''Contact:''' DevOps Team (devops@company.com)
+'''Response Time:''' 4-8 hours during business hours
+
+'''Custom Actions and Integrations:'''
+* Custom action development
+* Third-party integration issues
+* API rate limiting
+* Webhook configuration
+* Advanced automation patterns
+
+'''Contact:''' Developer Experience Team
+'''Response Time:''' 1-2 business days
+
+=== Wiki and Documentation ===
+
+'''Content Issues:'''
+* Outdated information
+* Missing tutorials
+* Broken links
+* Incorrect examples
+* Content requests
+
+'''Contact:''' Developer Experience Team (devex@company.com)
+'''Response Time:''' 1-3 business days
+
+'''Technical Issues:'''
+* Wiki not loading
+* Search not working
+* Authentication problems
+* Mobile access issues
+
+'''Contact:''' IT Helpdesk
+'''Response Time:''' 2-4 hours
+
+== Support Teams ==
+
+=== Developer Experience Team ===
+
+'''Team Members:'''
+* '''Sarah Johnson''' - Team Lead
+  * Email: sarah.johnson@company.com
+  * Slack: @sarah.johnson
+  * Expertise: GitHub strategy, training programs
+
+* '''Michael Chen''' - GitHub Specialist  
+  * Email: michael.chen@company.com
+  * Slack: @michael.chen
+  * Expertise: GitHub Actions, automation, integrations
+
+* '''Emma Wilson''' - Technical Writer
+  * Email: emma.wilson@company.com
+  * Slack: @emma.wilson
+  * Expertise: Documentation, tutorials, user guides
+
+'''Office Hours:'''
+* Monday-Friday: 9:00-17:00 GMT
+* Open office hours: Wednesdays 14:00-16:00 GMT
+* Book 1:1 sessions: [https://calendar.company.com/devex DevEx Calendar]
+
+=== GitHub Administrators ===
+
+'''Primary Administrators:'''
+* '''David Brown''' - Lead Administrator
+  * Email: david.brown@company.com
+  * Slack: @david.brown
+  * On-call: Week 1, 3, 5
+
+* '''Lisa Davis''' - Secondary Administrator
+  * Email: lisa.davis@company.com  
+  * Slack: @lisa.davis
+  * On-call: Week 2, 4, 6
+
+'''Emergency Contact:'''
+* Email: github-admin@company.com
+* Phone: +44 (0) 207 123 4567 (24/7 for critical issues)
+
+=== IT Helpdesk ===
+
+'''Contact Methods:'''
+* Phone: ext. 5555 (internal) / +44 (0) 207 123 5555 (external)
+* Email: helpdesk@company.com
+* Slack: #it-helpdesk
+* Portal: [https://helpdesk.company.com IT Support Portal]
+
+'''Hours:'''
+* Monday-Friday: 8:00-18:00 GMT
+* Weekend: Emergency support only
+* Response time: 30 minutes for urgent, 4 hours for standard
+
+== How to Get Help ==
+
+=== Before Contacting Support ===
+
+'''Check these resources first:'''
+# [[Troubleshooting Guide]] - Common problems and solutions
+# [[GitHub Glossary]] - Understand terminology
+# [[Project:FAQ]] - Frequently asked questions  
+# [https://docs.github.com GitHub Documentation] - Official documentation
+
+'''Gather information:'''
+* What were you trying to do?
+* What happened instead?
+* Error messages (full text or screenshots)
+* Steps to reproduce the problem
+* Your username and repository name (if applicable)
+
+=== Creating Support Requests ===
+
+'''Include in your request:'''
+* Clear description of the problem
+* Steps you've already tried
+* Urgency level (low/medium/high/critical)
+* Your contact preferences
+* Screenshots or error logs if helpful
+
+'''Urgency Levels:'''
+* '''Critical''' - System down, security incident, data loss
+* '''High''' - Major functionality broken, many users affected
+* '''Medium''' - Feature not working, single user affected
+* '''Low''' - Enhancement request, documentation issue
+
+=== Email Templates ===
+
+'''For GitHub Access Issues:'''
+{{Code|text|
+Subject: GitHub Access Issue - [Your Name]
+
+Hi GitHub Support Team,
+
+I'm experiencing an issue accessing GitHub:
+
+Problem: [Describe what you can't do]
+Error message: [Include exact error message]
+Repository/URL: [If applicable]
+When it started: [When you first noticed]
+Steps tried: [What troubleshooting you've done]
+
+My details:
+- GitHub username: [username]
+- Company email: [email]
+- Team: [team name]
+
+Thanks for your help!
+}}
+
+'''For Workflow/Actions Issues:'''
+{{Code|text|
+Subject: GitHub Actions Issue - [Repository Name]
+
+Hi DevOps Team,
+
+I need help with a GitHub Actions workflow:
+
+Repository: [org/repo-name]
+Workflow file: [.github/workflows/filename.yml]
+Problem: [What's not working]
+Error message: [Include logs or error output]
+Expected behavior: [What should happen]
+
+Workflow run URL: [link to failed run]
+
+Thanks!
+}}
+
+== Support Escalation ==
+
+=== When to Escalate ===
+
+'''Automatic escalation triggers:'''
+* No response within stated timeframe
+* Security incidents
+* Service outages affecting multiple users
+* Critical business impact
+
+'''How to escalate:'''
+# Contact the team lead directly
+# CC your manager on communications  
+# Use the emergency contact for urgent issues
+# Escalate through your departmental hierarchy
+
+=== Emergency Procedures ===
+
+'''Security Incidents:'''
+# Immediately contact: security@company.com
+# Follow company security incident procedures
+# Do not attempt to fix security issues yourself
+# Document everything for investigation
+
+'''Service Outages:'''
+# Check [https://githubstatus.com GitHub Status] first
+# Report to IT Helpdesk if company-specific
+# Use alternative communication channels
+# Monitor status updates
+
+== Self-Service Options ==
+
+=== Knowledge Base ===
+
+'''Search the knowledge base:'''
+* [https://kb.company.com Company Knowledge Base]
+* Use specific search terms
+* Check recent articles for new issues
+* Browse by category for related topics
+
+=== Training Resources ===
+
+'''Available training:'''
+* [[Category:Beginner Tutorials]] - Start here if new to GitHub
+* Monthly GitHub workshops
+* Online training portal
+* Video tutorial library
+
+'''Self-paced learning:'''
+* Follow structured learning paths
+* Practice with personal repositories
+* Join internal GitHub community
+* Attend lunch-and-learn sessions
+
+=== Common Solutions ===
+
+'''Frequent Issues and Quick Fixes:'''
+
+'''Can't clone repository:'''
+{{Code|bash|
+# Check authentication
+git config --list | grep user
+
+# Try HTTPS instead of SSH
+git clone https://github.com/company/repo.git
+
+# Verify repository permissions
+}}
+
+'''GitHub Actions not running:'''
+* Check if workflows are enabled in repository settings
+* Verify YAML syntax with online validator
+* Check if branch triggers match your branch name
+* Ensure repository has Actions enabled
+
+'''Permission denied errors:'''
+* Verify you're a collaborator on the repository
+* Check if you're using the correct GitHub account
+* Ensure SSH keys are added to your GitHub account
+* Try using HTTPS authentication instead
+
+== Feedback and Improvement ==
+
+=== Support Quality ===
+
+'''We want to improve:'''
+* Rate your support experience
+* Provide feedback on response times
+* Suggest process improvements
+* Share success stories
+
+'''Feedback channels:'''
+* Post-support survey (automatic)
+* Email: support-feedback@company.com
+* Quarterly support review meetings
+* Anonymous feedback form
+
+=== Service Improvements ===
+
+'''Recent improvements:'''
+* Reduced average response time by 40%
+* Added Slack integration for faster communication
+* Created self-service troubleshooting guides
+* Expanded office hours coverage
+
+'''Planned improvements:'''
+* AI-powered initial triage
+* Video call support for complex issues
+* Enhanced knowledge base search
+* Mobile-optimized support portal
+
+== International Support ==
+
+=== Time Zones ===
+
+'''Coverage areas:'''
+* '''UK/Europe''' - Primary coverage (8:00-18:00 GMT)
+* '''Americas''' - Extended coverage (13:00-23:00 GMT)
+* '''Asia-Pacific''' - Limited coverage (contact for arrangements)
+
+'''Language Support:'''
+* English (primary)
+* French (limited)
+* German (limited)
+* Other languages: use translation tools or request assistance
+
+== External Support Resources ==
+
+=== GitHub Official Support ===
+
+'''GitHub Enterprise Support:'''
+* [https://support.github.com Enterprise Support Portal]
+* Available with GitHub Enterprise license
+* Direct line to GitHub engineering team
+* SLA-backed response times
+
+'''Community Resources:'''
+* [https://github.community GitHub Community Forum]
+* [https://stackoverflow.com/questions/tagged/github Stack Overflow]
+* [https://github.blog GitHub Blog] - Updates and best practices
+
+=== Partner Support ===
+
+'''Approved vendors:'''
+* Development tooling support
+* CI/CD pipeline assistance
+* Security scanning tools
+* Training and consultation services
+
+'''Contact procurement team for vendor engagement'''
+
+{{Warning|Only use approved external support channels. Do not share company code or sensitive information with unauthorized parties.}}
+
+== Related Pages ==
+
+* [[Project:Help]] - General help and guidance
+* [[Troubleshooting Guide]] - Self-service problem solving
+* [[Project:FAQ]] - Common questions and answers
+* [[GitHub Enterprise Administration]] - Administrative procedures
+
+[[Category:Support]]
+[[Category:Project]]
+[[Category:Help]]

@@ -1,0 +1,419 @@
+= Configuring Branch Protection Rules in GitHub Enterprise =
+
+{{TOC limit=3}}
+
+== Overview ==
+
+Branch protection rules are a critical security and quality control feature in GitHub Enterprise that help teams maintain code integrity by enforcing specific workflows and requirements before changes can be merged into protected branches. This comprehensive guide covers the configuration of branch protection rules with a focus on approval workflows in GitHub Enterprise environments.
+
+== Prerequisites ==
+
+Before configuring branch protection rules, ensure you have:
+
+* '''Admin permissions''' on the repository or a custom role with the "edit repository rules" permission
+* A '''GitHub Enterprise''' account (GitHub Enterprise Cloud or GitHub Enterprise Server)
+* Understanding of your team's development workflow and approval requirements
+* Identified branches that require protection (typically <code>main</code>, <code>master</code>, or <code>production</code>)
+
+== Accessing Branch Protection Settings ==
+
+=== Via Web Interface ===
+
+# Navigate to your repository on GitHub Enterprise
+# Click on '''Settings''' in the repository navigation bar
+# In the left sidebar, click '''Branches''' under the "Code and automation" section
+# Under "Branch protection rules", click '''Add rule'''
+
+=== Via GitHub CLI ===
+
+<syntaxhighlight lang="bash">
+# List existing branch protection rules
+gh api repos/OWNER/REPO/branches/BRANCH/protection
+
+# View specific branch protection settings
+gh api repos/OWNER/REPO/branches/main/protection
+</syntaxhighlight>
+
+== Basic Branch Protection Configuration ==
+
+=== Creating a New Rule ===
+
+# In the "Branch name pattern" field, enter the branch name or pattern
+#* For a specific branch: <code>main</code>
+#* For all release branches: <code>release/*</code>
+#* For multiple patterns: <code>main|develop|release/*</code>
+# Configure the protection settings as described in the following sections
+# Click '''Create''' or '''Save changes'''
+
+=== Essential Protection Settings ===
+
+{| class="wikitable"
+! Setting !! Description !! Recommendation
+|-
+| '''Require a pull request before merging''' || Prevents direct pushes to the branch || ✓ Always enable for production branches
+|-
+| '''Require approvals''' || Mandates review approvals before merging || ✓ Enable with appropriate approval count
+|-
+| '''Dismiss stale pull request approvals''' || Invalidates approvals when new commits are pushed || ✓ Enable for security-critical branches
+|-
+| '''Require review from CODEOWNERS''' || Enforces approval from designated code owners || ✓ Enable for repositories with CODEOWNERS file
+|}
+
+== Configuring Approval Workflows ==
+
+=== Basic Approval Requirements ===
+
+# Enable '''Require a pull request before merging'''
+# Enable '''Require approvals'''
+# Set the '''Required number of approvals''' (recommended: 1-2 for most teams)
+# Configure additional approval settings:
+
+<syntaxhighlight lang="yaml">
+Approval Settings:
+  - Required approvals: 2
+  - Dismiss stale approvals: true
+  - Require code owner reviews: true
+  - Restrict who can dismiss reviews: true
+</syntaxhighlight>
+
+=== Advanced Approval Configuration ===
+
+==== Require Approval from Code Owners ====
+
+# Create a <code>CODEOWNERS</code> file in your repository
+# Enable '''Require review from CODEOWNERS'''
+# Example CODEOWNERS file:
+
+<syntaxhighlight lang="text">
+# Global owners
+* @org/admin-team
+
+# Frontend code owners
+/src/frontend/ @org/frontend-team
+*.js @org/javascript-experts
+
+# Backend code owners
+/src/backend/ @org/backend-team
+*.py @org/python-experts
+
+# Documentation owners
+/docs/ @org/docs-team
+*.md @org/docs-team
+</syntaxhighlight>
+
+==== Restrict Who Can Approve ====
+
+# Enable '''Restrict who can dismiss pull request reviews'''
+# Add specific users or teams who can dismiss reviews
+# This prevents unauthorised dismissal of required reviews
+
+==== Require Fresh Approvals ====
+
+Enable these options for enhanced security:
+* '''Dismiss stale pull request approvals when new commits are pushed'''
+* '''Require approval of the most recent reviewable push'''
+
+== Status Checks and Automation ==
+
+=== Configuring Required Status Checks ===
+
+# Enable '''Require status checks to pass before merging'''
+# Search and select required checks:
+#* Continuous Integration (CI) builds
+#* Security scans
+#* Code quality checks
+#* Test suites
+# Enable '''Require branches to be up to date before merging'''
+
+=== Example Status Check Configuration ===
+
+<syntaxhighlight lang="json">
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": [
+      "continuous-integration/jenkins",
+      "security/snyk",
+      "coverage/codecov",
+      "lint/eslint"
+    ]
+  }
+}
+</syntaxhighlight>
+
+== Enterprise-Specific Features ==
+
+=== Organisation-Level Rulesets ===
+
+GitHub Enterprise allows configuration of organisation-wide rulesets:
+
+# Navigate to your organisation settings
+# Click '''Repository''' → '''Rulesets'''
+# Click '''New ruleset'''
+# Configure rules that apply across multiple repositories
+
+=== Custom Deployment Protection Rules ===
+
+# Navigate to '''Settings''' → '''Environments'''
+# Select or create an environment
+# Under "Deployment protection rules", click '''Add rule'''
+# Configure custom GitHub App integrations for deployment approval
+
+=== Merge Queue Configuration ===
+
+For high-velocity teams, enable merge queues:
+
+# In branch protection settings, enable '''Require merge queue'''
+# Configure merge queue settings:
+#* Maximum pull requests to merge: 5-10
+#* Minimum pull requests to merge: 1-2
+#* Wait time between merges: 1-5 minutes
+
+== Advanced Configurations ==
+
+=== Bypass Permissions ===
+
+Configure bypass permissions for specific scenarios:
+
+# Enable '''Allow specified actors to bypass required pull requests'''
+# Add users, teams, or apps that can bypass:
+#* Deploy bots
+#* Emergency response teams
+#* Automated release tools
+
+'''Warning:''' Use bypass permissions sparingly and audit regularly.
+
+=== Conversation Resolution ===
+
+# Enable '''Require conversation resolution before merging'''
+# This ensures all PR comments are addressed before merging
+
+=== Signed Commits ===
+
+For enhanced security:
+# Enable '''Require signed commits'''
+# All commits must be GPG or S/MIME signed
+
+== Best Practices ==
+
+=== Recommended Configuration for Production Branches ===
+
+{| class="wikitable"
+! Setting !! Production !! Development !! Feature Branches
+|-
+| Require pull request || ✓ || ✓ || ✗
+|-
+| Required approvals || 2+ || 1 || 0
+|-
+| Dismiss stale approvals || ✓ || ✓ || ✗
+|-
+| Require code owner review || ✓ || ✗ || ✗
+|-
+| Require status checks || ✓ || ✓ || ✗
+|-
+| Require up-to-date branches || ✓ || ✗ || ✗
+|-
+| Require signed commits || ✓ || ✗ || ✗
+|-
+| Include administrators || ✓ || ✗ || ✗
+|}
+
+=== Security Recommendations ===
+
+# '''Enable administrator restrictions''' for production branches
+# '''Regularly audit''' branch protection settings and bypass permissions
+# '''Use CODEOWNERS''' for critical code paths
+# '''Implement status checks''' for security scanning
+# '''Document exceptions''' and bypass usage
+
+== Automation and API Usage ==
+
+=== Using GitHub API ===
+
+<syntaxhighlight lang="bash">
+# Create branch protection rule
+curl -X PUT \
+  -H "Authorization: token YOUR_PAT" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/OWNER/REPO/branches/main/protection \
+  -d '{
+    "required_status_checks": {
+      "strict": true,
+      "contexts": ["continuous-integration/travis-ci"]
+    },
+    "enforce_admins": true,
+    "required_pull_request_reviews": {
+      "dismissal_restrictions": {
+        "users": ["octocat"],
+        "teams": ["justice-league"]
+      },
+      "dismiss_stale_reviews": true,
+      "require_code_owner_reviews": true,
+      "required_approving_review_count": 2
+    },
+    "restrictions": null
+  }'
+</syntaxhighlight>
+
+=== Using GitHub CLI ===
+
+<syntaxhighlight lang="bash">
+# Update branch protection
+gh api \
+  --method PUT \
+  -H "Accept: application/vnd.github+json" \
+  /repos/OWNER/REPO/branches/main/protection \
+  --field required_status_checks[strict]=true \
+  --field required_status_checks[contexts][]="build" \
+  --field required_pull_request_reviews[required_approving_review_count]=2
+</syntaxhighlight>
+
+=== Terraform Configuration ===
+
+<syntaxhighlight lang="hcl">
+resource "github_branch_protection" "main" {
+  repository_id = github_repository.example.node_id
+  pattern       = "main"
+  
+  required_status_checks {
+    strict   = true
+    contexts = ["ci/build", "security/scan"]
+  }
+  
+  required_pull_request_reviews {
+    dismiss_stale_reviews           = true
+    require_code_owner_reviews      = true
+    required_approving_review_count = 2
+    
+    dismissal_restrictions = [
+      data.github_user.admin.node_id,
+      data.github_team.security.node_id,
+    ]
+  }
+  
+  enforce_admins = true
+}
+</syntaxhighlight>
+
+== Troubleshooting Common Issues ==
+
+=== Issue: Cannot Push to Protected Branch ===
+
+'''Symptoms:''' Error message "protected branch hook declined"
+
+'''Solutions:'''
+# Verify you're not pushing directly to the protected branch
+# Create a feature branch and open a pull request
+# Check if you have bypass permissions if direct push is required
+
+=== Issue: Pull Request Blocked Despite Approvals ===
+
+'''Symptoms:''' PR shows as blocked even with required approvals
+
+'''Checklist:'''
+# Verify all required status checks have passed
+# Check if branch is up-to-date with base branch
+# Ensure approvals are from authorised reviewers
+# Confirm no unresolved conversations
+# Check for code owner approval requirements
+
+=== Issue: Stale Reviews Not Dismissed ===
+
+'''Symptoms:''' Old approvals remain valid after new commits
+
+'''Solutions:'''
+# Verify "Dismiss stale pull request approvals" is enabled
+# Check if the setting was applied after the PR was created
+# Manually dismiss outdated reviews if necessary
+
+=== Issue: Status Checks Not Running ===
+
+'''Symptoms:''' Required checks don't appear or start
+
+'''Solutions:'''
+# Verify webhook configuration
+# Check CI/CD service connectivity
+# Ensure status checks are correctly named in protection rules
+# Validate branch patterns match the current branch
+
+== Monitoring and Compliance ==
+
+=== Audit Log Monitoring ===
+
+Monitor these events in the audit log:
+* <code>protected_branch.create</code>
+* <code>protected_branch.update</code>
+* <code>protected_branch.destroy</code>
+* <code>protected_branch.dismiss_stale_reviews</code>
+* <code>protected_branch.rejected_ref_update</code>
+
+=== Compliance Reporting ===
+
+<syntaxhighlight lang="bash">
+# Generate branch protection report
+gh api graphql -f query='
+  query($owner: String!, $name: String!) {
+    repository(owner: $owner, name: $name) {
+      branchProtectionRules(first: 100) {
+        nodes {
+          pattern
+          requiresApprovingReviews
+          requiredApprovingReviewCount
+          dismissesStaleReviews
+          requiresCodeOwnerReviews
+          requiresStatusChecks
+          requiresStrictStatusChecks
+          isAdminEnforced
+        }
+      }
+    }
+  }
+' -f owner=OWNER -f name=REPO
+</syntaxhighlight>
+
+== Migration Guide ==
+
+=== Migrating from Basic to Advanced Protection ===
+
+# '''Phase 1:''' Enable basic protection
+#* Require pull requests
+#* Set minimum approvals to 1
+# '''Phase 2:''' Add status checks
+#* Start with non-blocking checks
+#* Gradually make checks required
+# '''Phase 3:''' Implement code owners
+#* Create CODEOWNERS file
+#* Enable code owner reviews
+# '''Phase 4:''' Enhance security
+#* Enable signed commits
+#* Dismiss stale reviews
+#* Restrict review dismissal
+
+=== Rollback Procedures ===
+
+If issues arise:
+# Document current settings before changes
+# Make incremental changes
+# Test with non-critical branches first
+# Keep bypass permissions for emergency fixes
+# Have a rollback plan documented
+
+== See Also ==
+
+* [[GitHub Enterprise Server Documentation]]
+* [[CODEOWNERS File Configuration]]
+* [[GitHub Actions and Status Checks]]
+* [[Repository Rulesets]]
+* [[Deployment Environments]]
+
+== External Links ==
+
+* [https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches Official GitHub Documentation on Protected Branches]
+* [https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets GitHub Enterprise Rulesets Documentation]
+* [https://docs.github.com/en/rest/branches/branch-protection GitHub REST API for Branch Protection]
+
+[[Category:GitHub Enterprise]]
+[[Category:Repository Management]]
+[[Category:Security]]
+[[Category:DevOps]]
+[[Category:Version Control]]

@@ -1,0 +1,24 @@
+<includeonly><div style="background: #ffcdd2; border: 2px solid #f44336; border-radius: 5px; padding: 15px; margin-bottom: 20px; text-align: center;">
+<div style="font-size: 20px; margin-bottom: 10px;">🔒</div>
+<div style="font-weight: bold; font-size: 16px; color: #d32f2f; margin-bottom: 5px;">RESTRICTED ACCESS</div>
+<div style="font-size: 14px;">This page is only accessible to users in the <strong>admin</strong> group.</div>
+</div></includeonly><noinclude>
+== Template:AdminOnly ==
+
+This template displays a warning that the page is restricted to administrators only.
+
+=== Usage ===
+
+<pre>
+{{AdminOnly}}
+</pre>
+
+Place this template at the top of pages in the Admin: namespace.
+
+=== Example ===
+
+{{AdminOnly}}
+
+[[Category:Templates]]
+[[Category:Admin Templates]]
+</noinclude>

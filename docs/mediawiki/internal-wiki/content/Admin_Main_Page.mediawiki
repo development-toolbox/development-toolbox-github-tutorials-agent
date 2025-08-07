@@ -1,0 +1,258 @@
+{{AdminOnly}}
+= Administrator Portal =
+
+{{TOC limit|3}}
+
+<div style="background: #ffebee; border: 2px solid #f44336; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+'''⚠️ Administrator Access Only'''
+
+This section contains sensitive configuration and management information. Access is restricted to members of the '''admin''' group only.
+</div>
+
+== Quick Actions ==
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;">
+<div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 5px; padding: 15px; text-align: center;">
+=== 👥 [[Admin:User Management|User Management]] ===
+* Create/modify users
+* Assign permissions
+* Manage groups
+* Audit user activity
+</div>
+
+<div style="background: #f3e5f5; border: 1px solid #9c27b0; border-radius: 5px; padding: 15px; text-align: center;">
+=== 🔒 [[Admin:Security Configuration|Security]] ===
+* Configure authentication
+* Set up 2FA
+* Manage API tokens
+* Security policies
+</div>
+
+<div style="background: #e8f5e9; border: 1px solid #4caf50; border-radius: 5px; padding: 15px; text-align: center;">
+=== ⚙️ [[Admin:Enterprise Settings|Enterprise]] ===
+* Organisation settings
+* License management
+* SAML/SSO config
+* Audit logs
+</div>
+</div>
+
+== GitHub Enterprise Configuration ==
+
+=== Organisation Management ===
+
+* [[Admin:Organisation Setup|Initial Organisation Setup]]
+* [[Admin:Team Structure|Managing Teams and Permissions]]
+* [[Admin:Repository Templates|Repository Template Configuration]]
+* [[Admin:Webhook Configuration|Enterprise Webhooks]]
+* [[Admin:IP Allowlisting|Network Security Configuration]]
+
+=== Security and Compliance ===
+
+* [[Admin:Security Policies|Enforcing Security Policies]]
+* [[Admin:Compliance Reports|Generating Compliance Reports]]
+* [[Admin:Secret Scanning|Secret Scanning Configuration]]
+* [[Admin:Dependency Management|Dependency Security Settings]]
+* [[Admin:Code Scanning|Advanced Security Features]]
+
+=== Integration Management ===
+
+* [[Admin:GitHub Apps|Managing GitHub Apps]]
+* [[Admin:OAuth Applications|OAuth App Configuration]]
+* [[Admin:CI CD Integration|CI/CD Tool Integration]]
+* [[Admin:Third Party Services|Third-Party Service Management]]
+
+== Administrative Workflows ==
+
+=== User Onboarding Process ===
+
+# [[Admin:Create User Account|Create GitHub Enterprise account]]
+# [[Admin:Assign Teams|Assign to appropriate teams]]
+# [[Admin:Repository Access|Configure repository access]]
+# [[Admin:Security Setup|Enable security features]]
+# [[Admin:Training Assignment|Assign training materials]]
+
+{{Warning|Always follow the principle of least privilege when assigning permissions}}
+
+=== Incident Response ===
+
+<div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 10px; margin: 20px 0;">
+'''Security Incident Checklist:'''
+# [[Admin:Incident Detection|Detect and verify incident]]
+# [[Admin:Access Revocation|Revoke compromised access]]
+# [[Admin:Audit Investigation|Investigate via audit logs]]
+# [[Admin:Security Remediation|Apply security fixes]]
+# [[Admin:Incident Documentation|Document and report]]
+</div>
+
+== System Administration ==
+
+=== Performance Monitoring ===
+
+{| class="wikitable"
+! Metric !! Target !! Action if Exceeded
+|-
+| API Rate Limit Usage || <80% || [[Admin:Rate Limit Adjustment|Adjust limits]]
+|-
+| Storage Usage || <90% || [[Admin:Storage Management|Clean up repositories]]
+|-
+| Action Minutes || <85% || [[Admin:Actions Optimisation|Optimise workflows]]
+|-
+| User License Count || <95% || [[Admin:License Procurement|Request additional licenses]]
+|}
+
+=== Backup and Recovery ===
+
+* [[Admin:Backup Strategy|Enterprise Backup Strategy]]
+* [[Admin:Disaster Recovery|Disaster Recovery Plan]]
+* [[Admin:Data Retention|Data Retention Policies]]
+* [[Admin:Migration Planning|Migration Procedures]]
+
+== API and Automation ==
+
+=== Administrative APIs ===
+
+<syntaxhighlight lang="bash">
+# List all organisations
+curl -H "Authorization: token $ADMIN_TOKEN" \
+  https://github.company.com/api/v3/organizations
+
+# Get enterprise statistics
+curl -H "Authorization: token $ADMIN_TOKEN" \
+  https://github.company.com/api/v3/enterprise/stats/all
+
+# Audit log streaming
+curl -H "Authorization: token $ADMIN_TOKEN" \
+  https://github.company.com/api/v3/enterprises/ENTERPRISE/audit-log
+</syntaxhighlight>
+
+=== Automation Scripts ===
+
+* [[Admin:User Provisioning Script|Bulk User Provisioning]]
+* [[Admin:Repository Audit Script|Repository Compliance Checker]]
+* [[Admin:Permission Reporter|Permission Audit Report]]
+* [[Admin:Cleanup Scripts|Maintenance Automation]]
+
+== Troubleshooting ==
+
+=== Common Issues ===
+
+* [[Admin:Authentication Issues|Authentication Problems]]
+* [[Admin:Performance Issues|Performance Degradation]]
+* [[Admin:Integration Failures|Third-Party Integration Issues]]
+* [[Admin:Action Runner Issues|GitHub Actions Problems]]
+
+=== Emergency Procedures ===
+
+{{Critical|
+'''Emergency Contacts:'''
+* GitHub Enterprise Support: +44 20 7946 0xxx
+* Security Team: security@company.com
+* On-Call Admin: See [[Admin:On Call Schedule|schedule]]
+}}
+
+== Configuration Reference ==
+
+=== Enterprise Settings ===
+
+<syntaxhighlight lang="yaml">
+# github-enterprise-config.yml
+enterprise:
+  name: "Company GitHub Enterprise"
+  url: "https://github.company.com"
+
+authentication:
+  method: "saml"
+  provider: "okta"
+  enforce_2fa: true
+  session_timeout: 28800
+
+security:
+  dependency_scanning: enabled
+  secret_scanning: enabled
+  code_scanning: enabled
+  security_advisories: enabled
+
+policies:
+  repository_creation: "members"
+  default_repository_permission: "none"
+  members_can_create_teams: false
+  members_can_delete_repositories: false
+</syntaxhighlight>
+
+=== Recommended Extensions ===
+
+* [[Admin:Required Actions|Mandatory GitHub Actions]]
+* [[Admin:Approved Apps|Pre-approved GitHub Apps]]
+* [[Admin:Blocked Integrations|Blocked Integrations List]]
+
+== Reports and Analytics ==
+
+=== Monthly Reports ===
+
+* [[Admin:Usage Report|User Activity and Usage]]
+* [[Admin:Security Report|Security Compliance Status]]
+* [[Admin:License Report|License Utilisation]]
+* [[Admin:Cost Report|Cost Analysis and Optimisation]]
+
+=== Dashboard Access ===
+
+* [https://github.company.com/enterprises/COMPANY/insights Enterprise Insights]
+* [https://github.company.com/enterprises/COMPANY/settings/audit-log Audit Log]
+* [https://github.company.com/enterprises/COMPANY/policies Policy Management]
+
+== Administrator Resources ==
+
+=== Documentation ===
+
+* [[Admin:GitHub Enterprise Docs|Official Enterprise Documentation]]
+* [[Admin:API Reference|Enterprise API Reference]]
+* [[Admin:Best Practices|Administrative Best Practices]]
+* [[Admin:Change Log|Platform Change Log]]
+
+=== Training and Certification ===
+
+* [[Admin:Administrator Training|GitHub Enterprise Admin Training]]
+* [[Admin:Certification Path|Administrator Certification]]
+* [[Admin:Workshop Materials|Internal Training Materials]]
+
+== Quick Reference ==
+
+=== Essential Commands ===
+
+<syntaxhighlight lang="bash">
+# SSH to GitHub Enterprise Server
+ssh admin@github.company.com -p 122
+
+# GitHub Enterprise CLI commands
+ghe-actions-check
+ghe-btop
+ghe-cluster-support-bundle
+ghe-config
+ghe-license-check
+ghe-org-admin-promote
+ghe-repl-status
+ghe-support-bundle
+ghe-webhook-logs
+</syntaxhighlight>
+
+=== Support Channels ===
+
+{| class="wikitable"
+! Channel !! Purpose !! Response Time
+|-
+| Enterprise Support || Critical issues || 1 hour
+|-
+| #github-admins || Internal support || 4 hours
+|-
+| admin@company.com || Non-urgent queries || 1 business day
+|}
+
+{{Navigation
+|prev=[[Main Page]]
+|next=[[Admin:User Management]]
+}}
+
+[[Category:Administration]]
+[[Category:GitHub Enterprise]]
+[[Category:Admin Only]]

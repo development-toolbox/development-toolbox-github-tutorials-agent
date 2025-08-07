@@ -1,0 +1,727 @@
+{{Tutorial
+|title = Markdown Basics
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 20 minutes
+|prerequisites = Basic text editing knowledge
+|topics = Markdown, Documentation, Formatting, GitHub
+}}
+
+{{TOC limit|3}}
+
+= Markdown Basics =
+
+Markdown is a lightweight markup language that makes it easy to format text with simple, readable syntax. It's the standard for documentation on GitHub and many other platforms.
+
+== What is Markdown? ==
+
+Markdown is a way to write formatted text using plain text syntax:
+* '''Simple syntax''' - Easy to learn and remember
+* '''Readable as plain text''' - Looks good even without rendering
+* '''Widely supported''' - Works on GitHub, Reddit, Stack Overflow, and more
+* '''Convertible''' - Can be converted to HTML, PDF, and other formats
+* '''Version control friendly''' - Plain text works well with Git
+
+{{Note|Markdown was created by John Gruber in 2004 to make writing for the web easier and more intuitive.}}
+
+=== Why Use Markdown? ===
+
+'''Benefits over rich text editors:'''
+* '''Faster writing''' - No mouse needed for formatting
+* '''Consistent output''' - Same result across platforms
+* '''Future-proof''' - Plain text never becomes obsolete
+* '''Version control''' - Easy to track changes in Git
+* '''Cross-platform''' - Works everywhere
+
+'''Common uses:'''
+* README files
+* Documentation
+* Blog posts
+* Issue descriptions
+* Pull request descriptions
+* Comments on GitHub
+
+== Basic Syntax ==
+
+=== Headers ===
+
+Create headers using hash symbols (#):
+
+{{Code|markdown|
+# Header 1 (Largest)
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6 (Smallest)
+}}
+
+'''Alternative syntax for H1 and H2:'''
+{{Code|markdown|
+Header 1
+========
+
+Header 2
+--------
+}}
+
+{{Good|Use headers to create a logical document structure. Most documents only need H1-H3.}}
+
+=== Text Formatting ===
+
+'''Bold and Italic:'''
+{{Code|markdown|
+*italic text* or _italic text_
+**bold text** or __bold text__
+***bold and italic*** or ___bold and italic___
+}}
+
+'''Strikethrough:'''
+{{Code|markdown|
+~~strikethrough text~~
+}}
+
+'''Code formatting:'''
+{{Code|markdown|
+`inline code` with backticks
+}}
+
+=== Lists ===
+
+'''Unordered lists:'''
+{{Code|markdown|
+- Item 1
+- Item 2
+- Item 3
+  - Nested item
+  - Another nested item
+
+* Also works with asterisks
++ Or plus signs
+}}
+
+'''Ordered lists:'''
+{{Code|markdown|
+1. First item
+2. Second item
+3. Third item
+   1. Nested numbered item
+   2. Another nested item
+
+# Numbers don't have to be sequential
+1. First item
+5. This will show as "2."
+99. This will show as "3."
+}}
+
+'''Task lists (GitHub-specific):'''
+{{Code|markdown|
+- [x] Completed task
+- [ ] Incomplete task
+- [ ] Another incomplete task
+}}
+
+=== Links ===
+
+'''Basic links:'''
+{{Code|markdown|
+[Link text](https://example.com)
+[Link with title](https://example.com "Tooltip text")
+}}
+
+'''Reference-style links:'''
+{{Code|markdown|
+[Link text][reference]
+[Another link][ref2]
+
+[reference]: https://example.com "Optional title"
+[ref2]: https://github.com
+}}
+
+'''Automatic links:'''
+{{Code|markdown|
+https://example.com
+<https://example.com>
+user@example.com
+<user@example.com>
+}}
+
+=== Images ===
+
+'''Basic image syntax:'''
+{{Code|markdown|
+![Alt text](image.jpg)
+![Alt text](image.jpg "Image title")
+}}
+
+'''Reference-style images:'''
+{{Code|markdown|
+![Alt text][image-ref]
+
+[image-ref]: image.jpg "Optional title"
+}}
+
+'''Image with link:'''
+{{Code|markdown|
+[![Alt text](image.jpg)](https://example.com)
+}}
+
+=== Code Blocks ===
+
+'''Inline code:'''
+{{Code|markdown|
+Use `git status` to check repository status.
+}}
+
+'''Fenced code blocks:'''
+{{Code|markdown|
+```
+Basic code block
+No syntax highlighting
+```
+
+```javascript
+// JavaScript code with syntax highlighting
+function hello() {
+  console.log('Hello, World!');
+}
+```
+
+```python
+# Python code with syntax highlighting
+def hello():
+    print("Hello, World!")
+```
+}}
+
+'''Indented code blocks:'''
+{{Code|markdown|
+Regular paragraph.
+
+    This is a code block
+    Created with 4-space indentation
+    All lines must be indented
+}}
+
+=== Blockquotes ===
+
+{{Code|markdown|
+> This is a blockquote
+> It can span multiple lines
+
+> Blockquotes can be nested
+>> Like this
+>>> And this
+
+> You can use other **markdown** inside blockquotes
+> Including `code` and [links](https://example.com)
+}}
+
+=== Horizontal Rules ===
+
+Create horizontal lines to separate content:
+
+{{Code|markdown|
+---
+
+***
+
+___
+
+<!-- All three create the same horizontal rule -->
+}}
+
+== Tables ==
+
+Create tables using pipes (|) and hyphens (-):
+
+{{Code|markdown|
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Row 1    | Data     | Data     |
+| Row 2    | Data     | Data     |
+| Row 3    | Data     | Data     |
+}}
+
+'''Table alignment:'''
+{{Code|markdown|
+| Left Aligned | Center Aligned | Right Aligned |
+|:-------------|:--------------:|--------------:|
+| Left         | Center         | Right         |
+| Text         | Text           | Text          |
+}}
+
+'''Table formatting tips:'''
+* Outer pipes are optional
+* Don't need to align columns perfectly
+* Can include inline formatting in cells
+
+{{Code|markdown|
+Header 1 | Header 2 | Header 3
+---------|----------|----------
+**Bold** | `code`   | [Link](url)
+*Italic* | Text     | More text
+}}
+
+== GitHub-Specific Features ==
+
+=== Mentions ===
+
+Reference users and teams:
+{{Code|markdown|
+@username mentions a user
+@org/team-name mentions a team
+}}
+
+=== Issue and PR References ===
+
+Link to issues and pull requests:
+{{Code|markdown|
+#123 references issue or PR #123
+user/repo#123 references issue in another repository
+GH-123 also references issue #123
+}}
+
+=== Commit References ===
+
+Link to specific commits:
+{{Code|markdown|
+a1b2c3d references commit by SHA
+user/repo@a1b2c3d references commit in another repository
+}}
+
+=== Emoji ===
+
+Use GitHub's emoji shortcodes:
+{{Code|markdown|
+:smile: :heart: :thumbsup:
+:rocket: :tada: :fire:
+:bug: :warning: :bulb:
+}}
+
+Popular emoji for documentation:
+* `:warning:` ⚠️ - Warnings
+* `:information_source:` ℹ️ - Information
+* `:white_check_mark:` ✅ - Completed items
+* `:x:` ❌ - Incorrect or failed items
+* `:bulb:` 💡 - Tips and ideas
+
+=== Collapsible Sections ===
+
+Create collapsible content using HTML details tags:
+
+{{Code|markdown|
+<details>
+<summary>Click to expand</summary>
+
+This content is hidden by default.
+
+- You can include any markdown here
+- Lists, code blocks, etc.
+
+```javascript
+console.log('Even code blocks work!');
+```
+
+</details>
+}}
+
+=== Syntax Highlighting ===
+
+GitHub supports many languages for syntax highlighting:
+{{Code|markdown|
+```bash
+git commit -m "Add new feature"
+```
+
+```sql
+SELECT * FROM users WHERE active = 1;
+```
+
+```yaml
+name: CI Pipeline
+on: [push, pull_request]
+```
+
+```json
+{
+  "name": "example",
+  "version": "1.0.0"
+}
+```
+}}
+
+== Advanced Formatting ==
+
+=== Line Breaks ===
+
+Different ways to create line breaks:
+
+{{Code|markdown|
+Two spaces at end of line  
+Creates a line break
+
+Blank line between paragraphs
+
+Creates new paragraph
+
+Use <br> tag for manual breaks<br>
+When needed
+}}
+
+=== Escaping Characters ===
+
+Use backslash to escape special characters:
+
+{{Code|markdown|
+\*Not italic\*
+\# Not a header
+\[Not a link\](url)
+\`Not code\`
+}}
+
+=== HTML in Markdown ===
+
+You can use HTML tags when Markdown isn't enough:
+
+{{Code|markdown|
+<div align="center">
+  <strong>Centered bold text</strong>
+</div>
+
+<details>
+<summary>Collapsible section</summary>
+Content here
+</details>
+
+<kbd>Ctrl</kbd> + <kbd>C</kbd> for keyboard shortcuts
+
+<sub>subscript</sub> and <sup>superscript</sup>
+}}
+
+=== Mathematical Expressions ===
+
+GitHub supports LaTeX-style math expressions:
+
+{{Code|markdown|
+Inline math: $x = y + z$
+
+Block math:
+$$
+\sum_{i=1}^{n} x_i = x_1 + x_2 + \cdots + x_n
+$$
+}}
+
+== Document Structure Best Practices ==
+
+=== Logical Hierarchy ===
+
+Use headers to create clear document structure:
+
+{{Code|markdown|
+# Main Title (H1)
+
+Brief introduction paragraph.
+
+## Major Section (H2)
+
+Content about this major topic.
+
+### Subsection (H3)
+
+More specific information.
+
+#### Details (H4)
+
+Fine-grained details when needed.
+
+## Another Major Section (H2)
+
+Continue with more major topics.
+}}
+
+=== Table of Contents ===
+
+For long documents, create a table of contents:
+
+{{Code|markdown|
+# Document Title
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+- [Usage](#usage)
+  - [Basic Usage](#basic-usage)
+  - [Advanced Features](#advanced-features)
+- [Contributing](#contributing)
+
+## Introduction
+
+Content here...
+
+## Getting Started
+
+### Installation
+
+Installation instructions...
+}}
+
+=== README Structure ===
+
+Common structure for README files:
+
+{{Code|markdown|
+# Project Name
+
+Brief description of what the project does.
+
+## Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+## Installation
+
+```bash
+npm install project-name
+```
+
+## Usage
+
+```javascript
+const project = require('project-name');
+console.log(project.hello());
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Make changes
+4. Submit pull request
+
+## License
+
+MIT License - see LICENSE file for details.
+}}
+
+== Common Markdown Mistakes ==
+
+=== Formatting Issues ===
+
+'''Don't:'''
+{{Code|markdown|
+#Header without space
+**Bold text **with trailing space
+* List item without space after asterisk
+[Link] (with space before parentheses)
+}}
+
+'''Do:'''
+{{Code|markdown|
+# Header with space
+**Bold text** without trailing space
+* List item with space after asterisk
+[Link](without space before parentheses)
+}}
+
+=== List Formatting ===
+
+'''Don't:'''
+{{Code|markdown|
+1.First item without space
+2.Second item
+- Mixed list types
+1. in same list
+}}
+
+'''Do:'''
+{{Code|markdown|
+1. First item with space
+2. Second item
+
+- Use consistent list types
+- Throughout the document
+}}
+
+=== Link and Image Issues ===
+
+'''Don't:'''
+{{Code|markdown|
+[Broken link](url-that-doesnt-exist)
+![Missing alt text](image.jpg)
+[Link text] (space before URL)
+}}
+
+'''Do:'''
+{{Code|markdown|
+[Working link](https://example.com)
+![Descriptive alt text](image.jpg)
+[Link text](https://example.com)
+}}
+
+== Tools and Editors ==
+
+=== Markdown Editors ===
+
+'''Desktop editors:'''
+* [Typora](https://typora.io/) - WYSIWYG Markdown editor
+* [Mark Text](https://marktext.app/) - Real-time preview
+* [Zettlr](https://www.zettlr.com/) - Academic writing focus
+
+'''Online editors:'''
+* [Dillinger](https://dillinger.io/) - Online Markdown editor
+* [StackEdit](https://stackedit.io/) - In-browser editor
+* GitHub web editor - Edit directly on GitHub
+
+'''IDE extensions:'''
+* VS Code - Built-in Markdown support
+* Sublime Text - Markdown packages
+* Atom - Markdown preview packages
+
+=== Preview and Conversion ===
+
+'''Preview tools:'''
+{{Code|bash|
+# VS Code
+Ctrl/Cmd + Shift + V for preview
+
+# Command line tools
+pandoc document.md -o document.html
+markdown document.md > document.html
+}}
+
+'''Online converters:'''
+* [Pandoc Try](https://pandoc.org/try/) - Convert between formats
+* [Markdown to HTML](https://markdowntohtml.com/) - Simple conversion
+
+== GitHub Markdown Workflow ==
+
+=== Writing Issues ===
+
+Structure for clear issue reports:
+
+{{Code|markdown|
+## Summary
+Brief description of the issue.
+
+## Steps to Reproduce
+1. Go to page X
+2. Click button Y
+3. See error Z
+
+## Expected Behavior
+What should happen.
+
+## Actual Behavior
+What actually happens.
+
+## Environment
+- OS: Windows 10
+- Browser: Chrome 91
+- Version: 1.2.3
+
+## Screenshots
+![Error screenshot](screenshot.png)
+}}
+
+=== Pull Request Descriptions ===
+
+Template for pull request descriptions:
+
+{{Code|markdown|
+## Changes Made
+- Added user authentication
+- Fixed login bug
+- Updated documentation
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+
+## Screenshots
+Before: ![Before](before.png)
+After: ![After](after.png)
+
+## Related Issues
+Fixes #123
+References #456
+}}
+
+=== Documentation Updates ===
+
+Keep documentation current:
+
+{{Code|markdown|
+<!-- Update version numbers -->
+## Installation
+
+```bash
+npm install package-name@2.1.0
+```
+
+<!-- Update examples -->
+## Usage
+
+```javascript
+// New API in version 2.0
+const result = api.newMethod(data);
+```
+
+<!-- Add changelog entries -->
+## Changelog
+
+### v2.1.0 (2024-01-15)
+- Added new features
+- Fixed bugs
+- Updated dependencies
+```
+}}
+
+{{Success|Markdown makes documentation accessible and maintainable. Practice these basics and you'll be creating professional documentation in no time.}}
+
+== Quick Reference ==
+
+=== Essential Syntax ===
+{{Code|markdown|
+# Header 1              ## Header 2            ### Header 3
+*italic*                **bold**               ***bold italic***
+`inline code`           ~~strikethrough~~      
+
+- Unordered list        1. Ordered list        - [x] Task list
+> Blockquote            [Link](url)            ![Image](url)
+
+```
+Code block
+```
+
+| Table | Header |
+|-------|--------|
+| Row   | Data   |
+}}
+
+=== GitHub-Specific ===
+{{Code|markdown|
+@username               #123                   :emoji:
+```language            <details>              $$math$$
+code block             <summary>Title</summary>
+```                    Content</details>
+}}
+
+== Related Resources ==
+
+* [[README Files]] - Apply Markdown in documentation
+* [[GitHub Web Interface Tour]] - See Markdown rendering in action
+* [[Creating Your First Repository]] - Practice with repository documentation
+* [[Pull Request Best Practices]] - Use Markdown in PR descriptions
+
+[[Category:Beginner Tutorials]]
+[[Category:Markdown]]
+[[Category:Documentation]]
+[[Category:GitHub]]
+[[Category:Writing]]

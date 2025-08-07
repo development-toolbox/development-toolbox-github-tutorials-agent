@@ -1,0 +1,335 @@
+{{TutorialInfo
+|level=Beginner
+|duration=30 minutes
+|prerequisites=None
+|topics=Account creation, Basic navigation, Repository basics
+}}
+
+= Getting Started with GitHub =
+
+Welcome to GitHub! This comprehensive guide will walk you through everything you need to know to start using GitHub effectively in your organisation.
+
+{{TOC limit|3}}
+
+== What is GitHub? ==
+
+GitHub is a web-based platform that uses Git for version control and collaboration. It allows multiple people to work on projects simultaneously without stepping on each other's toes.
+
+=== Key Concepts ===
+
+; Repository (Repo)
+: A project's folder containing all files and their revision history
+
+; Commit
+: A snapshot of changes made to files at a specific point in time
+
+; Branch
+: An independent line of development within a repository
+
+; Pull Request (PR)
+: A proposal to merge changes from one branch to another
+
+; Fork
+: A personal copy of someone else's repository
+
+== Creating Your GitHub Account ==
+
+{{Note|If your organisation uses GitHub Enterprise, your IT department may have already created an account for you. Check with your administrator first.}}
+
+=== Step 1: Sign Up ===
+
+# Navigate to [https://github.com GitHub.com] or your GitHub Enterprise URL
+# Click '''Sign up''' in the top right corner
+# Enter your details:
+#* '''Username''': Choose wisely - this will be your identifier
+#* '''Email''': Use your work email address
+#* '''Password''': Follow your organisation's password policy
+
+=== Step 2: Verify Your Account ===
+
+# Check your email for a verification message
+# Click the verification link
+# Complete any additional security steps required
+
+=== Step 3: Configure Your Profile ===
+
+# Click your avatar → '''Settings'''
+# Add your:
+#* Full name
+#* Profile photo
+#* Bio
+#* Company
+#* Location
+
+<syntaxhighlight lang="bash">
+# Set up Git with your GitHub credentials
+git config --global user.name "Your Name"
+git config --global user.email "your.email@company.com"
+</syntaxhighlight>
+
+== Understanding the GitHub Interface ==
+
+=== Navigation Bar ===
+
+[[File:GitHub-Navigation-Bar.png|frame|center|The GitHub navigation bar provides quick access to all major features]]
+
+* '''Pull requests''': View and manage code review requests
+* '''Issues''': Track bugs, features, and tasks
+* '''Marketplace''': Browse tools and applications
+* '''Explore''': Discover projects and developers
+
+=== User Dashboard ===
+
+Your dashboard shows:
+* Repositories you're watching
+* Recent activity from people you follow
+* Your repositories and contributions
+
+== Creating Your First Repository ==
+
+=== Via Web Interface ===
+
+# Click the '''+''' icon in the navigation bar
+# Select '''New repository'''
+# Fill in the details:
+#* '''Repository name''': Use kebab-case (my-first-repo)
+#* '''Description''': Brief explanation of your project
+#* '''Visibility''': Public or Private
+#* '''Initialize with README''': Recommended for new projects
+
+{{Warning|Think carefully about repository visibility. Private repositories are only visible to authorised users.}}
+
+=== Via Command Line ===
+
+<syntaxhighlight lang="bash">
+# Create a new directory
+mkdir my-first-repo
+cd my-first-repo
+
+# Initialize Git
+git init
+
+# Create README
+echo "# My First Repository" > README.md
+
+# Add and commit
+git add README.md
+git commit -m "Initial commit"
+
+# Add remote origin
+git remote add origin https://github.com/username/my-first-repo.git
+
+# Push to GitHub
+git push -u origin main
+</syntaxhighlight>
+
+== Basic GitHub Workflow ==
+
+=== 1. Clone a Repository ===
+
+<syntaxhighlight lang="bash">
+# Clone via HTTPS
+git clone https://github.com/username/repository.git
+
+# Clone via SSH (recommended)
+git clone git@github.com:username/repository.git
+</syntaxhighlight>
+
+=== 2. Create a Branch ===
+
+<syntaxhighlight lang="bash">
+# Create and switch to new branch
+git checkout -b feature/my-new-feature
+
+# Or separately
+git branch feature/my-new-feature
+git checkout feature/my-new-feature
+</syntaxhighlight>
+
+=== 3. Make Changes ===
+
+# Edit files in your preferred editor
+# Save your changes
+# Stage the changes:
+
+<syntaxhighlight lang="bash">
+# Stage specific files
+git add filename.txt
+
+# Stage all changes
+git add .
+
+# Check status
+git status
+</syntaxhighlight>
+
+=== 4. Commit Changes ===
+
+<syntaxhighlight lang="bash">
+# Commit with message
+git commit -m "Add new feature"
+
+# Commit with detailed message
+git commit -m "Add user authentication
+
+- Implement login functionality
+- Add password hashing
+- Create session management"
+</syntaxhighlight>
+
+=== 5. Push to GitHub ===
+
+<syntaxhighlight lang="bash">
+# Push branch to GitHub
+git push origin feature/my-new-feature
+</syntaxhighlight>
+
+=== 6. Create Pull Request ===
+
+# Go to your repository on GitHub
+# Click '''Pull requests''' → '''New pull request'''
+# Select your branch
+# Add title and description
+# Request reviewers
+# Click '''Create pull request'''
+
+== Essential GitHub Features ==
+
+=== Issues ===
+
+Issues are used to track:
+* 🐛 Bugs
+* ✨ Feature requests
+* 📋 Tasks
+* 💬 Discussions
+
+Creating an issue:
+# Navigate to '''Issues''' tab
+# Click '''New issue'''
+# Choose a template (if available)
+# Fill in title and description
+# Assign labels, milestone, and assignees
+
+=== Projects ===
+
+GitHub Projects provide Kanban-style boards for project management:
+
+# Go to '''Projects''' tab
+# Click '''Create a project'''
+# Choose a template
+# Add issues and pull requests as cards
+
+=== Actions ===
+
+GitHub Actions automate workflows:
+
+<syntaxhighlight lang="yaml">
+# .github/workflows/hello-world.yml
+name: Hello World
+on: [push]
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "Hello, World!"
+</syntaxhighlight>
+
+== Best Practices for Beginners ==
+
+=== Commit Messages ===
+
+{{Good|Write clear, descriptive commit messages}}
+* ✅ "Fix navigation menu dropdown on mobile devices"
+* ❌ "Fixed stuff"
+
+=== Branch Naming ===
+
+Use consistent naming conventions:
+* '''feature/''' - New features (feature/user-auth)
+* '''bugfix/''' - Bug fixes (bugfix/login-error)
+* '''hotfix/''' - Urgent fixes (hotfix/security-patch)
+* '''docs/''' - Documentation (docs/api-guide)
+
+=== README Files ===
+
+Every repository should have a README.md containing:
+* Project title and description
+* Installation instructions
+* Usage examples
+* Contributing guidelines
+* License information
+
+== Common Beginner Mistakes ==
+
+{| class="wikitable"
+! Mistake !! Solution
+|-
+| Committing sensitive data || Use .gitignore, scan for secrets
+|-
+| Working directly on main || Always create feature branches
+|-
+| Large commits || Make small, focused commits
+|-
+| Poor commit messages || Be descriptive and specific
+|-
+| Not pulling before pushing || Always sync with remote first
+|}
+
+== Getting Help ==
+
+=== Within GitHub ===
+
+* '''GitHub Docs''': Comprehensive documentation
+* '''GitHub Community''': Forums and discussions
+* '''GitHub Learning Lab''': Interactive tutorials
+
+=== In Your Organisation ===
+
+* Check internal wikis and documentation
+* Ask team members or mentors
+* Attend GitHub training sessions
+
+== Next Steps ==
+
+Now that you understand the basics:
+
+# [[Creating Your First Pull Request|Create your first pull request]]
+# [[GitHub Collaboration Basics|Learn about collaboration]]
+# [[Git Commands Cheat Sheet|Master essential Git commands]]
+# [[GitHub Desktop Guide|Try GitHub Desktop]]
+
+== Quick Reference ==
+
+<syntaxhighlight lang="bash">
+# Essential commands for beginners
+git clone <url>              # Copy repository
+git status                   # Check current state
+git add <file>              # Stage changes
+git commit -m "message"      # Save changes
+git push                     # Upload to GitHub
+git pull                     # Download from GitHub
+git branch                   # List branches
+git checkout <branch>        # Switch branches
+</syntaxhighlight>
+
+== Practice Exercise ==
+
+{{Exercise|
+# Create a new repository called "hello-github"
+# Clone it to your computer
+# Create a new branch called "feature/add-name"
+# Add a file called "contributors.md" with your name
+# Commit and push your changes
+# Create a pull request
+# Merge the pull request
+}}
+
+{{Navigation
+|prev=[[Main Page]]
+|next=[[Creating Your First Pull Request]]
+}}
+
+[[Category:Beginner Tutorials]]
+[[Category:Getting Started]]
+[[Category:Tutorials]]

@@ -1,0 +1,341 @@
+= Complete MediaWiki Template Package =
+
+This file contains all the templates used in the GitHub tutorials. Create each template in your MediaWiki by navigating to Template:TemplateName and pasting the appropriate code.
+
+== Template:TutorialInfo ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template displays tutorial information at the top of tutorial pages.
+</noinclude><includeonly><div style="background-color: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 3px; padding: 12px; margin-bottom: 16px;">
+<div style="font-weight: bold; font-size: 1.1em; margin-bottom: 8px; color: #000;">Tutorial Information</div>
+<table style="width: 100%; background: transparent;">
+<tr>
+<td style="width: 50%; padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Level:'''</div>
+<div style="margin-left: 10px;">{{{level|Not specified}}}</div>
+</td>
+<td style="width: 50%; padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Duration:'''</div>
+<div style="margin-left: 10px;">{{{duration|Not specified}}}</div>
+</td>
+</tr>
+<tr>
+<td style="padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Prerequisites:'''</div>
+<div style="margin-left: 10px;">{{{prerequisites|None}}}</div>
+</td>
+<td style="padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Topics:'''</div>
+<div style="margin-left: 10px;">{{{topics|Not specified}}}</div>
+</td>
+</tr>
+</table>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Tutorial ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template is used for tutorial metadata.
+</noinclude><includeonly><div style="display: none;">
+Title: {{{title|}}}
+Author: {{{author|}}}
+Date: {{{date|}}}
+Category: {{{category|}}}
+Level: {{{level|}}}
+Duration: {{{duration|}}}
+</div>[[Category:Tutorials]][[Category:{{{category|General}}} Tutorials]]{{#ifeq:{{{level}}}|Beginner|[[Category:Beginner Tutorials]]}}{{#ifeq:{{{level}}}|Intermediate|[[Category:Intermediate Tutorials]]}}{{#ifeq:{{{level}}}|Advanced|[[Category:Advanced Tutorials]]}}</includeonly>
+</syntaxhighlight>
+
+== Template:TOC_limit ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template limits the table of contents depth.
+</noinclude><includeonly>{{#if:{{{1|}}}|<div class="toclimit-{{{1}}}"></div>}}</includeonly>
+</syntaxhighlight>
+
+== Template:Note ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates an information note box.
+</noinclude><includeonly><div style="background-color: #f6f6f6; border-left: 4px solid #1e90ff; padding: 12px; margin: 16px 0;">
+<div style="display: flex; align-items: flex-start;">
+<div style="font-size: 1.5em; margin-right: 10px;">ℹ️</div>
+<div style="flex-grow: 1;">
+<div style="font-weight: bold; margin-bottom: 4px;">Note</div>
+<div>{{{1|{{{text|}}}}}}</div>
+</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Warning ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates a warning box.
+</noinclude><includeonly><div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin: 16px 0;">
+<div style="display: flex; align-items: flex-start;">
+<div style="font-size: 1.5em; margin-right: 10px;">⚠️</div>
+<div style="flex-grow: 1;">
+<div style="font-weight: bold; margin-bottom: 4px;">Warning</div>
+<div>{{{1|{{{text|}}}}}}</div>
+</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Critical ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates a critical alert box.
+</noinclude><includeonly><div style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 16px 0;">
+<div style="display: flex; align-items: flex-start;">
+<div style="font-size: 1.5em; margin-right: 10px;">🚨</div>
+<div style="flex-grow: 1;">
+<div style="font-weight: bold; margin-bottom: 4px;">Critical</div>
+<div>{{{1|{{{text|}}}}}}</div>
+</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Good ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates a best practice/good tip box.
+</noinclude><includeonly><div style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 16px 0;">
+<div style="display: flex; align-items: flex-start;">
+<div style="font-size: 1.5em; margin-right: 10px;">✅</div>
+<div style="flex-grow: 1;">
+<div style="font-weight: bold; margin-bottom: 4px;">Best Practice</div>
+<div>{{{1|{{{text|}}}}}}</div>
+</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Info ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This is an alias for Template:Note.
+</noinclude><includeonly>{{Note|{{{1|{{{text|}}}}}}}}</includeonly>
+</syntaxhighlight>
+
+== Template:Success ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates a success message box.
+</noinclude><includeonly><div style="background-color: #d1ecf1; border-left: 4px solid #17a2b8; padding: 12px; margin: 16px 0;">
+<div style="display: flex; align-items: flex-start;">
+<div style="font-size: 1.5em; margin-right: 10px;">🎉</div>
+<div style="flex-grow: 1;">
+<div style="font-weight: bold; margin-bottom: 4px;">Success</div>
+<div>{{{1|{{{text|}}}}}}</div>
+</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Exercise ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates an exercise box.
+</noinclude><includeonly><div style="background-color: #e7f3ff; border: 2px dashed #0066cc; padding: 16px; margin: 16px 0; border-radius: 8px;">
+<div style="display: flex; align-items: flex-start;">
+<div style="font-size: 1.5em; margin-right: 10px;">📝</div>
+<div style="flex-grow: 1;">
+<div style="font-weight: bold; font-size: 1.1em; margin-bottom: 8px; color: #0066cc;">Exercise: {{{title|Practice Exercise}}}</div>
+<div>{{{1|{{{content|Exercise content here}}}}}}</div>
+</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Code ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template displays code blocks with syntax highlighting.
+</noinclude><includeonly><syntaxhighlight lang="{{{1|text}}}">{{{2|}}}</syntaxhighlight></includeonly>
+</syntaxhighlight>
+
+== Template:Navigation ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates navigation between tutorial pages.
+</noinclude><includeonly><div style="background-color: #f8f9fa; border: 1px solid #a2a9b1; padding: 12px; margin: 20px 0; border-radius: 3px;">
+<table style="width: 100%;">
+<tr>
+<td style="text-align: left; width: 33%;">{{#if:{{{previous|}}}|← [[{{{previous}}}|Previous: {{{previous_title|{{{previous}}}}}}]]|}}</td>
+<td style="text-align: center; width: 34%;">{{#if:{{{home|}}}|[[{{{home}}}|{{{home_title|Home}}}]]|}}</td>
+<td style="text-align: right; width: 33%;">{{#if:{{{next|}}}|[[{{{next}}}|Next: {{{next_title|{{{next}}}}}}]] →|}}</td>
+</tr>
+</table>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:AdminOnly ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template shows admin-only content notices.
+</noinclude><includeonly><div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; margin: 10px 0; border-radius: 3px;">
+<div style="display: flex; align-items: center;">
+<div style="font-size: 1.2em; margin-right: 8px;">🔒</div>
+<div><strong>Admin Only:</strong> {{{1|This feature requires administrator privileges.}}}</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Did_You_Know ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template displays "Did You Know" tips.
+</noinclude><includeonly><div style="background-color: #f0f8ff; border-left: 4px solid #4169e1; padding: 12px; margin: 16px 0;">
+<div style="display: flex; align-items: flex-start;">
+<div style="font-size: 1.5em; margin-right: 10px;">💡</div>
+<div style="flex-grow: 1;">
+<div style="font-weight: bold; margin-bottom: 4px;">Did You Know?</div>
+<div>{{{1|{{{fact|}}}}}}</div>
+</div>
+</div>
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Tip ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates a tip box (alias for Good).
+</noinclude><includeonly>{{Good|{{{1|{{{text|}}}}}}}}</includeonly>
+</syntaxhighlight>
+
+== Template:See_also ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template creates a "See also" section.
+</noinclude><includeonly><div style="background-color: #f8f9fa; border: 1px solid #a2a9b1; padding: 10px; margin-top: 20px;">
+<div style="font-weight: bold; margin-bottom: 8px;">See Also</div>
+{{{1|
+* [[Related Page 1]]
+* [[Related Page 2]]
+}}}
+</div></includeonly>
+</syntaxhighlight>
+
+== Template:Prerequisites ==
+
+<syntaxhighlight lang="mediawiki">
+<noinclude>
+This template formats prerequisite sections.
+</noinclude><includeonly><div style="background-color: #fff8dc; border: 1px solid #f0e68c; padding: 12px; margin: 16px 0; border-radius: 3px;">
+<div style="font-weight: bold; margin-bottom: 8px;">📋 Prerequisites</div>
+{{{1|No prerequisites specified}}}
+</div></includeonly>
+</syntaxhighlight>
+
+== Installation Instructions ==
+
+=== Step 1: Create Templates ===
+
+For each template above:
+
+1. Log in to your MediaWiki as an administrator
+2. Navigate to: <code>Template:TemplateName</code> (e.g., Template:TutorialInfo)
+3. Click "Create this page"
+4. Copy the code from the appropriate section above
+5. Paste it into the edit box
+6. Save the page
+
+=== Step 2: Enable Required Extensions ===
+
+Add to LocalSettings.php:
+
+<syntaxhighlight lang="php">
+# Enable syntax highlighting for code blocks
+wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+
+# Enable parser functions for template logic
+wfLoadExtension( 'ParserFunctions' );
+</syntaxhighlight>
+
+=== Step 3: Add CSS (Optional) ===
+
+Add to MediaWiki:Common.css for TOC limiting:
+
+<syntaxhighlight lang="css">
+/* Limit TOC depth */
+.toclimit-2 .toclevel-2 { display: none; }
+.toclimit-3 .toclevel-3 { display: none; }
+.toclimit-4 .toclevel-4 { display: none; }
+</syntaxhighlight>
+
+== Testing Your Templates ==
+
+Create a test page with this content:
+
+<syntaxhighlight lang="mediawiki">
+= Template Test Page =
+
+{{TutorialInfo
+|level=Beginner
+|duration=30 minutes
+|prerequisites=None
+|topics=Template testing, MediaWiki setup
+}}
+
+== Content Examples ==
+
+{{Note|This is a note box}}
+
+{{Warning|This is a warning box}}
+
+{{Good|This is a best practice tip}}
+
+{{Exercise|title=Test Exercise|
+Try creating your own template-based content!
+}}
+
+{{Code|python|
+def hello_world():
+    print("Hello, MediaWiki!")
+}}
+
+{{Navigation|previous=Previous Page|next=Next Page|home=Main Page}}
+</syntaxhighlight>
+
+== Troubleshooting ==
+
+=== Templates Not Rendering ===
+
+1. Check that ParserFunctions extension is enabled
+2. Verify template names match exactly (case-sensitive)
+3. Clear page cache: append ?action=purge to URL
+
+=== Syntax Highlighting Not Working ===
+
+1. Ensure SyntaxHighlight_GeSHi extension is installed
+2. Check that Python is available on server
+3. Verify Pygments is installed
+
+=== Styling Issues ===
+
+1. Check if styles are being stripped by MediaWiki
+2. Consider moving inline styles to MediaWiki:Common.css
+3. Use !important if styles are being overridden
+
+[[Category:Documentation]]
+[[Category:Templates]]

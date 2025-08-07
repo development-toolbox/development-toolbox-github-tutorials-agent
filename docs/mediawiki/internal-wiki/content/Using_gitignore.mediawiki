@@ -1,0 +1,794 @@
+{{Tutorial
+|title = Using .gitignore
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 15 minutes
+|prerequisites = Basic Git knowledge, file system understanding
+|topics = .gitignore, File exclusion, Repository management, Best practices
+}}
+
+{{TOC limit|3}}
+
+= Using .gitignore =
+
+The .gitignore file tells Git which files and directories to ignore, keeping your repository clean and secure by excluding unnecessary or sensitive files.
+
+== What is .gitignore? ==
+
+A .gitignore file is a text file that specifies which files Git should ignore:
+* '''Prevents tracking''' of specified files and directories
+* '''Keeps repositories clean''' by excluding temporary and generated files
+* '''Protects sensitive data''' like passwords and API keys
+* '''Reduces repository size''' by excluding large or unnecessary files
+* '''Improves performance''' by reducing the number of files Git tracks
+
+{{Note|Files already tracked by Git won't be ignored even if added to .gitignore later. You must first remove them from tracking.}}
+
+=== Why Use .gitignore? ===
+
+Without .gitignore, repositories become cluttered with:
+* '''Build artifacts''' - Compiled binaries, dist folders
+* '''Dependency directories''' - node_modules, vendor folders
+* '''IDE files''' - Editor-specific configuration files
+* '''Operating system files''' - .DS_Store, Thumbs.db
+* '''Log files''' - Application logs, debug files
+* '''Temporary files''' - Cache, swap files
+* '''Sensitive data''' - Configuration with secrets
+
+## Creating a .gitignore File ==
+
+=== Basic Setup ===
+
+Create .gitignore in your repository root:
+
+'''Via command line:'''
+{{Code|bash|
+# Create .gitignore file
+touch .gitignore
+
+# Edit with your preferred editor
+nano .gitignore
+# or
+code .gitignore
+}}
+
+'''Via GitHub web interface:'''
+1. Navigate to your repository
+2. Click '''Create new file'''
+3. Name the file '''.gitignore'''
+4. Add your ignore patterns
+5. Commit the file
+
+=== File Placement ===
+
+.gitignore files can be placed:
+* '''Repository root''' - Applies to entire repository (most common)
+* '''Subdirectories''' - Applies only to that directory and below
+* '''Global gitignore''' - Applies to all repositories on your machine
+
+'''Global .gitignore setup:'''
+{{Code|bash|
+# Create global .gitignore
+git config --global core.excludesfile ~/.gitignore_global
+
+# Edit the global file
+nano ~/.gitignore_global
+}}
+
+== .gitignore Syntax ==
+
+=== Basic Patterns ===
+
+'''Exact filenames:'''
+{{Code|text|
+# Ignore specific files
+secrets.txt
+config.local.json
+debug.log
+}}
+
+'''File extensions:'''
+{{Code|text|
+# Ignore all files with specific extensions
+*.log
+*.tmp
+*.cache
+*.bak
+}}
+
+'''Directories:'''
+{{Code|text|
+# Ignore entire directories
+node_modules/
+dist/
+build/
+.idea/
+}}
+
+=== Advanced Patterns ===
+
+'''Wildcards:'''
+{{Code|text|
+# ? matches single character
+temp?.txt        # matches temp1.txt, tempA.txt, etc.
+
+# * matches zero or more characters  
+*.log           # matches any .log file
+temp*           # matches temp, temp1, temporary, etc.
+
+# ** matches directories recursively
+**/logs         # matches logs/ in any directory
+logs/**         # matches anything inside logs/
+**/logs/*.log   # matches .log files in any logs/ directory
+}}
+
+'''Negation (exceptions):'''
+{{Code|text|
+# Ignore all .txt files except important.txt
+*.txt
+!important.txt
+
+# Ignore build directory but keep .gitkeep files
+build/
+!build/.gitkeep
+}}
+
+'''Path-specific patterns:'''
+{{Code|text|
+# Leading slash means from repository root
+/config.json    # only ignores config.json in root, not subdirs
+
+# No leading slash means anywhere in repository
+config.json     # ignores config.json anywhere
+}}
+
+'''Comments:'''
+{{Code|text|
+# This is a comment
+# Comments help explain ignore patterns
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore OS files
+.DS_Store       # macOS
+Thumbs.db       # Windows
+}}
+
+== Common .gitignore Patterns ==
+
+=== Operating System Files ===
+
+'''macOS:'''
+{{Code|text|
+# macOS system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+}}
+
+'''Windows:'''
+{{Code|text|
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+}}
+
+'''Linux:'''
+{{Code|text|
+# Linux system files
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+}}
+
+=== IDE and Editor Files ===
+
+'''Visual Studio Code:'''
+{{Code|text|
+.vscode/
+*.code-workspace
+.history/
+}}
+
+'''IntelliJ IDEA:'''
+{{Code|text|
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+}}
+
+'''Sublime Text:'''
+{{Code|text|
+*.sublime-project
+*.sublime-workspace
+*.sublime-session
+}}
+
+'''Vim:'''
+{{Code|text|
+*.swp
+*.swo
+*~
+.netrwhist
+}}
+
+=== Language-Specific Patterns ===
+
+'''Node.js:'''
+{{Code|text|
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+}}
+
+'''Python:'''
+{{Code|text|
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.spyderproject
+.spyproject
+.vscode/
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+}}
+
+'''Java:'''
+{{Code|text|
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle
+.gradle
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+}}
+
+'''C/C++:'''
+{{Code|text|
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.so
+*.so.*
+*.dylib
+}}
+
+=== Framework-Specific Patterns ===
+
+'''React:'''
+{{Code|text|
+# Dependencies
+node_modules/
+
+# Production build
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+}}
+
+'''Django:'''
+{{Code|text|
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Static files
+staticfiles/
+static/
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Secret configuration
+.env
+secrets.json
+}}
+
+'''Laravel:'''
+{{Code|text|
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+}}
+
+== Advanced .gitignore Usage ==
+
+=== Pattern Priority ===
+
+Git processes .gitignore patterns in order:
+1. '''More specific patterns''' override general ones
+2. '''Later patterns''' can override earlier ones using negation
+3. '''Directory-specific''' .gitignore files override parent directories
+
+'''Example:'''
+{{Code|text|
+# Ignore all .log files
+*.log
+
+# But keep important.log
+!important.log
+
+# Ignore everything in temp/
+temp/
+
+# But keep temp/.gitkeep
+!temp/.gitkeep
+}}
+
+=== Multiple .gitignore Files ===
+
+You can have .gitignore files in subdirectories:
+
+'''Repository structure:'''
+{{Code|text|
+my-project/
+├── .gitignore          # Root .gitignore
+├── src/
+│   └── .gitignore      # Specific to src/ directory
+└── tests/
+    └── .gitignore      # Specific to tests/ directory
+}}
+
+'''Use cases:'''
+* Different rules for different parts of project
+* Override parent directory rules
+* Team-specific exclusions in subdirectories
+
+=== Checking .gitignore Rules ===
+
+'''See which files are ignored:'''
+{{Code|bash|
+# List all ignored files
+git ls-files --others --ignored --exclude-standard
+
+# Check if specific file is ignored
+git check-ignore filename.txt
+
+# Check which rule ignores a file
+git check-ignore -v filename.txt
+
+# See all files Git tracks
+git ls-files
+}}
+
+'''Debug .gitignore patterns:'''
+{{Code|bash|
+# Test what would be ignored
+git status --ignored
+
+# See ignored files in specific directory
+git status --ignored -- path/to/directory/
+}}
+
+== Managing Already-Tracked Files ==
+
+=== Removing Files from Tracking ===
+
+If you add files to .gitignore after they're already tracked:
+
+'''Remove from tracking but keep locally:'''
+{{Code|bash|
+# Remove specific file
+git rm --cached filename.txt
+
+# Remove directory recursively
+git rm --cached -r directory/
+
+# Commit the removal
+git commit -m "Remove tracked files now in .gitignore"
+}}
+
+'''Remove and delete files:'''
+{{Code|bash|
+# This will delete files from filesystem too
+git rm filename.txt
+git commit -m "Remove and delete tracked files"
+}}
+
+=== Clearing All Ignored Files ===
+
+Remove all files that should be ignored:
+
+{{Code|bash|
+# Remove all files from index
+git rm -r --cached .
+
+# Re-add files (respecting .gitignore)
+git add .
+
+# Commit the changes
+git commit -m "Apply .gitignore to all files"
+}}
+
+{{Warning|This approach affects all files in your repository. Make sure you have a backup and review changes carefully before committing.}}
+
+== .gitignore Templates ==
+
+=== Using GitHub Templates ===
+
+GitHub provides .gitignore templates when creating repositories:
+1. Create new repository on GitHub
+2. Check "Add .gitignore" option
+3. Choose template for your language/framework
+4. GitHub creates appropriate .gitignore file
+
+'''Popular templates:'''
+* Node.js
+* Python
+* Java
+* C++
+* Go
+* Swift
+* Unity
+* Jekyll
+* Rails
+
+=== Template Collections ===
+
+Comprehensive .gitignore template collections:
+* [github/gitignore](https://github.com/github/gitignore) - Official GitHub collection
+* [gitignore.io](https://gitignore.io/) - Generate custom .gitignore files
+* IDE plugins that generate .gitignore files
+
+=== Creating Custom Templates ===
+
+For organization-specific needs:
+
+{{Code|text|
+# Company-specific .gitignore template
+# Save as template and share with team
+
+# Company-specific files
+config/production.json
+deploy/secrets.env
+internal-tools/
+
+# Standard language patterns
+node_modules/
+*.log
+.env
+
+# IDE preferences
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+}}
+
+== Best Practices ==
+
+=== What to Ignore ===
+
+'''Always ignore:'''
+* Generated files (build outputs, compiled binaries)
+* Dependency directories (node_modules, vendor)
+* Log files and temporary files
+* IDE and editor configuration files
+* Operating system generated files
+* Files containing secrets or sensitive data
+
+'''Consider ignoring:'''
+* Large binary files
+* Personal configuration files
+* Development database files
+* Cache directories
+* Backup files created by editors
+
+=== What NOT to Ignore ===
+
+'''Don't ignore:'''
+* Source code files
+* Configuration templates
+* Essential project files
+* Documentation
+* Test files
+* Build configuration files (package.json, requirements.txt)
+
+=== Organization Strategies ===
+
+'''Group related patterns:'''
+{{Code|text|
+# === Operating System ===
+.DS_Store
+Thumbs.db
+
+# === IDEs and Editors ===
+.vscode/
+.idea/
+*.swp
+
+# === Language Specific ===
+node_modules/
+__pycache__/
+
+# === Project Specific ===
+dist/
+build/
+logs/
+}}
+
+'''Use comments liberally:'''
+{{Code|text|
+# Ignore all log files except the template
+*.log
+!logs/template.log
+
+# Environment-specific configs (keep template)
+.env*
+!.env.example
+}}
+
+== Troubleshooting ==
+
+=== Common Issues ===
+
+'''File still being tracked after adding to .gitignore:'''
+{{Code|bash|
+# Remove from tracking first
+git rm --cached filename.txt
+git commit -m "Stop tracking filename.txt"
+}}
+
+'''.gitignore not working:'''
+* Check file is named exactly ".gitignore"
+* Ensure it's in the repository root (or appropriate subdirectory)
+* Verify patterns are correct (test with `git check-ignore`)
+* Make sure you haven't staged the files already
+
+'''Accidentally committed sensitive files:'''
+{{Code|bash|
+# Remove from history (dangerous - changes history)
+git filter-branch --tree-filter 'rm -f sensitive-file.txt' HEAD
+
+# Better: Contact security team and rotate credentials
+}}
+
+'''Global .gitignore not working:'''
+{{Code|bash|
+# Check if global .gitignore is configured
+git config --global core.excludesfile
+
+# Set global .gitignore
+git config --global core.excludesfile ~/.gitignore_global
+}}
+
+=== Testing .gitignore Rules ===
+
+'''Verify patterns work:'''
+{{Code|bash|
+# Create test files
+touch test.log test.tmp test.txt
+
+# Check what Git sees
+git status
+
+# Test specific files
+git check-ignore test.log  # Should show the file if ignored
+git check-ignore -v test.log  # Shows which rule matched
+}}
+
+== Security Considerations ==
+
+=== Protecting Sensitive Data ===
+
+'''Never commit:'''
+* Passwords and API keys
+* Private keys and certificates
+* Database credentials
+* Personal access tokens
+* Internal server names or IPs
+
+'''Common sensitive file patterns:'''
+{{Code|text|
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Config files with secrets
+config/secrets.yml
+config/database.yml
+app/config/parameters.yml
+
+# Key files
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Credential files
+credentials.json
+service-account.json
+aws-credentials
+}}
+
+'''Use environment variables instead:'''
+{{Code|javascript|
+// Instead of committing config with secrets
+const config = {
+  apiKey: process.env.API_KEY,
+  dbPassword: process.env.DB_PASSWORD
+};
+
+// Commit template showing expected variables
+// .env.example
+API_KEY=your_api_key_here
+DB_PASSWORD=your_database_password
+}}
+
+{{Critical|If you accidentally commit sensitive data, don't just add it to .gitignore. Remove it from history and rotate the compromised credentials immediately.}}
+
+== Related Resources ==
+
+* [[Basic Git Commands]] - Essential Git operations
+* [[Security Best Practices]] - Protecting sensitive information
+* [[Creating Your First Repository]] - Repository setup basics
+* [[README Files]] - Documenting your project
+* [[Basic Repository Operations]] - Repository management
+
+{{Success|A well-configured .gitignore file keeps your repository clean, secure, and professional. Take time to set it up properly at the start of each project.}}
+
+[[Category:Beginner Tutorials]]
+[[Category:Git]]
+[[Category:Security]]
+[[Category:Best Practices]]
+[[Category:Repository Management]]

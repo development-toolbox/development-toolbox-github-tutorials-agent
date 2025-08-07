@@ -1,0 +1,22 @@
+<includeonly><div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 10px; margin: 15px 0;">
+<div style="display: flex; align-items: center;">
+<div style="margin-right: 10px; font-size: 18px;">✅</div>
+<div><strong>Good Practice:</strong> {{{1|}}}</div>
+</div>
+</div></includeonly><noinclude>
+== Template:Good ==
+
+This template creates a green good practice box.
+
+=== Usage ===
+
+<pre>
+{{Good|Your good practice text here}}
+</pre>
+
+=== Example ===
+
+{{Good|Always create feature branches instead of working directly on the main branch.}}
+
+[[Category:Templates]]
+</noinclude>

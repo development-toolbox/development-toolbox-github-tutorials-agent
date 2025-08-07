@@ -1,0 +1,22 @@
+<includeonly><div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 10px; margin: 15px 0;">
+<div style="display: flex; align-items: center;">
+<div style="margin-right: 10px; font-size: 18px;">⚠️</div>
+<div><strong>Warning:</strong> {{{1|}}}</div>
+</div>
+</div></includeonly><noinclude>
+== Template:Warning ==
+
+This template creates an orange warning box.
+
+=== Usage ===
+
+<pre>
+{{Warning|Your warning text here}}
+</pre>
+
+=== Example ===
+
+{{Warning|Be careful when performing this action as it cannot be undone.}}
+
+[[Category:Templates]]
+</noinclude>

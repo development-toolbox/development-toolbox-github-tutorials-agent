@@ -1,0 +1,25 @@
+<includeonly>{{#switch: {{#expr: {{CURRENTTIMESTAMP}} mod 5}}
+| 0 = You can use keyboard shortcuts in GitHub! Press '''?''' on any page to see available shortcuts.
+| 1 = GitHub Actions can automatically close issues when you use keywords like "fixes #123" in pull request descriptions.
+| 2 = You can create issue templates in the `.github/ISSUE_TEMPLATE/` directory to standardise bug reports and feature requests.
+| 3 = The GitHub CLI tool (`gh`) allows you to manage pull requests, issues, and repositories from your command line.
+| 4 = You can use GitHub Codespaces to create cloud-based development environments for any repository.
+}}</includeonly><noinclude>
+== Template:Did You Know ==
+
+This template displays rotating tips and facts about GitHub. It cycles through different tips based on the current timestamp.
+
+=== Usage ===
+
+<pre>
+{{Did You Know}}
+</pre>
+
+=== Example ===
+
+{{Did You Know}}
+
+The template automatically selects one of several tips to display, creating variety for users visiting the main page at different times.
+
+[[Category:Templates]]
+</noinclude>

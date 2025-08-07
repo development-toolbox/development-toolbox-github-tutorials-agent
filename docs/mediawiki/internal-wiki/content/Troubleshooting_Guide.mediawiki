@@ -1,0 +1,625 @@
+{{Tutorial
+|title = Troubleshooting Guide
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = As needed for your specific issue
+|prerequisites = Basic GitHub and Git knowledge
+|topics = Problem solving, Error resolution, Common issues
+}}
+
+{{TOC limit|3}}
+
+= Troubleshooting Guide =
+
+This comprehensive guide helps you diagnose and resolve common issues with Git, GitHub, and related development tools.
+
+== Before You Start ==
+
+=== Information to Gather ===
+
+When troubleshooting, collect this information first:
+* Exact error message (copy/paste the full text)
+* What you were trying to do
+* Steps to reproduce the problem
+* Your operating system and version
+* Git version (`git --version`)
+* GitHub Desktop version (if applicable)
+
+{{Good|Taking screenshots of error messages can be helpful, but always include the text version too for searchability.}}
+
+=== Quick Diagnostics ===
+
+{{Code|bash|
+# Check Git installation and version
+git --version
+
+# Check Git configuration
+git config --list
+
+# Check repository status
+git status
+
+# Check remote configuration
+git remote -v
+
+# Check network connectivity to GitHub
+ping github.com
+}}
+
+== Authentication Issues ==
+
+=== Cannot Push - Authentication Failed ===
+
+'''Symptoms:'''
+* "Authentication failed" error when pushing
+* "Permission denied" errors
+* Prompted for username/password repeatedly
+
+'''Solutions:'''
+
+'''1. Check Authentication Method:'''
+{{Code|bash|
+# Check if using HTTPS or SSH
+git remote -v
+
+# If using HTTPS, ensure you're using a token, not password
+# If using SSH, ensure SSH key is configured
+}}
+
+'''2. Personal Access Token (HTTPS):'''
+* GitHub no longer accepts passwords for authentication
+* Create a Personal Access Token in GitHub Settings
+* Use token as password when prompted
+
+'''3. SSH Key Issues:'''
+{{Code|bash|
+# Check if SSH key exists
+ls -la ~/.ssh
+
+# Test SSH connection
+ssh -T git@github.com
+
+# Generate new SSH key if needed
+ssh-keygen -t ed25519 -C "your.email@example.com"
+
+# Add SSH key to SSH agent
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+}}
+
+'''4. Two-Factor Authentication:'''
+* Use Personal Access Token instead of password
+* Configure app-specific passwords if required
+
+=== Permission Denied Errors ===
+
+'''Common causes:'''
+* Not a collaborator on the repository
+* Using wrong GitHub account
+* SSH key not added to GitHub account
+* Repository is private and you don't have access
+
+'''Solutions:'''
+{{Code|bash|
+# Check which GitHub account you're authenticated as
+gh auth status
+
+# Verify SSH key is added to GitHub
+ssh -T git@github.com
+
+# Check repository permissions in GitHub web interface
+# Contact repository owner for access
+}}
+
+== Repository Issues ==
+
+=== Cannot Clone Repository ===
+
+'''Error: "Repository not found"'''
+
+'''Solutions:'''
+* Verify repository URL is correct
+* Check if repository is private (you need access)
+* Ensure you're logged into correct GitHub account
+* Try cloning with different protocol (HTTPS vs SSH)
+
+{{Code|bash|
+# Try different clone methods
+git clone https://github.com/owner/repo.git
+git clone git@github.com:owner/repo.git
+
+# Clone specific branch
+git clone -b branch-name https://github.com/owner/repo.git
+}}
+
+=== Cannot Create Repository ===
+
+'''Common issues:'''
+* Repository name already exists
+* Invalid characters in repository name
+* Reached repository limit (check organization settings)
+* Insufficient permissions
+
+'''Solutions:'''
+* Choose a different repository name
+* Use only alphanumeric characters, hyphens, and underscores
+* Check organization/account limits
+* Contact administrator for permission issues
+
+=== Large Repository Issues ===
+
+'''Problems:'''
+* Clone takes very long
+* Running out of disk space
+* Git operations are slow
+
+'''Solutions:'''
+{{Code|bash|
+# Shallow clone (recent history only)
+git clone --depth 1 https://github.com/owner/repo.git
+
+# Partial clone (no history)
+git clone --filter=blob:none https://github.com/owner/repo.git
+
+# Clone specific branch only
+git clone -b main --single-branch https://github.com/owner/repo.git
+}}
+
+== Git Workflow Issues ==
+
+=== Merge Conflicts ===
+
+'''Understanding conflicts:'''
+* Occur when same lines modified in different branches
+* Git cannot automatically determine which version to keep
+* Must be resolved manually
+
+'''Resolving conflicts:'''
+{{Code|bash|
+# Pull latest changes
+git pull origin main
+
+# Conflicts will be marked in files with:
+# <<<<<<< HEAD
+# Your changes
+# =======
+# Their changes
+# >>>>>>> branch-name
+
+# Edit files to resolve conflicts
+# Remove conflict markers
+# Keep desired changes
+
+# Add resolved files
+git add resolved-file.txt
+
+# Complete merge
+git commit
+}}
+
+'''Conflict resolution tools:'''
+* VS Code built-in merge tool
+* GitKraken
+* Meld
+* P4Merge
+
+=== Detached HEAD State ===
+
+'''What it means:'''
+* Not on any branch
+* Changes may be lost if you switch branches
+
+'''Solutions:'''
+{{Code|bash|
+# Create new branch from current state
+git checkout -b new-branch-name
+
+# Or switch back to a branch
+git checkout main
+
+# Or create branch and switch in one command
+git switch -c new-branch-name
+}}
+
+=== Accidentally Committed Wrong Files ===
+
+'''Remove files from last commit:'''
+{{Code|bash|
+# Remove file but keep in working directory
+git reset --soft HEAD~1
+git reset HEAD unwanted-file.txt
+git commit
+
+# Or amend the commit
+git reset HEAD~1
+git add wanted-files-only.txt
+git commit -m "Corrected commit"
+}}
+
+'''Remove sensitive data:'''
+{{Warning|If you committed passwords or sensitive data, contact security team immediately.}}
+
+{{Code|bash|
+# For recent commits (use with caution)
+git filter-branch --tree-filter 'rm -f sensitive-file.txt' HEAD
+
+# Better tool for this job
+# Install git-filter-repo first
+git filter-repo --path sensitive-file.txt --invert-paths
+}}
+
+== Branch Issues ==
+
+=== Cannot Switch Branches ===
+
+'''Error: "Please commit your changes or stash them"'''
+
+'''Solutions:'''
+{{Code|bash|
+# Option 1: Commit changes
+git add .
+git commit -m "Work in progress"
+
+# Option 2: Stash changes
+git stash
+git checkout other-branch
+# Later: git stash pop
+
+# Option 3: Force switch (loses changes)
+git checkout --force other-branch
+}}
+
+=== Branch Not Showing Up ===
+
+'''Local vs Remote branches:'''
+{{Code|bash|
+# List all local branches
+git branch
+
+# List all remote branches
+git branch -r
+
+# List all branches (local and remote)
+git branch -a
+
+# Fetch latest remote branches
+git fetch origin
+
+# Create local branch tracking remote
+git checkout -b local-branch origin/remote-branch
+}}
+
+=== Deleted Branch by Mistake ===
+
+'''Recovery:'''
+{{Code|bash|
+# Find deleted branch in reflog
+git reflog
+
+# Restore branch (use commit hash from reflog)
+git checkout -b recovered-branch abc1234
+
+# Or use git fsck to find dangling commits
+git fsck --full --no-reflogs --unreachable --lost-found
+}}
+
+== GitHub Web Interface Issues ==
+
+=== Page Not Loading ===
+
+'''Troubleshooting steps:'''
+1. Check GitHub Status: https://githubstatus.com
+2. Try different browser or incognito mode
+3. Clear browser cache and cookies
+4. Disable browser extensions
+5. Check network connectivity
+6. Try accessing from different network
+
+=== Features Not Working ===
+
+'''Common issues:'''
+* JavaScript disabled in browser
+* Ad blockers interfering
+* Corporate firewall restrictions
+* Browser compatibility issues
+
+'''Solutions:'''
+* Enable JavaScript
+* Whitelist GitHub in ad blocker
+* Contact IT about firewall rules
+* Try modern browser (Chrome, Firefox, Safari, Edge)
+
+=== Cannot Upload Files ===
+
+'''File size limits:'''
+* Individual files: 100 MB maximum
+* Repository size: 1 GB recommended
+
+'''Solutions:'''
+{{Code|bash|
+# Use Git LFS for large files
+git lfs track "*.zip"
+git add .gitattributes
+git add large-file.zip
+git commit -m "Add large file with LFS"
+
+# Split large files if possible
+# Use external file hosting for very large files
+}}
+
+== GitHub Actions Issues ==
+
+=== Workflow Not Running ===
+
+'''Check these items:'''
+* Workflow file is in `.github/workflows/` directory
+* YAML syntax is valid (use online YAML validator)
+* Trigger conditions match your situation
+* Repository has Actions enabled
+* You have necessary permissions
+
+{{Code|yaml|
+# Basic workflow structure
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "Hello World"
+}}
+
+=== Workflow Failing ===
+
+'''Debugging steps:'''
+1. Check workflow run logs in Actions tab
+2. Look for specific error messages
+3. Verify secrets and environment variables
+4. Test commands locally first
+5. Use debugging output in workflow
+
+{{Code|yaml|
+# Add debugging steps
+- name: Debug information
+  run: |
+    echo "Event: ${{ github.event_name }}"
+    echo "Ref: ${{ github.ref }}"
+    echo "Working directory: $(pwd)"
+    ls -la
+}}
+
+=== Permission Errors in Actions ===
+
+'''Common causes:'''
+* Insufficient GITHUB_TOKEN permissions
+* Missing secrets
+* Trying to access private repositories
+* Rate limiting
+
+'''Solutions:'''
+{{Code|yaml|
+# Specify permissions explicitly
+permissions:
+  contents: read
+  pull-requests: write
+
+# Use secrets for sensitive data
+env:
+  API_KEY: ${{ secrets.API_KEY }}
+}}
+
+== Network and Connectivity Issues ==
+
+=== Slow Git Operations ===
+
+'''Potential causes:'''
+* Large repository size
+* Slow network connection
+* Corporate proxy/firewall
+* Git configuration issues
+
+'''Solutions:'''
+{{Code|bash|
+# Configure Git for better performance
+git config --global core.preloadindex true
+git config --global core.fscache true
+git config --global gc.auto 256
+
+# Use shallow clones when possible
+git clone --depth 1 repo-url
+
+# Configure proxy if needed
+git config --global http.proxy http://proxy.company.com:8080
+}}
+
+=== Corporate Firewall Issues ===
+
+'''Common problems:'''
+* SSH (port 22) blocked
+* HTTPS certificate issues
+* Proxy configuration required
+
+'''Solutions:'''
+{{Code|bash|
+# Use HTTPS instead of SSH
+git config --global url."https://".insteadOf git://
+
+# Configure proxy
+git config --global http.proxy http://proxy:port
+git config --global https.proxy https://proxy:port
+
+# Use HTTPS for SSH connections (if SSH blocked)
+# Add to ~/.ssh/config:
+# Host github.com
+#   Hostname ssh.github.com
+#   Port 443
+#   User git
+}}
+
+== IDE and Editor Integration Issues ==
+
+=== VS Code Git Integration Problems ===
+
+'''Common issues:'''
+* Git not detected in VS Code
+* Authentication problems
+* Merge conflicts not showing properly
+
+'''Solutions:'''
+1. Ensure Git is installed and in PATH
+2. Restart VS Code after Git installation
+3. Configure Git path in VS Code settings
+4. Install GitHub extension for better integration
+
+=== GitHub Desktop Issues ===
+
+'''Authentication problems:'''
+* Sign out and sign back in
+* Check two-factor authentication
+* Clear application data if necessary
+
+'''Sync issues:'''
+* Check internet connection
+* Verify repository permissions
+* Try cloning repository again
+
+== Performance Issues ==
+
+=== Git Operations Very Slow ===
+
+'''Optimization techniques:'''
+{{Code|bash|
+# Enable Git's built-in caching
+git config --global core.preloadindex true
+git config --global core.fscache true
+
+# Optimize garbage collection
+git config --global gc.auto 256
+
+# Use partial clone for large repositories
+git clone --filter=blob:limit=10m repo-url
+
+# Clean up repository
+git gc --aggressive --prune=now
+}}
+
+=== Large Repository Management ===
+
+'''Strategies:'''
+* Use Git LFS for large binary files
+* Consider repository splitting
+* Use sparse-checkout for partial working directory
+* Implement .gitignore properly
+
+{{Code|bash|
+# Enable sparse-checkout
+git config core.sparseCheckout true
+echo "src/" > .git/info/sparse-checkout
+git read-tree -m -u HEAD
+}}
+
+== Error Message Reference ==
+
+=== Common Git Errors ===
+
+'''`fatal: not a git repository`'''
+* You're not in a Git repository directory
+* Run `git init` or navigate to repository folder
+
+'''`error: failed to push some refs`'''
+* Remote has changes you don't have locally
+* Run `git pull` before pushing
+
+'''`fatal: refusing to merge unrelated histories`'''
+* Trying to merge repositories with different histories
+* Use `git pull --allow-unrelated-histories` if intentional
+
+'''`error: Your local changes would be overwritten`'''
+* You have uncommitted changes that conflict
+* Commit, stash, or discard changes before switching branches
+
+=== GitHub API Errors ===
+
+'''`API rate limit exceeded`'''
+* Too many API requests in short time
+* Wait for rate limit reset or authenticate for higher limits
+
+'''`Bad credentials`'''
+* Invalid username/password or token
+* Regenerate Personal Access Token
+
+'''`Not Found`'''
+* Repository doesn't exist or you don't have access
+* Check repository name and permissions
+
+== Getting Additional Help ==
+
+=== When to Escalate ===
+
+Contact support when:
+* Security incidents (exposed credentials)
+* Data loss or corruption
+* Persistent authentication issues
+* GitHub service problems
+* Issues affecting multiple team members
+
+=== Information to Provide ===
+
+When asking for help, include:
+* Complete error messages
+* Steps to reproduce
+* What you expected to happen
+* Your environment details
+* Screenshots if relevant
+
+=== Support Channels ===
+
+* '''Internal''': [[Project:Support]] - Company GitHub support
+* '''Slack''': #github-help - Quick questions
+* '''GitHub''': https://support.github.com - Official GitHub support
+* '''Community''': https://github.community - Community forum
+
+== Prevention Best Practices ==
+
+=== Regular Maintenance ===
+
+{{Code|bash|
+# Keep Git updated
+git --version
+
+# Clean up repository periodically
+git gc
+git prune
+
+# Update remote references
+git remote prune origin
+
+# Check repository health
+git fsck
+}}
+
+=== Good Habits ===
+
+* Commit frequently with clear messages
+* Pull before pushing
+* Use branches for new features
+* Don't commit sensitive information
+* Keep repositories reasonably sized
+* Regular backups of important work
+
+{{Success|Most Git and GitHub issues can be resolved with patience and systematic troubleshooting. When in doubt, ask for help!}}
+
+== Related Resources ==
+
+* [[Basic Git Commands]] - Essential Git operations
+* [[GitHub Desktop Guide]] - Alternative to command line
+* [[Git Command Reference]] - Comprehensive command reference
+* [[Project:Support]] - Getting help and support
+* [[Security Best Practices]] - Avoiding security issues
+
+[[Category:Reference]]
+[[Category:Troubleshooting]]
+[[Category:Support]]
+[[Category:Git]]
+[[Category:GitHub]]

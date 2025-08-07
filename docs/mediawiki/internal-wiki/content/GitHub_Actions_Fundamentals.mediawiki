@@ -1,0 +1,692 @@
+{{TutorialInfo
+|level=Intermediate
+|duration=45 minutes
+|prerequisites=[[Getting Started with GitHub]], Basic YAML knowledge
+|topics=Workflows, Jobs, Actions, CI/CD
+}}
+
+= GitHub Actions Fundamentals =
+
+GitHub Actions is a powerful automation platform that enables you to create custom workflows directly in your GitHub repository. This tutorial covers everything from basic concepts to creating production-ready CI/CD pipelines.
+
+{{TOC limit|3}}
+
+== Introduction to GitHub Actions ==
+
+GitHub Actions allows you to:
+* 🔄 Automate your build, test, and deployment pipeline
+* 🤖 Create custom workflows triggered by GitHub events
+* 🔧 Run code reviews, branch management, and issue triaging
+* 📦 Publish packages to registries
+* 🚀 Deploy to any cloud provider
+
+=== Core Concepts ===
+
+; Workflow
+: An automated process defined in YAML that runs one or more jobs
+
+; Job
+: A set of steps that execute on the same runner
+
+; Step
+: An individual task that runs commands or actions
+
+; Action
+: A reusable unit of code that performs a specific task
+
+; Runner
+: A server that executes your workflows
+
+; Event
+: A specific activity that triggers a workflow
+
+== Your First Workflow ==
+
+=== Creating a Workflow File ===
+
+Workflows live in the `.github/workflows/` directory of your repository.
+
+<syntaxhighlight lang="yaml">
+# .github/workflows/hello-world.yml
+name: Hello World Workflow
+
+# Triggers
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Jobs
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Say Hello
+      run: echo "Hello, GitHub Actions!"
+    
+    - name: Display Date
+      run: date
+    
+    - name: Show System Info
+      run: |
+        echo "Runner OS: $RUNNER_OS"
+        echo "Job ID: $GITHUB_JOB"
+</syntaxhighlight>
+
+=== Understanding Workflow Syntax ===
+
+{| class="wikitable"
+! Element !! Description !! Required
+|-
+| `name` || Workflow display name || No
+|-
+| `on` || Events that trigger the workflow || Yes
+|-
+| `jobs` || Groups of steps that execute || Yes
+|-
+| `runs-on` || Type of runner to use || Yes
+|-
+| `steps` || List of tasks to perform || Yes
+|}
+
+== Workflow Triggers ==
+
+=== Common Triggers ===
+
+<syntaxhighlight lang="yaml">
+# Single event
+on: push
+
+# Multiple events
+on: [push, pull_request]
+
+# Detailed configuration
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+    tags:
+      - v*
+    paths:
+      - '**.js'
+      - '!**.test.js'
+  
+  pull_request:
+    types: [opened, synchronize, reopened]
+  
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight
+  
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+</syntaxhighlight>
+
+=== Event Filters ===
+
+{{Note|Use filters to run workflows only when specific conditions are met}}
+
+<syntaxhighlight lang="yaml">
+on:
+  push:
+    branches:
+      - main
+      - develop
+    branches-ignore:
+      - 'temp/**'
+    paths:
+      - 'src/**'
+      - 'package.json'
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+</syntaxhighlight>
+
+== Jobs and Steps ==
+
+=== Basic Job Structure ===
+
+<syntaxhighlight lang="yaml">
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests
+      run: npm test
+    
+    - name: Build project
+      run: npm run build
+</syntaxhighlight>
+
+=== Job Dependencies ===
+
+<syntaxhighlight lang="yaml">
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running tests..."
+  
+  build:
+    needs: test  # Wait for test job
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Building application..."
+  
+  deploy:
+    needs: [test, build]  # Wait for both
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - run: echo "Deploying to production..."
+</syntaxhighlight>
+
+=== Matrix Builds ===
+
+Test across multiple versions and operating systems:
+
+<syntaxhighlight lang="yaml">
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [14, 16, 18]
+        exclude:
+          - os: windows-latest
+            node: 14
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm test
+</syntaxhighlight>
+
+== Using Actions ==
+
+=== Official Actions ===
+
+GitHub provides official actions for common tasks:
+
+<syntaxhighlight lang="yaml">
+steps:
+  # Checkout repository
+  - uses: actions/checkout@v3
+    with:
+      fetch-depth: 0  # Full history
+  
+  # Setup programming languages
+  - uses: actions/setup-node@v3
+  - uses: actions/setup-python@v4
+  - uses: actions/setup-java@v3
+  
+  # Cache dependencies
+  - uses: actions/cache@v3
+    with:
+      path: ~/.npm
+      key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+  
+  # Upload/Download artifacts
+  - uses: actions/upload-artifact@v3
+    with:
+      name: build-files
+      path: dist/
+  
+  - uses: actions/download-artifact@v3
+    with:
+      name: build-files
+</syntaxhighlight>
+
+=== Community Actions ===
+
+Find actions in the [GitHub Marketplace](https://github.com/marketplace):
+
+<syntaxhighlight lang="yaml">
+steps:
+  # Semantic versioning
+  - uses: cycjimmy/semantic-release-action@v3
+  
+  # Docker operations
+  - uses: docker/build-push-action@v4
+  
+  # Cloud deployments
+  - uses: aws-actions/configure-aws-credentials@v2
+  - uses: Azure/webapps-deploy@v2
+  - uses: google-github-actions/deploy-appengine@v1
+</syntaxhighlight>
+
+== Environment Variables and Secrets ==
+
+=== Environment Variables ===
+
+<syntaxhighlight lang="yaml">
+env:
+  GLOBAL_VAR: 'Available to all jobs'
+
+jobs:
+  build:
+    env:
+      JOB_VAR: 'Available to all steps in this job'
+    
+    steps:
+    - name: Use variables
+      env:
+        STEP_VAR: 'Available to this step'
+      run: |
+        echo "Global: $GLOBAL_VAR"
+        echo "Job: $JOB_VAR"
+        echo "Step: $STEP_VAR"
+        echo "GitHub: $GITHUB_REPOSITORY"
+</syntaxhighlight>
+
+=== Using Secrets ===
+
+{{Warning|Never hardcode sensitive information in workflows}}
+
+<syntaxhighlight lang="yaml">
+jobs:
+  deploy:
+    steps:
+    - name: Deploy to server
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      run: |
+        # Secrets are masked in logs
+        ./deploy.sh
+</syntaxhighlight>
+
+== Conditional Execution ==
+
+=== If Conditions ===
+
+<syntaxhighlight lang="yaml">
+jobs:
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to production
+      if: success()  # Previous steps succeeded
+      run: ./deploy-prod.sh
+    
+    - name: Notify failure
+      if: failure()  # Any previous step failed
+      run: ./send-alert.sh
+    
+    - name: Cleanup
+      if: always()  # Run regardless of status
+      run: ./cleanup.sh
+</syntaxhighlight>
+
+=== Context Expressions ===
+
+<syntaxhighlight lang="yaml">
+steps:
+- name: PR Comment
+  if: |
+    github.event_name == 'pull_request' &&
+    contains(github.event.pull_request.labels.*.name, 'deploy')
+  run: echo "Deploy label found!"
+
+- name: Tag Release
+  if: startsWith(github.ref, 'refs/tags/v')
+  run: echo "Creating release for ${{ github.ref_name }}"
+</syntaxhighlight>
+
+== Real-World CI/CD Pipeline ==
+
+=== Complete Node.js Pipeline ===
+
+<syntaxhighlight lang="yaml">
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # Linting and code quality
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run ESLint
+      run: npm run lint
+    
+    - name: Check formatting
+      run: npm run format:check
+
+  # Run tests
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run unit tests
+      run: npm run test:unit
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+    
+    - name: Run integration tests
+      run: npm run test:integration
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+  # Build application
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build application
+      run: npm run build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-files
+        path: |
+          dist/
+          package.json
+          package-lock.json
+
+  # Deploy to staging
+  deploy-staging:
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-files
+    
+    - name: Deploy to staging
+      env:
+        DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
+      run: |
+        # Deploy script here
+        echo "Deploying to staging..."
+
+  # Deploy to production
+  deploy-production:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-files
+    
+    - name: Deploy to production
+      env:
+        DEPLOY_KEY: ${{ secrets.PRODUCTION_DEPLOY_KEY }}
+      run: |
+        # Deploy script here
+        echo "Deploying to production..."
+    
+    - name: Create release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+</syntaxhighlight>
+
+== Advanced Features ==
+
+=== Reusable Workflows ===
+
+<syntaxhighlight lang="yaml">
+# .github/workflows/reusable-tests.yml
+name: Reusable Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: false
+        type: string
+        default: '18'
+    secrets:
+      codecov-token:
+        required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+    - run: npm test
+</syntaxhighlight>
+
+Using the reusable workflow:
+
+<syntaxhighlight lang="yaml">
+jobs:
+  tests:
+    uses: ./.github/workflows/reusable-tests.yml
+    with:
+      node-version: '16'
+    secrets:
+      codecov-token: ${{ secrets.CODECOV_TOKEN }}
+</syntaxhighlight>
+
+=== Composite Actions ===
+
+<syntaxhighlight lang="yaml">
+# .github/actions/setup-project/action.yml
+name: 'Setup Project'
+description: 'Setup Node.js and install dependencies'
+
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: '18'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+    
+    - run: npm ci
+      shell: bash
+    
+    - run: npm run build
+      shell: bash
+</syntaxhighlight>
+
+== Best Practices ==
+
+=== 1. Security ===
+
+* ✅ Use secrets for sensitive data
+* ✅ Limit permissions with `permissions:`
+* ✅ Pin action versions to SHA
+* ✅ Enable Dependabot for actions
+
+=== 2. Performance ===
+
+* ✅ Use caching for dependencies
+* ✅ Run jobs in parallel when possible
+* ✅ Use matrix builds efficiently
+* ✅ Minimize checkout depth when full history isn't needed
+
+=== 3. Maintainability ===
+
+* ✅ Use meaningful job and step names
+* ✅ Extract common logic to composite actions
+* ✅ Document complex workflows
+* ✅ Use workflow templates for consistency
+
+== Debugging Workflows ==
+
+=== Enable Debug Logging ===
+
+Set these repository secrets:
+* `ACTIONS_STEP_DEBUG` = `true`
+* `ACTIONS_RUNNER_DEBUG` = `true`
+
+=== Debugging Steps ===
+
+<syntaxhighlight lang="yaml">
+steps:
+- name: Debug Info
+  run: |
+    echo "Event: ${{ github.event_name }}"
+    echo "Ref: ${{ github.ref }}"
+    echo "SHA: ${{ github.sha }}"
+    echo "Actor: ${{ github.actor }}"
+    echo "Workflow: ${{ github.workflow }}"
+    echo "Run ID: ${{ github.run_id }}"
+    echo "Run Number: ${{ github.run_number }}"
+
+- name: Print event payload
+  run: |
+    cat << 'EOF'
+    ${{ toJSON(github.event) }}
+    EOF
+</syntaxhighlight>
+
+== Common Patterns ==
+
+=== Deployment with Environments ===
+
+<syntaxhighlight lang="yaml">
+deploy:
+  runs-on: ubuntu-latest
+  environment:
+    name: production
+    url: https://app.example.com
+  steps:
+  - name: Deploy
+    run: ./deploy.sh
+</syntaxhighlight>
+
+=== Automated Releases ===
+
+<syntaxhighlight lang="yaml">
+- name: Create Release
+  if: startsWith(github.ref, 'refs/tags/')
+  uses: softprops/action-gh-release@v1
+  with:
+    files: |
+      dist/*
+      README.md
+    draft: false
+    prerelease: false
+</syntaxhighlight>
+
+== Next Steps ==
+
+* [[Advanced GitHub Actions|Advanced GitHub Actions Techniques]]
+* [[Custom GitHub Actions Development|Creating Custom Actions]]
+* [[GitHub Actions Security|Security Best Practices]]
+* [[GitHub Actions Performance|Optimising Workflow Performance]]
+
+{{Navigation
+|prev=[[Collaborative Development]]
+|next=[[Advanced GitHub Actions]]
+}}
+
+[[Category:Intermediate Tutorials]]
+[[Category:GitHub Actions]]
+[[Category:CI/CD]]
+[[Category:Tutorials]]

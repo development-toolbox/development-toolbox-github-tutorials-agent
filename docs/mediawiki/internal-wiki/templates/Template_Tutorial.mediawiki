@@ -1,0 +1,43 @@
+<noinclude>
+This template creates a structured tutorial header with metadata.
+
+== Usage ==
+<pre>
+{{Tutorial
+|title = Tutorial Title
+|author = Author Name
+|difficulty = beginner/intermediate/advanced
+|estimated_time = 30 minutes
+|prerequisites = Basic Git knowledge
+|topics = GitHub Actions, CI/CD
+}}
+</pre>
+
+== Parameters ==
+* '''title''': The title of the tutorial
+* '''author''': The author(s) of the tutorial
+* '''difficulty''': The difficulty level (beginner, intermediate, or advanced)
+* '''estimated_time''': Estimated time to complete the tutorial
+* '''prerequisites''' (optional): Prerequisites needed
+* '''topics''' (optional): Topics covered in the tutorial
+
+</noinclude><includeonly><div style="background: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+<div style="font-size: 1.4em; font-weight: bold; margin-bottom: 10px; color: #333;">{{{title|Tutorial}}}</div>
+<div style="display: grid; grid-template-columns: auto 1fr; gap: 8px; font-size: 0.95em;">
+<span style="font-weight: bold;">Author:</span> <span>{{{author|Not specified}}}</span>
+<span style="font-weight: bold;">Difficulty:</span> <span style="padding: 2px 8px; border-radius: 3px; background: {{#switch: {{{difficulty|}}}
+| beginner = #e8f5e9; color: #2e7d32
+| intermediate = #fff3e0; color: #f57c00
+| advanced = #fce4ec; color: #c2185b
+| #default = #f5f5f5; color: #666
+}}">{{{difficulty|Not specified}}}</span>
+<span style="font-weight: bold;">Time:</span> <span>⏱️ {{{estimated_time|Not specified}}}</span>
+{{#if: {{{prerequisites|}}} |
+<span style="font-weight: bold;">Prerequisites:</span> <span>{{{prerequisites}}}</span>
+}}
+{{#if: {{{topics|}}} |
+<span style="font-weight: bold;">Topics:</span> <span>{{{topics}}}</span>
+}}
+</div>
+</div></includeonly>
+[[Category:Tutorial templates]]

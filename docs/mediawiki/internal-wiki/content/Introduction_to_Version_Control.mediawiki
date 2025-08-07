@@ -1,0 +1,418 @@
+{{Tutorial
+|title = Introduction to Version Control
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 20 minutes
+|prerequisites = Basic computer literacy
+|topics = Version control, Git concepts, Collaboration, History tracking
+}}
+
+{{TOC limit|3}}
+
+= Introduction to Version Control =
+
+Version control is the foundation of modern software development. Understanding these concepts will transform how you work with code, documents, and collaborative projects.
+
+== What is Version Control? ==
+
+Version control is a system that tracks changes to files over time, allowing you to:
+* '''Recall specific versions''' of files from the past
+* '''See what changed''' between versions
+* '''Collaborate''' with others without conflicts
+* '''Backup your work''' automatically
+* '''Experiment safely''' with new features
+
+{{Note|Think of version control as a "save game" system for your projects - you can always go back to any previous state.}}
+
+=== Real-World Analogies ===
+
+'''Google Docs Version History:'''
+* See all changes made to a document
+* Restore previous versions
+* See who made what changes
+* Collaborate simultaneously
+
+'''Video Game Save Files:'''
+* Save your progress at different points
+* Load a previous save if something goes wrong
+* Multiple save slots for different paths
+* Share saves with friends
+
+'''Photo Albums:'''
+* Chronological organisation of memories
+* Tag photos with descriptions
+* Share albums with family
+* Never lose precious moments
+
+== Why Use Version Control? ==
+
+=== Without Version Control ===
+
+Common problems when working without version control:
+* '''Lost work''' - Accidentally delete or overwrite files
+* '''Merge conflicts''' - Multiple people editing the same file
+* '''No history''' - Can't see what changed or when
+* '''No backup''' - Single point of failure
+* '''Collaboration chaos''' - Emailing files back and forth
+
+'''Typical file naming without version control:'''
+{{Code|text|
+project.doc
+project_final.doc
+project_final_v2.doc
+project_final_v2_really_final.doc
+project_final_v2_really_final_THIS_ONE.doc
+}}
+
+{{Warning|This chaotic approach leads to confusion, lost work, and frustrated team members.}}
+
+=== With Version Control ===
+
+Benefits of using version control systems:
+* '''Complete history''' - Every change is tracked and recoverable
+* '''Branching''' - Work on features without affecting main project
+* '''Merging''' - Combine work from multiple contributors
+* '''Blame/annotation''' - See who changed what and when
+* '''Distributed backup''' - Your code exists in multiple places
+* '''Collaboration''' - Multiple people can work simultaneously
+
+== Core Concepts ==
+
+=== Repository (Repo) ===
+
+A '''repository''' is a project folder tracked by version control:
+* Contains all your project files
+* Stores complete history of changes
+* Can be local (on your computer) or remote (on GitHub)
+* Acts as the central hub for collaboration
+
+=== Commits ===
+
+A '''commit''' is a snapshot of your project at a specific moment:
+* Records what files changed
+* Includes a descriptive message
+* Has a unique identifier (hash)
+* Forms a chain of project history
+
+'''Commit anatomy:'''
+* '''Changes''' - Which files were modified, added, or deleted
+* '''Message''' - Human-readable description of what changed
+* '''Author''' - Who made the changes
+* '''Timestamp''' - When the changes were made
+* '''Parent''' - Link to the previous commit
+
+{{Good|Think of commits as diary entries for your project - each one tells a story about what happened.}}
+
+=== Working Directory ===
+
+Your '''working directory''' is the current state of files:
+* What you see in your file system
+* May contain uncommitted changes
+* Where you edit and modify files
+* The "live" version of your project
+
+=== Staging Area ===
+
+The '''staging area''' is a preparation space for commits:
+* Choose which changes to include in next commit
+* Review changes before committing
+* Allows for atomic, focused commits
+* Sometimes called the "index"
+
+'''Three states of files:'''
+1. '''Modified''' - Changed but not staged
+2. '''Staged''' - Marked for inclusion in next commit  
+3. '''Committed''' - Safely stored in repository history
+
+== Understanding Git ==
+
+=== What is Git? ===
+
+Git is the most popular version control system:
+* '''Distributed''' - Every copy is a complete backup
+* '''Fast''' - Optimised for performance
+* '''Flexible''' - Supports many different workflows
+* '''Open source''' - Free and continuously improved
+* '''Industry standard''' - Used by millions of developers
+
+=== Git vs GitHub ===
+
+Important distinction:
+* '''Git''' - The version control system (software)
+* '''GitHub''' - A hosting service for Git repositories (website)
+
+'''Analogy:'''
+* Git is like Microsoft Word (the software)
+* GitHub is like Google Drive (the cloud storage service)
+
+=== Distributed Version Control ===
+
+Unlike centralised systems, Git is distributed:
+* '''Every copy is complete''' - Full history in every repository
+* '''No single point of failure''' - If one copy is lost, others remain
+* '''Work offline''' - No internet connection required for most operations
+* '''Multiple remotes''' - Can sync with several other repositories
+
+'''Centralised vs Distributed:'''
+
+'''Centralised (old way):'''
+{{Code|text|
+Developer A ←→ Central Server ←→ Developer B
+}}
+
+'''Distributed (Git way):'''
+{{Code|text|
+Developer A ←→ GitHub ←→ Developer B
+     ↓                    ↓
+Local Repository    Local Repository
+}}
+
+## Basic Workflow ==
+
+=== The Git Lifecycle ===
+
+Understanding the basic Git workflow:
+
+1. '''Modify files''' - Edit code in your working directory
+2. '''Stage changes''' - Select which changes to commit
+3. '''Commit changes''' - Save snapshot to repository
+4. '''Push changes''' - Share with remote repository (GitHub)
+
+'''Visual representation:'''
+{{Code|text|
+Working Directory → Staging Area → Local Repository → Remote Repository
+     (edit)           (add)          (commit)         (push)
+}}
+
+=== Example Workflow ===
+
+Here's what a typical development session looks like:
+
+{{Code|bash|
+# 1. Check current status
+git status
+
+# 2. Edit some files
+# (make changes in your editor)
+
+# 3. See what changed
+git diff
+
+# 4. Stage changes for commit
+git add file1.txt file2.txt
+
+# 5. Commit with descriptive message
+git commit -m "Add user authentication feature"
+
+# 6. Push to GitHub
+git push origin main
+}}
+
+=== Branching and Merging ===
+
+'''Branches''' allow parallel development:
+* '''Main branch''' - Stable, production-ready code
+* '''Feature branches''' - New features in development
+* '''Bug fix branches''' - Fixes for specific issues
+* '''Experiment branches''' - Try new ideas safely
+
+'''Merging''' combines work from different branches:
+* Integrate completed features into main branch
+* Preserve history of all changes
+* Handle conflicts when same code is modified
+* Maintain project stability
+
+{{Info|Branching is like having multiple parallel universes for your project - you can experiment in one without affecting the others.}}
+
+== Collaboration with Version Control ==
+
+=== How Teams Use Version Control ===
+
+Version control enables effective teamwork:
+* '''Parallel development''' - Multiple people work simultaneously
+* '''Change tracking''' - See exactly what each person contributed
+* '''Code review''' - Examine changes before integration
+* '''Release management''' - Tag stable versions for deployment
+
+=== Common Collaboration Patterns ===
+
+'''Feature Branch Workflow:'''
+1. Create branch for new feature
+2. Develop feature in isolation
+3. Create pull request for review
+4. Merge after approval
+5. Delete feature branch
+
+'''Fork and Pull Model:'''
+1. Fork repository to your account
+2. Clone fork to local machine
+3. Make changes and commit
+4. Push changes to your fork
+5. Create pull request to original repository
+
+=== Handling Conflicts ===
+
+When multiple people edit the same code:
+* '''Git detects conflicts''' automatically
+* '''Manual resolution''' required for overlapping changes
+* '''Merge tools''' help visualise and resolve conflicts
+* '''Communication''' prevents most conflicts
+
+{{Good|Regular communication and small, frequent commits reduce the likelihood of conflicts.}}
+
+== Version Control Best Practices ==
+
+=== Commit Messages ===
+
+Write clear, descriptive commit messages:
+* '''Use present tense''' - "Add feature" not "Added feature"
+* '''Be specific''' - Explain what and why, not just what
+* '''Keep first line short''' - 50 characters or less
+* '''Add details if needed''' - Use multiple lines for complex changes
+
+'''Good commit messages:'''
+{{Code|text|
+Add user authentication with OAuth2
+Fix memory leak in image processing
+Update README with installation instructions
+Refactor database connection handling
+}}
+
+'''Poor commit messages:'''
+{{Code|text|
+Fixed stuff
+Updates
+Changed files
+Work in progress
+}}
+
+=== When to Commit ===
+
+Commit frequently with focused changes:
+* '''Atomic commits''' - One logical change per commit
+* '''Working code''' - Don't commit broken functionality
+* '''Complete features''' - Finish what you start
+* '''Regular rhythm''' - Commit at least daily
+
+=== Repository Organisation ===
+
+Keep repositories organised:
+* '''One project per repository''' - Don't mix unrelated projects  
+* '''Clear structure''' - Organise files logically
+* '''Documentation''' - Include README and other docs
+* '''Ignore unnecessary files''' - Use .gitignore appropriately
+
+== Types of Version Control Systems ==
+
+=== Centralised Systems ===
+
+Traditional approach with single central server:
+* '''Examples''' - Subversion (SVN), Perforce, Team Foundation Server
+* '''Pros''' - Simple model, easy to understand
+* '''Cons''' - Single point of failure, requires network access
+
+=== Distributed Systems ===
+
+Modern approach with multiple complete copies:
+* '''Examples''' - Git, Mercurial, Bazaar
+* '''Pros''' - No single point of failure, work offline, faster
+* '''Cons''' - More complex initially, larger storage requirements
+
+=== Why Git Won ===
+
+Git became dominant because:
+* '''Speed''' - Extremely fast operations
+* '''Flexibility''' - Supports many workflows
+* '''Reliability''' - Strong data integrity
+* '''Community''' - Large ecosystem and tooling
+* '''GitHub''' - Excellent hosting and collaboration platform
+
+== Beyond Code: Other Uses ==
+
+Version control isn't just for programmers:
+
+=== Documentation ===
+
+* '''Technical writing''' - Track changes to manuals and guides
+* '''Collaboration''' - Multiple writers working together
+* '''Publishing''' - Maintain different versions for different audiences
+* '''Translation''' - Coordinate translation efforts
+
+=== Creative Projects ===
+
+* '''Writing''' - Track novel or screenplay development
+* '''Design''' - Version control for design files
+* '''Research''' - Manage research data and analysis
+* '''Legal documents''' - Track contract and policy changes
+
+=== Configuration Management ===
+
+* '''System configuration''' - Server setup and deployment scripts
+* '''Infrastructure as code''' - Cloud resource definitions
+* '''Environment management''' - Development, staging, production configs
+* '''Backup and recovery''' - Maintain historical snapshots
+
+{{Success|Version control transforms chaotic file management into organised, collaborative, and reliable workflows.}}
+
+== Getting Started ==
+
+Ready to dive in? Here's your next steps:
+
+1. '''Create GitHub account''' - [[Creating Your GitHub Account]]
+2. '''Learn Git basics''' - [[Basic Git Commands]]
+3. '''Try the interface''' - [[GitHub Web Interface Tour]]
+4. '''Make first repository''' - [[First Repository]]
+
+=== Recommended Learning Path ===
+
+'''Week 1: Fundamentals'''
+* Understand concepts (this tutorial)
+* Create GitHub account
+* Learn basic Git commands
+* Practice with personal project
+
+'''Week 2: Collaboration'''
+* Fork a repository
+* Make your first pull request
+* Learn code review process
+* Join open source project
+
+'''Week 3: Workflows'''
+* Master branching and merging
+* Set up automated testing
+* Learn advanced Git features
+* Establish team workflows
+
+== Common Misconceptions ==
+
+=== "It's Too Complicated" ===
+
+'''Reality:''' While Git has many features, you only need to learn a few basic commands to get started. Most developers use the same 5-10 commands daily.
+
+=== "It's Only for Programmers" ===
+
+'''Reality:''' Version control benefits anyone working with files that change over time - writers, designers, researchers, and more.
+
+=== "I Don't Need It for Small Projects" ===
+
+'''Reality:''' Version control is most valuable for small projects where you can't afford to lose work. The overhead is minimal compared to the benefits.
+
+=== "I Can Just Use Dropbox/Google Drive" ===
+
+'''Reality:''' While cloud storage provides backup, it doesn't provide the change tracking, branching, merging, and collaboration features of proper version control.
+
+== Related Resources ==
+
+* [[Basic Git Commands]] - Learn essential Git operations
+* [[GitHub Web Interface Tour]] - Navigate GitHub effectively
+* [[Creating Your First Repository]] - Hands-on practice
+* [[Pull Request Best Practices]] - Collaborate effectively
+* [[Git Command Reference]] - Comprehensive command list
+
+{{Info|Version control is a skill that will serve you throughout your career. Invest time in learning it properly, and you'll wonder how you ever worked without it.}}
+
+[[Category:Beginner Tutorials]]
+[[Category:Git]]
+[[Category:Version Control]]
+[[Category:Concepts]]
+[[Category:Getting Started]]

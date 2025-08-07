@@ -1,0 +1,18 @@
+<noinclude>
+This template creates a success message box.
+
+== Usage ==
+<pre>
+{{Success|Operation completed successfully!}}
+</pre>
+
+== Parameters ==
+* '''1''': The success message
+
+</noinclude><includeonly><div style="background: #d4edda; border: 1px solid #c3e6cb; border-left: 4px solid #28a745; border-radius: 3px; padding: 12px; margin: 10px 0;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="font-size: 1.2em;">✅</span>
+<div><strong>Success:</strong> {{{1|}}}</div>
+</div>
+</div></includeonly>
+[[Category:Message box templates]]

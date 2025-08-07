@@ -1,0 +1,364 @@
+{{Tutorial
+|title = Your First Repository
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 15 minutes
+|prerequisites = GitHub account
+|topics = Repository creation, Git basics, Version control
+}}
+
+{{TOC limit|3}}
+
+= Your First Repository =
+
+Creating your first GitHub repository is an exciting milestone in your development journey. This tutorial will guide you through creating, configuring, and managing your very first repository.
+
+== What is a Repository? ==
+
+A '''repository''' (or "repo") is like a project folder that contains:
+* All your project files
+* Complete history of changes
+* Configuration for collaboration
+* Documentation and metadata
+
+{{Note|Think of a repository as a time machine for your project - you can see every change that's ever been made and who made it.}}
+
+== Creating Your First Repository ==
+
+=== Method 1: GitHub Web Interface ===
+
+# '''Sign in''' to [https://github.com GitHub.com]
+# Click the '''green "New"''' button or the '''+''' icon in the top-right
+# Fill in repository details:
+   * '''Repository name''': Choose something descriptive (e.g., "my-first-project")
+   * '''Description''': Brief explanation of your project (optional but recommended)
+   * '''Visibility''': 
+     * '''Public''' - Anyone can see this repository
+     * '''Private''' - Only you and collaborators can see it
+# '''Initialise repository''' options:
+   * ✅ '''Add a README file''' (recommended for beginners)
+   * ✅ '''Add .gitignore''' (choose template for your project type)
+   * ✅ '''Choose a licence''' (MIT License is popular for open source)
+# Click '''Create repository'''
+
+{{Good|Always include a README file - it's the first thing visitors see and explains what your project does.}}
+
+=== Method 2: GitHub Desktop ===
+
+# Open GitHub Desktop
+# Click '''File''' → '''New Repository'''
+# Fill in details:
+   * Name
+   * Description
+   * Local path (where to save on your computer)
+   * Initialise with README
+   * Git ignore template
+   * Licence
+# Click '''Create Repository'''
+# Click '''Publish repository''' to upload to GitHub
+
+=== Method 3: Command Line ===
+
+{{Code|bash|
+# Create directory and navigate to it
+mkdir my-first-project
+cd my-first-project
+
+# Initialise Git repository
+git init
+
+# Create README file
+echo "# My First Project" > README.md
+
+# Add files to staging
+git add README.md
+
+# Make first commit
+git commit -m "Initial commit"
+
+# Connect to GitHub (replace USERNAME/REPO)
+git remote add origin https://github.com/USERNAME/my-first-project.git
+
+# Push to GitHub
+git push -u origin main
+}}
+
+== Repository Structure ==
+
+Your new repository contains several important elements:
+
+=== Essential Files ===
+
+'''README.md'''
+* Written in Markdown format
+* First thing visitors see
+* Explains what your project does
+* Includes setup instructions
+
+'''.gitignore'''
+* Lists files Git should ignore
+* Prevents committing sensitive or temporary files
+* Templates available for different languages
+
+'''LICENSE'''
+* Defines how others can use your code
+* Important for open source projects
+* GitHub provides common licence templates
+
+=== Repository Sections ===
+
+'''Code Tab'''
+* Browse your files
+* View file contents
+* See recent commits
+
+'''Issues Tab'''
+* Track bugs and feature requests
+* Discuss improvements
+* Assign tasks to team members
+
+'''Pull Requests Tab'''
+* Review proposed changes
+* Discuss code before merging
+* Collaborate on features
+
+'''Actions Tab'''
+* Automated workflows
+* Continuous integration
+* Deployment pipelines
+
+'''Settings Tab'''
+* Repository configuration
+* Collaborator management
+* Security settings
+
+== Adding Your First Files ==
+
+=== Via Web Interface ===
+
+# Click '''Add file''' → '''Create new file'''
+# Name your file (e.g., "index.html")
+# Add content in the editor
+# Scroll down to '''Commit new file'''
+# Write commit message
+# Click '''Commit new file'''
+
+=== Via GitHub Desktop ===
+
+# Open your repository folder in file explorer
+# Add or create files
+# Return to GitHub Desktop
+# Review changes in the left panel
+# Write commit message
+# Click '''Commit to main'''
+# Click '''Push origin''' to upload
+
+=== Via Command Line ===
+
+{{Code|bash|
+# Create a new file
+echo "Hello, World!" > hello.txt
+
+# Check status
+git status
+
+# Add file to staging
+git add hello.txt
+
+# Commit with message
+git commit -m "Add hello world file"
+
+# Push to GitHub
+git push
+}}
+
+== Understanding Commits ==
+
+A '''commit''' is like a snapshot of your project at a specific moment:
+
+* '''Unique ID''' (hash) - Identifies the commit
+* '''Author''' - Who made the changes
+* '''Timestamp''' - When changes were made
+* '''Message''' - Description of what changed
+* '''Changes''' - Actual file modifications
+
+{{Good|Write commit messages in present tense: "Add feature" rather than "Added feature" or "Adding feature".}}
+
+=== Good Commit Messages ===
+
+✅ '''Good examples:'''
+* "Add user authentication system"
+* "Fix navigation menu on mobile devices"
+* "Update README with installation instructions"
+
+❌ '''Poor examples:'''
+* "Fixed stuff"
+* "Changes"
+* "asdf"
+
+== Repository Settings ==
+
+=== General Settings ===
+
+'''Repository name'''
+* Can be changed anytime
+* Should be descriptive and clear
+
+'''Description'''
+* Helps others understand your project
+* Appears in search results
+
+'''Website'''
+* Link to deployed application
+* Project homepage or documentation
+
+'''Topics'''
+* Tags that help categorise your repository
+* Improve discoverability
+
+=== Collaboration Settings ===
+
+'''Collaborators'''
+* Add people who can contribute
+* Different permission levels available
+
+'''Teams''' (for organisations)
+* Manage groups of collaborators
+* Assign repository access to teams
+
+=== Security Settings ===
+
+'''Visibility'''
+* Change between public and private
+* Consider implications before switching
+
+'''Branch protection'''
+* Prevent direct pushes to important branches
+* Require reviews before merging
+
+'''Security advisories'''
+* Report security vulnerabilities
+* Coordinate responsible disclosure
+
+== Best Practices for New Repositories ==
+
+=== Documentation ===
+
+{{Good|Good documentation makes your project accessible to others and your future self.}}
+
+'''README.md should include:'''
+* Project description
+* Installation instructions
+* Usage examples
+* Contributing guidelines
+* Licence information
+
+=== File Organisation ===
+
+'''Typical project structure:'''
+{{Code|text|
+my-project/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── src/           # Source code
+├── docs/          # Documentation
+├── tests/         # Test files
+└── examples/      # Usage examples
+}}
+
+=== Commit Habits ===
+
+* '''Commit frequently''' - Small, focused changes
+* '''Test before committing''' - Ensure code works
+* '''Write clear messages''' - Explain the "why"
+* '''Review changes''' - Double-check what you're committing
+
+== Common Beginner Mistakes ==
+
+{{Warning|Avoid these common pitfalls when starting with repositories.}}
+
+=== What NOT to Commit ===
+
+* Passwords or API keys
+* Compiled binaries
+* Temporary files
+* Large media files (unless necessary)
+* IDE-specific configuration
+
+=== Security Considerations ===
+
+* Never commit sensitive information
+* Use environment variables for secrets
+* Regularly review your commit history
+* Be careful with public repositories
+
+== Growing Your Repository ==
+
+=== Adding Collaborators ===
+
+# Go to '''Settings''' → '''Manage access'''
+# Click '''Invite a collaborator'''
+# Enter GitHub username or email
+# Choose permission level
+# Send invitation
+
+=== Creating Issues ===
+
+# Click '''Issues''' tab
+# Click '''New issue'''
+# Choose template (if available)
+# Fill in title and description
+# Add labels and assignees
+# Click '''Submit new issue'''
+
+=== Making Your First Pull Request ===
+
+# Create a new branch
+# Make changes
+# Push branch to GitHub
+# Click '''Compare & pull request'''
+# Fill in description
+# Click '''Create pull request'''
+
+== Next Steps ==
+
+Now that you've created your first repository:
+
+# '''Add more content''' - Build out your project
+# '''Learn branching''' - [[Introduction to Branching]]
+# '''Collaborate''' - [[Creating Your First Pull Request]]
+# '''Automate''' - [[GitHub Actions Fundamentals]]
+# '''Explore''' - [[GitHub Web Interface Tour]]
+
+{{See also|
+* [[Creating Your GitHub Account]] - Account setup
+* [[Basic Git Commands]] - Command-line operations
+* [[Understanding Commits]] - Dive deeper into commits
+* [[README Files]] - Documentation best practices
+* [[Using .gitignore]] - Exclude unwanted files
+}}
+
+== Troubleshooting ==
+
+=== Repository Not Appearing ===
+* Check if it's private and you're signed in
+* Verify organisation settings
+* Refresh the page
+
+=== Can't Push Changes ===
+* Check authentication (username/password or SSH key)
+* Ensure you have write permissions
+* Try pulling latest changes first
+
+=== Commit History Looks Wrong ===
+* Check your Git configuration (name and email)
+* Verify you're on the correct branch
+* Consider using GitHub Desktop for visual feedback
+
+{{Success|Congratulations! You've created your first repository and taken your first step into the world of version control and collaboration.}}
+
+[[Category:Beginner Tutorials]]
+[[Category:Git]]
+[[Category:GitHub]]
+[[Category:Repository Management]]

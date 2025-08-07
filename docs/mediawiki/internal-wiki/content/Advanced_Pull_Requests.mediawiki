@@ -1,0 +1,1220 @@
+{{Tutorial
+|title = Advanced Pull Requests
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 40 minutes
+|prerequisites = Pull request basics, Git branching, GitHub Actions knowledge
+|topics = Pull requests, Code review, Automation, Quality control, Collaboration
+}}
+
+{{TOC limit|3}}
+
+= Advanced Pull Requests =
+
+Master advanced pull request techniques to improve code quality, streamline reviews, and automate workflows for professional development teams.
+
+== Advanced PR Strategies ==
+
+=== Draft Pull Requests ===
+
+Use draft PRs for work-in-progress collaboration:
+* '''Early feedback''' - Get input before work is complete
+* '''Continuous integration''' - Run tests on incomplete code
+* '''Documentation''' - Show progress and approach
+* '''Collaboration''' - Allow others to contribute during development
+
+'''Creating draft PRs:'''
+{{Code|bash|
+# Create draft PR via GitHub CLI
+gh pr create --draft --title "WIP: Add user authentication" \
+  --body "Working on user auth system. Feedback welcome on approach."
+
+# Or use the web interface checkbox
+# "Create draft pull request" when creating PR
+}}
+
+'''Converting between draft and ready:'''
+{{Code|bash|
+# Mark draft as ready for review
+gh pr ready 123
+
+# Convert back to draft
+gh pr edit 123 --add-draft
+}}
+
+'''Draft PR workflow:'''
+{{Code|yaml|
+# .github/workflows/draft-pr.yml
+name: Draft PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  draft-checks:
+    if: github.event.pull_request.draft == true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run basic checks on draft
+      run: |
+        npm install
+        npm run lint
+        npm run test:unit  # Only unit tests for drafts
+    
+    - name: Comment on draft
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '🚧 Draft PR checks completed. Ready for full review when marked as ready!'
+          });
+}}
+
+=== PR Templates ===
+
+Create consistent PR descriptions with templates:
+
+'''Basic PR template (`.github/pull_request_template.md`):'''
+{{Code|markdown|
+## Description
+Brief description of changes made.
+
+## Type of Change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+- [ ] Performance improvement
+- [ ] Code refactoring
+
+## How Has This Been Tested?
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+- [ ] Cross-browser testing (if applicable)
+
+## Screenshots (if applicable)
+<!-- Add screenshots to help explain your changes -->
+
+## Checklist
+- [ ] My code follows the project's style guidelines
+- [ ] I have performed a self-review of my code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
+
+## Related Issues
+Fixes #(issue number)
+Closes #(issue number)
+Related to #(issue number)
+}}
+
+'''Feature-specific template:'''
+{{Code|markdown|
+## 🚀 Feature Summary
+What feature does this PR add?
+
+## 🎯 Motivation
+Why is this feature needed? What problem does it solve?
+
+## 🔧 Implementation Details
+- **Architecture decisions:** How was this implemented?
+- **Key components:** What are the main parts?
+- **Database changes:** Any schema modifications?
+- **API changes:** New endpoints or modifications?
+
+## 🧪 Testing Strategy
+- **Unit tests:** What units are covered?
+- **Integration tests:** How are components tested together?
+- **E2E tests:** What user flows are tested?
+- **Performance tests:** Any performance considerations?
+
+## 📸 Demo
+<!-- GIFs, screenshots, or links to deployed preview -->
+
+## 🔄 Migration Guide
+<!-- If this introduces breaking changes, how should users migrate? -->
+
+## 📚 Documentation
+- [ ] README updated
+- [ ] API documentation updated
+- [ ] Code comments added
+- [ ] Wiki/internal docs updated
+
+## 🎨 UI/UX Changes
+<!-- For frontend changes, describe UI/UX impact -->
+- **Before:** Description of old behavior
+- **After:** Description of new behavior
+- **Accessibility:** Any a11y considerations?
+
+## ⚡ Performance Impact
+- **Bundle size:** Impact on application size
+- **Runtime performance:** Speed improvements/regressions
+- **Memory usage:** Memory impact
+- **Database queries:** Query optimization
+}}
+
+'''Multiple templates with subdirectories:'''
+{{Code|text|
+.github/
+├── PULL_REQUEST_TEMPLATE/
+│   ├── bug_fix.md
+│   ├── feature.md
+│   ├── documentation.md
+│   └── hotfix.md
+└── ISSUE_TEMPLATE/
+    ├── bug_report.yml
+    └── feature_request.yml
+}}
+
+'''Template with query parameters:'''
+{{Code|markdown|
+<!-- Use URL to select specific template -->
+<!-- https://github.com/owner/repo/compare/main...feature?template=feature.md -->
+
+## 🐛 Bug Fix Summary
+<!-- When using bug_fix.md template -->
+What bug does this PR fix?
+
+## 🔍 Root Cause Analysis
+What caused this bug?
+
+## 🛠️ Solution
+How was the bug fixed?
+
+## 🧪 Testing
+- [ ] Added regression tests
+- [ ] Verified fix works in all environments
+- [ ] Tested edge cases
+
+## 📊 Impact Assessment
+- **Severity:** How critical was this bug?
+- **Affected users:** Who was impacted?
+- **Downtime:** Any service interruption?
+}}
+
+=== Automated PR Checks ===
+
+Implement comprehensive automated validation:
+
+'''Multi-stage PR validation:'''
+{{Code|yaml|
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+jobs:
+  validate-pr:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for proper diffing
+    
+    - name: Validate PR title
+      uses: amannn/action-semantic-pull-request@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        types: |
+          feat
+          fix
+          docs
+          style
+          refactor
+          perf
+          test
+          chore
+        requireScope: false
+        subjectPattern: ^(?![A-Z]).+$
+        subjectPatternError: |
+          The subject "{subject}" found in the pull request title "{title}"
+          didn't match the configured pattern. Please ensure that the subject
+          doesn't start with an uppercase character.
+    
+    - name: Check PR size
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          const additions = pr.additions;
+          const deletions = pr.deletions;
+          const changes = additions + deletions;
+          
+          if (changes > 1000) {
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `⚠️ This PR is quite large (${changes} lines changed). Consider breaking it into smaller PRs for easier review.`
+            });
+          }
+    
+    - name: Check for breaking changes
+      run: |
+        # Check if any breaking changes are introduced
+        if git diff --name-only origin/main...HEAD | grep -E "(package\.json|\.env\.example|migrations/)" > /dev/null; then
+          echo "::warning::This PR may contain breaking changes. Please review carefully."
+        fi
+    
+    - name: Lint commit messages
+      uses: wagoid/commitlint-github-action@v5
+      with:
+        configFile: .commitlintrc.json
+
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run linting
+      run: npm run lint
+    
+    - name: Run type checking
+      run: npm run type-check
+    
+    - name: Run tests with coverage
+      run: npm run test:coverage
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: unittests
+        name: codecov-umbrella
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  performance-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build application
+      run: npm run build
+    
+    - name: Run Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v9
+      with:
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+    
+    - name: Bundle size analysis
+      uses: preactjs/compressed-size-action@v2
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+}}
+
+=== PR Status Checks ===
+
+Configure required status checks for quality gates:
+
+'''Branch protection with status checks:'''
+{{Code|javascript|
+// Using GitHub API to configure branch protection
+const { Octokit } = require("@octokit/rest");
+
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN,
+});
+
+await octokit.rest.repos.updateBranchProtection({
+  owner: "your-org",
+  repo: "your-repo",
+  branch: "main",
+  required_status_checks: {
+    strict: true,  // Require branches to be up to date
+    contexts: [
+      "ci/code-quality",
+      "ci/tests",
+      "ci/security-scan",
+      "ci/performance-test"
+    ]
+  },
+  enforce_admins: true,
+  required_pull_request_reviews: {
+    required_approving_review_count: 2,
+    dismiss_stale_reviews: true,
+    require_code_owner_reviews: true,
+    require_last_push_approval: true
+  },
+  restrictions: null,  // No push restrictions
+  allow_force_pushes: false,
+  allow_deletions: false
+});
+}}
+
+'''Custom status check action:'''
+{{Code|yaml|
+name: Custom Status Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  custom-validation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set status to pending
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.repos.createCommitStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.payload.pull_request.head.sha,
+            state: 'pending',
+            context: 'custom/validation',
+            description: 'Running custom validation...'
+          });
+    
+    - name: Run custom validation
+      id: validation
+      run: |
+        # Your custom validation logic here
+        if [ "$(echo 'validation logic')" = "pass" ]; then
+          echo "result=success" >> $GITHUB_OUTPUT
+        else
+          echo "result=failure" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Set status to success
+      if: steps.validation.outputs.result == 'success'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.repos.createCommitStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.payload.pull_request.head.sha,
+            state: 'success',
+            context: 'custom/validation',
+            description: 'Custom validation passed!'
+          });
+    
+    - name: Set status to failure
+      if: steps.validation.outputs.result == 'failure'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.repos.createCommitStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.payload.pull_request.head.sha,
+            state: 'failure',
+            context: 'custom/validation',
+            description: 'Custom validation failed!'
+          });
+}}
+
+== Advanced Review Workflows ==
+
+=== Code Owner Reviews ===
+
+Implement code ownership for focused reviews:
+
+'''CODEOWNERS file configuration:'''
+{{Code|text|
+# .github/CODEOWNERS
+
+# Global owners (fallback)
+* @devops-team @tech-leads
+
+# Frontend code
+/src/frontend/ @frontend-team @ui-ux-team
+/src/components/ @frontend-team
+*.css @frontend-team @design-team
+*.scss @frontend-team @design-team
+
+# Backend code
+/src/backend/ @backend-team @api-team
+/src/api/ @backend-team @api-team
+/src/database/ @backend-team @database-team
+
+# Infrastructure
+/infrastructure/ @devops-team @sre-team
+/.github/ @devops-team
+/docker/ @devops-team
+*.yml @devops-team
+*.yaml @devops-team
+
+# Documentation
+/docs/ @tech-writers @product-team
+README.md @tech-writers
+*.md @tech-writers
+
+# Security sensitive files
+/src/auth/ @security-team @backend-team
+/src/payments/ @security-team @backend-team @compliance-team
+*.key @security-team
+*.pem @security-team
+
+# Configuration files
+/.env.example @devops-team @security-team
+/config/ @devops-team @backend-team
+
+# Mobile app
+/mobile/ @mobile-team
+/mobile/ios/ @mobile-team @ios-team
+/mobile/android/ @mobile-team @android-team
+
+# Specific high-impact files
+package.json @tech-leads @devops-team
+package-lock.json @tech-leads @devops-team
+Dockerfile @devops-team @security-team
+}}
+
+'''Advanced CODEOWNERS patterns:'''
+{{Code|text|
+# Multiple patterns for the same owners
+/src/{frontend,components}/ @frontend-team
+
+# Exclude patterns (overrides previous rules)
+/src/frontend/legacy/ 
+
+# Directory-specific overrides
+/src/frontend/critical-component/ @frontend-team @tech-leads @security-team
+
+# File type patterns
+*.{js,jsx,ts,tsx} @frontend-team
+*.{py,pyx} @backend-team
+*.{sql,migration} @database-team
+
+# Complex path patterns
+**/tests/ @qa-team
+**/migrations/ @database-team @backend-team
+**/security/**/* @security-team
+
+# Conditional ownership (requires all teams to approve)
+/src/payments/ @security-team @backend-team @compliance-team
+}}
+
+=== Review Assignment Automation ===
+
+Automate reviewer assignment based on PR content:
+
+{{Code|yaml|
+name: Auto Assign Reviewers
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Analyze changed files and assign reviewers
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const prNumber = context.payload.pull_request.number;
+          
+          // Get changed files
+          const files = await github.rest.pulls.listFiles({
+            owner,
+            repo,
+            pull_number: prNumber
+          });
+          
+          const changedFiles = files.data.map(file => file.filename);
+          const reviewers = new Set();
+          
+          // Logic to assign reviewers based on changed files
+          const rules = {
+            frontend: {
+              patterns: [/^src\/frontend\//, /\.css$/, /\.scss$/, /\.jsx?$/, /\.tsx?$/],
+              reviewers: ['frontend-lead', 'ui-expert']
+            },
+            backend: {
+              patterns: [/^src\/backend\//, /\.py$/, /^api\//],
+              reviewers: ['backend-lead', 'api-expert']
+            },
+            database: {
+              patterns: [/migration/, /\.sql$/, /database/],
+              reviewers: ['database-admin', 'backend-lead']
+            },
+            security: {
+              patterns: [/auth/, /security/, /\.env/, /secrets/],
+              reviewers: ['security-team-lead', 'senior-dev']
+            },
+            infrastructure: {
+              patterns: [/docker/, /\.yml$/, /\.yaml$/, /infrastructure/],
+              reviewers: ['devops-lead', 'sre-engineer']
+            }
+          };
+          
+          // Assign reviewers based on rules
+          for (const [category, rule] of Object.entries(rules)) {
+            const hasMatchingFiles = changedFiles.some(file => 
+              rule.patterns.some(pattern => pattern.test(file))
+            );
+            
+            if (hasMatchingFiles) {
+              rule.reviewers.forEach(reviewer => reviewers.add(reviewer));
+            }
+          }
+          
+          // Always assign at least one senior reviewer for large PRs
+          const totalChanges = files.data.reduce((sum, file) => 
+            sum + file.additions + file.deletions, 0
+          );
+          
+          if (totalChanges > 500) {
+            reviewers.add('tech-lead');
+            reviewers.add('senior-architect');
+          }
+          
+          // Convert Set to Array and remove PR author
+          const finalReviewers = Array.from(reviewers)
+            .filter(reviewer => reviewer !== context.payload.pull_request.user.login)
+            .slice(0, 4); // Limit to 4 reviewers max
+          
+          if (finalReviewers.length > 0) {
+            await github.rest.pulls.requestReviewers({
+              owner,
+              repo,
+              pull_number: prNumber,
+              reviewers: finalReviewers
+            });
+            
+            // Add comment explaining reviewer assignment
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: `🔍 **Auto-assigned reviewers based on changed files:**\n\n${finalReviewers.map(r => `- @${r}`).join('\n')}\n\nTotal changes: ${totalChanges} lines`
+            });
+          }
+}}
+
+=== Review Quality Metrics ===
+
+Track and improve review quality:
+
+{{Code|yaml|
+name: Review Metrics
+
+on:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [closed]
+
+jobs:
+  track-review-metrics:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Calculate review metrics
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const prNumber = context.payload.pull_request.number;
+          
+          // Get PR details
+          const pr = await github.rest.pulls.get({
+            owner,
+            repo,
+            pull_number: prNumber
+          });
+          
+          // Get reviews
+          const reviews = await github.rest.pulls.listReviews({
+            owner,
+            repo,
+            pull_number: prNumber
+          });
+          
+          // Calculate metrics
+          const metrics = {
+            prSize: pr.data.additions + pr.data.deletions,
+            timeToFirstReview: null,
+            timeToMerge: null,
+            reviewCount: reviews.data.length,
+            approvalCount: reviews.data.filter(r => r.state === 'APPROVED').length,
+            changesRequestedCount: reviews.data.filter(r => r.state === 'CHANGES_REQUESTED').length,
+            reviewTurnaroundTimes: []
+          };
+          
+          // Calculate time to first review
+          if (reviews.data.length > 0) {
+            const firstReviewTime = new Date(reviews.data[0].submitted_at);
+            const prCreatedTime = new Date(pr.data.created_at);
+            metrics.timeToFirstReview = (firstReviewTime - prCreatedTime) / (1000 * 60 * 60); // hours
+          }
+          
+          // Calculate time to merge
+          if (pr.data.merged_at) {
+            const mergedTime = new Date(pr.data.merged_at);
+            const prCreatedTime = new Date(pr.data.created_at);
+            metrics.timeToMerge = (mergedTime - prCreatedTime) / (1000 * 60 * 60); // hours
+          }
+          
+          // Store metrics (example: comment on PR)
+          const metricsComment = `
+          ## 📊 PR Review Metrics
+          
+          - **PR Size:** ${metrics.prSize} lines changed
+          - **Reviews:** ${metrics.reviewCount} total (${metrics.approvalCount} approved, ${metrics.changesRequestedCount} changes requested)
+          - **Time to First Review:** ${metrics.timeToFirstReview ? metrics.timeToFirstReview.toFixed(1) + ' hours' : 'N/A'}
+          - **Time to Merge:** ${metrics.timeToMerge ? metrics.timeToMerge.toFixed(1) + ' hours' : 'N/A'}
+          
+          ${metrics.prSize > 500 ? '⚠️ Large PR - consider breaking into smaller pieces for faster reviews' : ''}
+          ${metrics.timeToFirstReview > 24 ? '⚠️ Long time to first review - consider reviewer availability' : ''}
+          `;
+          
+          if (context.payload.action === 'closed' && pr.data.merged) {
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: metricsComment
+            });
+          }
+}}
+
+== Advanced PR Automation ==
+
+=== Auto-update PRs ===
+
+Keep PRs up-to-date with base branch:
+
+{{Code|yaml|
+name: Auto-update PRs
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 8 * * 1-5'  # Weekdays at 8 AM
+
+jobs:
+  update-prs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auto-update pull requests
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          
+          // Get all open PRs
+          const prs = await github.rest.pulls.list({
+            owner,
+            repo,
+            state: 'open',
+            base: 'main'
+          });
+          
+          for (const pr of prs.data) {
+            // Skip draft PRs
+            if (pr.draft) continue;
+            
+            // Check if PR is behind base branch
+            const comparison = await github.rest.repos.compareCommits({
+              owner,
+              repo,
+              base: pr.head.sha,
+              head: 'main'
+            });
+            
+            if (comparison.data.behind_by > 0) {
+              try {
+                // Update PR branch
+                await github.rest.pulls.updateBranch({
+                  owner,
+                  repo,
+                  pull_number: pr.number
+                });
+                
+                console.log(`Updated PR #${pr.number}: ${pr.title}`);
+                
+                // Add comment about update
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: pr.number,
+                  body: `🔄 This PR has been automatically updated with the latest changes from \`main\` branch.`
+                });
+                
+              } catch (error) {
+                console.log(`Could not update PR #${pr.number}: ${error.message}`);
+                
+                // Notify about conflicts
+                if (error.message.includes('merge conflict')) {
+                  await github.rest.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number: pr.number,
+                    body: `⚠️ This PR has merge conflicts with the \`main\` branch and cannot be automatically updated. Please resolve conflicts manually.`
+                  });
+                }
+              }
+            }
+          }
+}}
+
+=== Smart PR Labeling ===
+
+Automatically label PRs based on content and metadata:
+
+{{Code|yaml|
+name: Smart PR Labeling
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  label-pr:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Analyze and label PR
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const prNumber = context.payload.pull_request.number;
+          const pr = context.payload.pull_request;
+          
+          // Get changed files
+          const files = await github.rest.pulls.listFiles({
+            owner,
+            repo,
+            pull_number: prNumber
+          });
+          
+          const changedFiles = files.data.map(file => file.filename);
+          const labels = new Set();
+          
+          // Size-based labels
+          const totalChanges = pr.additions + pr.deletions;
+          if (totalChanges < 50) labels.add('size/small');
+          else if (totalChanges < 200) labels.add('size/medium');
+          else if (totalChanges < 500) labels.add('size/large');
+          else labels.add('size/extra-large');
+          
+          // Type-based labels from PR title
+          const title = pr.title.toLowerCase();
+          if (title.includes('fix') || title.includes('bug')) labels.add('type/bug-fix');
+          if (title.includes('feat') || title.includes('feature')) labels.add('type/feature');
+          if (title.includes('docs') || title.includes('documentation')) labels.add('type/documentation');
+          if (title.includes('refactor')) labels.add('type/refactoring');
+          if (title.includes('test')) labels.add('type/testing');
+          if (title.includes('chore')) labels.add('type/maintenance');
+          if (title.includes('perf') || title.includes('performance')) labels.add('type/performance');
+          if (title.includes('security')) labels.add('type/security');
+          
+          // Area-based labels from changed files
+          const areaRules = {
+            'area/frontend': [/^src\/frontend\//, /\.css$/, /\.scss$/, /\.jsx?$/, /\.tsx?$/],
+            'area/backend': [/^src\/backend\//, /\.py$/, /^api\//, /\.java$/],
+            'area/database': [/migration/, /\.sql$/, /database/, /schema/],
+            'area/infrastructure': [/docker/, /\.yml$/, /\.yaml$/, /infrastructure/, /terraform/],
+            'area/mobile': [/^mobile\//, /\.swift$/, /\.kt$/, /\.dart$/],
+            'area/docs': [/^docs\//, /README/, /\.md$/],
+            'area/tests': [/test/, /spec/, /\.test\./, /\.spec\./],
+            'area/ci-cd': [/\.github\//, /\.gitlab-ci/, /jenkins/, /azure-pipelines/]
+          };
+          
+          for (const [label, patterns] of Object.entries(areaRules)) {
+            if (changedFiles.some(file => patterns.some(pattern => pattern.test(file)))) {
+              labels.add(label);
+            }
+          }
+          
+          // Priority labels based on title keywords
+          if (title.includes('urgent') || title.includes('hotfix') || title.includes('critical')) {
+            labels.add('priority/high');
+          } else if (title.includes('minor') || title.includes('cleanup')) {
+            labels.add('priority/low');
+          } else {
+            labels.add('priority/medium');
+          }
+          
+          // Breaking change detection
+          if (title.includes('breaking') || 
+              title.includes('!:') || 
+              changedFiles.some(file => file.includes('migration'))) {
+            labels.add('breaking-change');
+          }
+          
+          // Security-related changes
+          if (changedFiles.some(file => 
+            file.includes('auth') || 
+            file.includes('security') || 
+            file.includes('.env') ||
+            file.includes('secrets')
+          )) {
+            labels.add('security-review-required');
+          }
+          
+          // Performance impact
+          if (changedFiles.some(file => 
+            file.includes('performance') ||
+            file.includes('optimization') ||
+            file.includes('cache')
+          )) {
+            labels.add('performance-impact');
+          }
+          
+          // Apply labels
+          if (labels.size > 0) {
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: prNumber,
+              labels: Array.from(labels)
+            });
+          }
+          
+          // Add milestone for feature PRs
+          if (labels.has('type/feature')) {
+            // Get current active milestone
+            const milestones = await github.rest.issues.listMilestones({
+              owner,
+              repo,
+              state: 'open',
+              sort: 'due_on',
+              direction: 'asc'
+            });
+            
+            if (milestones.data.length > 0) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: prNumber,
+                milestone: milestones.data[0].number
+              });
+            }
+          }
+}}
+
+=== PR Health Checks ===
+
+Comprehensive health validation for PRs:
+
+{{Code|yaml|
+name: PR Health Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: PR Health Assessment
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const prNumber = context.payload.pull_request.number;
+          const pr = context.payload.pull_request;
+          
+          const healthReport = {
+            score: 100,
+            issues: [],
+            recommendations: [],
+            blockers: []
+          };
+          
+          // Check PR description
+          if (!pr.body || pr.body.trim().length < 50) {
+            healthReport.score -= 20;
+            healthReport.issues.push('❌ **Missing or insufficient PR description** (< 50 characters)');
+            healthReport.recommendations.push('Add a detailed description explaining the changes');
+          }
+          
+          // Check PR title
+          const titleRegex = /^(feat|fix|docs|style|refactor|perf|test|chore)(\(.+\))?: .+/;
+          if (!titleRegex.test(pr.title)) {
+            healthReport.score -= 15;
+            healthReport.issues.push('❌ **PR title doesn\'t follow conventional format**');
+            healthReport.recommendations.push('Use format: `type(scope): description`');
+          }
+          
+          // Check PR size
+          const totalChanges = pr.additions + pr.deletions;
+          if (totalChanges > 1000) {
+            healthReport.score -= 25;
+            healthReport.issues.push(`❌ **Large PR** (${totalChanges} lines changed)`);
+            healthReport.recommendations.push('Consider breaking into smaller, focused PRs');
+          } else if (totalChanges > 500) {
+            healthReport.score -= 10;
+            healthReport.issues.push(`⚠️ **Medium-large PR** (${totalChanges} lines changed)`);
+          }
+          
+          // Check for linked issues
+          const issuePattern = /(fixes|closes|resolves|addresses)\s+#\d+/i;
+          if (!issuePattern.test(pr.body || '')) {
+            healthReport.score -= 10;
+            healthReport.issues.push('⚠️ **No linked issues found**');
+            healthReport.recommendations.push('Link related issues using "Fixes #123" format');
+          }
+          
+          // Get changed files
+          const files = await github.rest.pulls.listFiles({
+            owner,
+            repo,
+            pull_number: prNumber
+          });
+          
+          const changedFiles = files.data.map(file => file.filename);
+          
+          // Check for test files
+          const hasTests = changedFiles.some(file => 
+            file.includes('test') || 
+            file.includes('spec') ||
+            file.match(/\.(test|spec)\.(js|ts|py|java)$/)
+          );
+          
+          const hasSourceChanges = changedFiles.some(file => 
+            !file.includes('test') && 
+            !file.includes('spec') &&
+            !file.includes('docs') &&
+            !file.match(/\.(md|txt|yml|yaml)$/)
+          );
+          
+          if (hasSourceChanges && !hasTests) {
+            healthReport.score -= 20;
+            healthReport.issues.push('❌ **No test files found for source changes**');
+            healthReport.recommendations.push('Add appropriate unit/integration tests');
+          }
+          
+          // Check for documentation updates
+          const hasDocChanges = changedFiles.some(file => 
+            file.includes('README') || 
+            file.includes('docs/') ||
+            file.match(/\.md$/)
+          );
+          
+          if (pr.title.includes('feat') && !hasDocChanges) {
+            healthReport.score -= 10;
+            healthReport.issues.push('⚠️ **New feature without documentation updates**');
+            healthReport.recommendations.push('Update README or documentation for new features');
+          }
+          
+          // Check for potential security issues
+          const securityPatterns = [
+            /password/i,
+            /secret/i,
+            /api[_-]?key/i,
+            /token/i,
+            /private[_-]?key/i
+          ];
+          
+          for (const file of files.data) {
+            if (file.patch) {
+              const addedLines = file.patch.split('\n')
+                .filter(line => line.startsWith('+'))
+                .join('\n');
+              
+              for (const pattern of securityPatterns) {
+                if (pattern.test(addedLines)) {
+                  healthReport.score -= 30;
+                  healthReport.blockers.push(`🚨 **Potential security issue** in ${file.filename}`);
+                  healthReport.recommendations.push('Review for hardcoded secrets or sensitive data');
+                  break;
+                }
+              }
+            }
+          }
+          
+          // Check merge conflicts
+          if (pr.mergeable === false) {
+            healthReport.score -= 50;
+            healthReport.blockers.push('🚨 **Merge conflicts detected**');
+            healthReport.recommendations.push('Resolve merge conflicts before review');
+          }
+          
+          // Generate health score emoji
+          let healthEmoji = '🟢';
+          if (healthReport.score < 70) healthEmoji = '🟡';
+          if (healthReport.score < 50) healthEmoji = '🔴';
+          
+          // Create health report comment
+          let reportComment = `## ${healthEmoji} PR Health Check (Score: ${healthReport.score}/100)\n\n`;
+          
+          if (healthReport.blockers.length > 0) {
+            reportComment += '### 🚨 Blockers\n';
+            reportComment += healthReport.blockers.map(issue => `- ${issue}`).join('\n') + '\n\n';
+          }
+          
+          if (healthReport.issues.length > 0) {
+            reportComment += '### Issues Found\n';
+            reportComment += healthReport.issues.map(issue => `- ${issue}`).join('\n') + '\n\n';
+          }
+          
+          if (healthReport.recommendations.length > 0) {
+            reportComment += '### 💡 Recommendations\n';
+            reportComment += healthReport.recommendations.map(rec => `- ${rec}`).join('\n') + '\n\n';
+          }
+          
+          if (healthReport.score >= 90) {
+            reportComment += '### ✅ Excellent!\nThis PR follows best practices and is ready for review.\n\n';
+          } else if (healthReport.score >= 70) {
+            reportComment += '### ✅ Good\nThis PR is in good shape with minor improvements possible.\n\n';
+          } else if (healthReport.score >= 50) {
+            reportComment += '### ⚠️ Needs Improvement\nThis PR has several issues that should be addressed.\n\n';
+          } else {
+            reportComment += '### 🔴 Needs Significant Work\nThis PR has major issues that must be resolved.\n\n';
+          }
+          
+          reportComment += '<details><summary>Health Check Criteria</summary>\n\n';
+          reportComment += '- **PR Description**: Detailed explanation of changes (20 points)\n';
+          reportComment += '- **Title Format**: Conventional commit format (15 points)\n';
+          reportComment += '- **PR Size**: Manageable size for review (25 points)\n';
+          reportComment += '- **Linked Issues**: References related issues (10 points)\n';
+          reportComment += '- **Test Coverage**: Tests for source changes (20 points)\n';
+          reportComment += '- **Documentation**: Updates for new features (10 points)\n';
+          reportComment += '- **Security**: No sensitive data exposed (30 points deduction if found)\n';
+          reportComment += '- **Conflicts**: No merge conflicts (50 points deduction if found)\n';
+          reportComment += '</details>';
+          
+          // Post health report
+          await github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number: prNumber,
+            body: reportComment
+          });
+          
+          // Set status check
+          const state = healthReport.score >= 70 ? 'success' : 
+                       healthReport.score >= 50 ? 'pending' : 'failure';
+          
+          await github.rest.repos.createCommitStatus({
+            owner,
+            repo,
+            sha: pr.head.sha,
+            state: state,
+            context: 'pr-health-check',
+            description: `Health Score: ${healthReport.score}/100`
+          });
+}}
+
+== Best Practices for Advanced PRs ==
+
+=== Review Guidelines ===
+
+'''For PR Authors:'''
+* Keep PRs focused on a single concern
+* Write clear, descriptive titles and descriptions
+* Include screenshots/demos for UI changes
+* Add tests for new functionality
+* Update documentation as needed
+* Respond promptly to review feedback
+* Keep commits clean and well-organized
+
+'''For Reviewers:'''
+* Review promptly (within 24 hours)
+* Be constructive and specific in feedback
+* Look for logic errors, not just style
+* Consider security and performance implications
+* Suggest improvements, don't just criticize
+* Approve when code meets standards
+* Use GitHub's suggestion feature for minor fixes
+
+=== PR Metrics to Track ===
+
+'''Key metrics for team health:'''
+{{Code|yaml|
+# Example metrics collection
+metrics:
+  time_to_first_review: "< 24 hours"
+  time_to_merge: "< 5 days"
+  pr_size_distribution:
+    small: "< 100 lines (60%)"
+    medium: "100-500 lines (30%)"
+    large: "> 500 lines (10%)"
+  review_participation: "> 80% of team members"
+  approval_rate: "> 95%"
+  revert_rate: "< 2%"
+}}
+
+=== Automated Quality Gates ===
+
+'''Implement progressive quality gates:'''
+1. **Basic validation** - Syntax, formatting, basic tests
+2. **Code quality** - Linting, complexity analysis, coverage
+3. **Security scanning** - Vulnerability detection, secret scanning
+4. **Performance testing** - Load tests, bundle size analysis
+5. **Integration testing** - E2E tests, API tests
+6. **Manual review** - Human code review and approval
+
+{{Success|Advanced pull requests enable sophisticated collaboration workflows while maintaining code quality and team velocity. Implement these patterns gradually based on your team's needs and maturity.}}
+
+== Related Resources ==
+
+* [[Code Review Process]] - Detailed review guidelines and practices
+* [[GitHub Actions Basics]] - Automating PR workflows
+* [[Branch Protection Rules]] - Enforcing quality standards
+* [[Collaborative Workflows]] - Team development processes
+* [[Git Hooks]] - Local automation and validation
+
+[[Category:Intermediate Tutorials]]
+[[Category:Pull Requests]]
+[[Category:Code Review]]
+[[Category:Automation]]
+[[Category:Collaboration]]

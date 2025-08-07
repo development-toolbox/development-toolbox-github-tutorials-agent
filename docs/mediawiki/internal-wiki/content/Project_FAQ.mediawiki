@@ -1,0 +1,439 @@
+= Frequently Asked Questions =
+
+Common questions and answers about GitHub, this wiki, and company development practices.
+
+== General GitHub Questions ==
+
+=== Getting Started ===
+
+'''Q: I'm new to the company. How do I get started with GitHub?'''
+
+A: Welcome! Follow these steps:
+# Request GitHub access through IT (if not already provided)
+# Complete the [[Getting Started with GitHub]] tutorial
+# Join your team's repositories as a collaborator
+# Set up your development environment with [[SSH Keys Setup]]
+# Read your team's contribution guidelines
+
+'''Q: What's the difference between Git and GitHub?'''
+
+A: Git is the version control system that tracks changes to your code. GitHub is a web-based platform that hosts Git repositories and provides collaboration tools like pull requests, issues, and project management features.
+
+'''Q: Should I use GitHub Desktop or the command line?'''
+
+A: Both are valid options:
+* '''GitHub Desktop''' - Great for beginners, visual interface, handles most common tasks
+* '''Command Line''' - More powerful, faster for experienced users, required for advanced operations
+* Start with Desktop and gradually learn command line as needed
+
+=== Account and Authentication ===
+
+'''Q: How do I reset my GitHub password?'''
+
+A: For company GitHub accounts, contact IT Helpdesk. Personal GitHub accounts can be reset through github.com/password_reset.
+
+'''Q: I'm getting authentication errors when pushing code. What should I do?'''
+
+A: Try these steps:
+# Check if you're using the correct username and password/token
+# Verify two-factor authentication is working
+# Ensure SSH keys are properly configured
+# Try using HTTPS instead of SSH temporarily
+# Contact IT if issues persist
+
+'''Q: Can I use my personal GitHub account for work?'''
+
+A: No, you must use your company-provided GitHub account for all work-related repositories. This ensures proper access control and compliance.
+
+== Repository Management ==
+
+=== Creating and Managing Repositories ===
+
+'''Q: How do I create a new repository?'''
+
+A: Follow the [[First Repository]] tutorial. Generally:
+# Click the "New" button on GitHub
+# Fill in repository details
+# Choose appropriate visibility (private for internal projects)
+# Initialize with README, .gitignore, and license
+
+'''Q: Should I make my repository public or private?'''
+
+A: Default to private for all company projects. Only make repositories public if:
+* Approved by your manager and legal team
+* Contains no proprietary information
+* Intended as open source contribution
+
+'''Q: How do I add collaborators to my repository?'''
+
+A: Go to Settings → Manage access → Invite a collaborator. Choose appropriate permission levels (read, write, admin) based on their role.
+
+=== Branching and Workflow ===
+
+'''Q: What branching strategy should I use?'''
+
+A: Most teams use GitHub Flow:
+# Create feature branches from main
+# Make changes and commits
+# Open pull request for review
+# Merge after approval
+# Delete feature branch
+
+For larger projects, consider Git Flow. Check with your team for specific guidelines.
+
+'''Q: How long should I keep feature branches?'''
+
+A: Delete feature branches immediately after merging. They're no longer needed and clutter the repository. GitHub automatically suggests deletion after merge.
+
+'''Q: Can I work directly on the main branch?'''
+
+A: No, never commit directly to main. Always use feature branches and pull requests. This ensures code review, prevents broken code, and maintains audit trails.
+
+== Pull Requests and Code Review ==
+
+=== Creating Pull Requests ===
+
+'''Q: What should I include in a pull request description?'''
+
+A: Include:
+* What changes were made and why
+* How to test the changes
+* Any breaking changes or considerations
+* Link to related issues
+* Screenshots for UI changes
+
+See [[Pull Request Best Practices]] for detailed guidance.
+
+'''Q: How do I handle merge conflicts?'''
+
+A: 
+# Update your branch with latest main: `git pull origin main`
+# Resolve conflicts in your editor
+# Add resolved files: `git add .`
+# Complete the merge: `git commit`
+# Push updated branch: `git push`
+
+'''Q: Who should review my pull requests?'''
+
+A: 
+* At least one team member (required)
+* Code owners for modified areas (if configured)
+* Senior developer for significant changes
+* Security team for security-related changes
+
+=== Code Review Process ===
+
+'''Q: How long should code reviews take?'''
+
+A: Aim for reviews within 24-48 hours. Prioritize reviews to maintain team velocity. For urgent fixes, request immediate review via Slack.
+
+'''Q: What if I disagree with review feedback?'''
+
+A: 
+# Discuss constructively in the PR comments
+# Provide reasoning for your approach
+# Consider alternative solutions
+# Escalate to team lead if needed
+# Remember: code quality is more important than individual preferences
+
+'''Q: Can I merge my own pull requests?'''
+
+A: Only if:
+* You have admin permissions
+* It's a minor fix (typos, documentation)
+* Emergency hotfixes (get retroactive review)
+# Generally, have someone else merge after approval
+
+== GitHub Actions and Automation ==
+
+=== Workflow Issues ===
+
+'''Q: My GitHub Actions workflow isn't running. Why?'''
+
+A: Check:
+* Workflows are enabled in repository settings
+* YAML syntax is correct (use online validator)
+* Trigger conditions match your situation
+* You have necessary permissions
+* Repository has Actions enabled
+
+'''Q: How do I debug failed workflows?'''
+
+A: 
+# Click on the failed workflow run
+# Expand failed steps to see error messages
+# Check the "Raw logs" for detailed output
+# Add debugging output to your workflow
+# Test workflow changes in feature branches first
+
+'''Q: Can I run workflows manually?'''
+
+A: Yes, add `workflow_dispatch` trigger to your workflow file. This adds a "Run workflow" button in the Actions tab.
+
+=== Secrets and Security ===
+
+'''Q: How do I store API keys and passwords securely?'''
+
+A: 
+* Never commit secrets to code
+* Use GitHub Secrets (Settings → Secrets and variables → Actions)
+* Use environment variables in workflows
+* For production, use proper secret management systems
+
+'''Q: Who can see GitHub Secrets?'''
+
+A: Repository secrets are visible to repository administrators and can be used by workflows. They're encrypted and not visible in logs or to regular users.
+
+== Security and Permissions ==
+
+=== Access Control ===
+
+'''Q: I can't access a repository. How do I get permission?'''
+
+A: 
+# Check if you're logged into the correct GitHub account
+# Contact the repository owner or your team lead
+# Ensure you're added as a collaborator or team member
+# Check if your organization access is properly configured
+
+'''Q: What permissions do I need for different actions?'''
+
+A: 
+* '''Read''' - View repository, clone, download
+* '''Write''' - Push changes, create branches, manage issues/PRs
+* '''Admin''' - Manage settings, collaborators, delete repository
+
+'''Q: How do I report a security issue?'''
+
+A: 
+* Never create public issues for security problems
+* Email security@company.com immediately
+* Follow responsible disclosure practices
+* Work with security team on resolution
+
+=== Best Practices ===
+
+'''Q: What should I never commit to GitHub?'''
+
+A: Never commit:
+* Passwords, API keys, tokens
+* Personal information (SSNs, credit cards)
+* Proprietary algorithms or business secrets
+* Large binary files (use Git LFS instead)
+* IDE-specific configuration files
+
+'''Q: How do I remove sensitive data that's already committed?'''
+
+A: 
+* Contact security team immediately
+* Use git-filter-repo or BFG Repo-Cleaner
+* Force push to rewrite history
+* Revoke compromised credentials
+* Consider making repository private temporarily
+
+== GitHub Actions ==
+
+=== Workflow Development ===
+
+'''Q: How do I create my first GitHub Actions workflow?'''
+
+A: 
+# Create `.github/workflows/` directory
+# Add a YAML file (e.g., `ci.yml`)
+# Define triggers, jobs, and steps
+# Start with simple workflows and add complexity gradually
+# See [[GitHub Actions Fundamentals]] for guidance
+
+'''Q: Can I use third-party actions?'''
+
+A: Yes, but:
+* Only use actions from trusted sources
+* Pin to specific versions for security
+* Review action source code if possible
+* Check with security team for new external actions
+
+'''Q: How do I share workflows between repositories?'''
+
+A: 
+* Create reusable workflows in a central repository
+* Use composite actions for shared steps
+* Create organization-level templates
+* Consider marketplace actions for common tasks
+
+== Company-Specific Questions ==
+
+=== Policies and Procedures ===
+
+'''Q: What are our company's GitHub policies?'''
+
+A: Key policies:
+* All work repositories must be private by default
+* Enable two-factor authentication
+* Use company email for Git commits
+* Follow branch protection rules
+* Regular security training required
+
+'''Q: Can I work on personal projects during work hours?'''
+
+A: Check your employment contract and company policy. Generally, personal projects should be done on personal time using personal accounts and equipment.
+
+'''Q: How do we handle open source contributions?'''
+
+A: 
+* Get manager approval before contributing
+* Use personal GitHub account for external contributions
+* Ensure no proprietary code is shared
+* Follow company's open source contribution policy
+
+=== Team Collaboration ===
+
+'''Q: How do we coordinate work across multiple teams?'''
+
+A: 
+* Use GitHub Projects for cross-team coordination
+* Create organization-level discussions
+* Establish clear API contracts between services
+* Regular sync meetings between team leads
+
+'''Q: What's our process for releasing software?'''
+
+A: 
+# Create release branch from main
+# Final testing and bug fixes
+# Create GitHub release with changelog
+# Deploy using approved deployment process
+# Tag release for version tracking
+
+Check your team's specific release procedures.
+
+== Troubleshooting ==
+
+=== Common Issues ===
+
+'''Q: Git is asking for username/password repeatedly. How do I fix this?'''
+
+A: 
+* Configure credential helper: `git config --global credential.helper store`
+* Use SSH keys instead of HTTPS
+* Check if two-factor authentication is properly configured
+* Ensure you're using personal access tokens, not passwords
+
+'''Q: I accidentally committed to the wrong branch. How do I fix it?'''
+
+A: 
+{{Code|bash|
+# Create new branch from current position
+git branch correct-branch
+
+# Reset wrong branch to previous commit  
+git reset --hard HEAD~1
+
+# Switch to correct branch
+git switch correct-branch
+}}
+
+'''Q: My repository is too large. What should I do?'''
+
+A: 
+* Use Git LFS for large files
+* Remove unnecessary files and history
+* Consider splitting into multiple repositories
+* Use .gitignore to prevent large files
+
+=== Getting Help ===
+
+'''Q: Where can I get more help?'''
+
+A: 
+* [[Project:Help]] - Comprehensive help resources
+* [[Project:Support]] - Contact support teams
+* [[Troubleshooting Guide]] - Common problem solutions
+* Slack #github-help - Quick questions
+* Office hours with Developer Experience Team
+
+'''Q: How do I request new features or improvements?'''
+
+A: 
+* Create issues in relevant repositories
+* Contact Developer Experience Team
+* Participate in quarterly feedback sessions
+* Join GitHub community discussions
+
+== Learning and Development ==
+
+=== Training Resources ===
+
+'''Q: What training is available for GitHub?'''
+
+A: 
+* Internal wiki tutorials (start here!)
+* Monthly GitHub workshops
+* Online training through learning portal
+* Mentoring program with experienced developers
+* External GitHub training courses (with approval)
+
+'''Q: How do I stay updated with new GitHub features?'''
+
+A: 
+* Subscribe to GitHub Blog
+* Follow @github on Twitter
+* Join GitHub community discussions
+* Attend GitHub Universe conference (virtual/in-person)
+* Regular updates from Developer Experience Team
+
+'''Q: I'm struggling with Git concepts. What should I do?'''
+
+A: 
+* Start with visual tools like GitHub Desktop
+* Practice with personal repositories first
+* Find a mentor or pair programming partner
+* Take it slow - Git has a learning curve
+* Focus on understanding concepts, not memorizing commands
+
+== Advanced Topics ==
+
+'''Q: When should I consider GitHub Enterprise features?'''
+
+A: Consider advanced features for:
+* Large teams (50+ developers)
+* Strict compliance requirements
+* Advanced security needs
+* Complex organizational structures
+* Integration with enterprise systems
+
+'''Q: How do I integrate GitHub with other company tools?'''
+
+A: 
+* Use GitHub Apps for custom integrations
+* Leverage webhooks for real-time updates
+* Explore GitHub Marketplace for existing integrations
+* Contact DevOps team for enterprise integrations
+* Follow API best practices for rate limiting
+
+'''Q: What's the difference between GitHub Actions and other CI/CD tools?'''
+
+A: GitHub Actions advantages:
+* Native integration with GitHub
+* No additional infrastructure needed
+* Tight integration with pull requests
+* Large marketplace of actions
+* Good for GitHub-centric workflows
+
+Other tools may be better for complex enterprise pipelines or non-GitHub workflows.
+
+== Still Need Help? ==
+
+If your question isn't answered here:
+
+# Search this wiki for specific topics
+# Check the [[Troubleshooting Guide]]
+# Contact [[Project:Support]] for personalized help
+# Ask in Slack #github-help for quick questions
+# Schedule time with the Developer Experience Team
+
+{{Info|This FAQ is updated regularly based on common support requests. If you have suggestions for additional questions, please contact the Developer Experience Team.}}
+
+[[Category:FAQ]]
+[[Category:Help]]
+[[Category:Support]]
+[[Category:Project]]

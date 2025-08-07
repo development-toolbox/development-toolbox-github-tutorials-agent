@@ -1,0 +1,1191 @@
+{{Tutorial
+|title = Code Review Process
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 40 minutes
+|prerequisites = Pull request knowledge, Git branching, team collaboration basics
+|topics = Code review, Quality assurance, Team collaboration, Best practices, Review tools
+}}
+
+{{TOC limit|3}}
+
+= Code Review Process =
+
+Code review is a systematic examination of source code by team members to identify bugs, improve code quality, share knowledge, and maintain coding standards across projects.
+
+== What is Code Review? ==
+
+Code review is a quality assurance practice where developers examine each other's code before it's merged:
+* '''Quality gate''' - Catch bugs and issues before they reach production
+* '''Knowledge sharing''' - Spread understanding of codebase across team
+* '''Standards enforcement''' - Maintain consistent coding practices
+* '''Mentorship''' - Help junior developers learn and improve
+* '''Risk mitigation''' - Reduce the likelihood of introducing defects
+
+{{Note|Studies show that code reviews can catch 60-90% of defects before they reach production, making them one of the most effective quality assurance practices.}}
+
+=== Benefits of Code Review ===
+
+'''For Code Quality:'''
+* Early bug detection and prevention
+* Improved code readability and maintainability
+* Consistent adherence to coding standards
+* Better architectural decisions
+* Reduced technical debt
+
+'''For Team Development:'''
+* Knowledge transfer and learning opportunities
+* Improved team communication
+* Shared ownership of codebase
+* Mentoring and skill development
+* Better understanding of system architecture
+
+== Review Process Workflow ==
+
+=== Standard Review Workflow ===
+
+Typical code review process steps:
+
+1. **Developer creates feature branch**
+2. **Implements changes and commits**
+3. **Opens pull request with detailed description**
+4. **Automated checks run (CI/CD, linting, tests)**
+5. **Team members review code and provide feedback**
+6. **Developer addresses feedback and updates code**
+7. **Reviewers approve changes**
+8. **Code is merged to main branch**
+
+'''Workflow diagram:'''
+{{Code|text|
+Feature Branch Creation
+        ↓
+    Development
+        ↓
+   Pull Request
+        ↓
+   Automated Checks ←→ Manual Review
+        ↓                    ↓
+   Feedback Loop ←----------┘
+        ↓
+    Approval
+        ↓
+     Merge
+}}
+
+=== Review Stages ===
+
+'''Pre-review (Author responsibilities):'''
+{{Code|markdown|
+## Pre-Review Checklist
+
+### Code Quality
+- [ ] Code follows project style guidelines
+- [ ] All functions and classes are properly documented
+- [ ] Complex logic includes explanatory comments
+- [ ] No commented-out code or debug statements
+- [ ] Error handling is implemented appropriately
+
+### Testing
+- [ ] New code includes appropriate tests
+- [ ] All tests pass locally
+- [ ] Test coverage meets project requirements
+- [ ] Edge cases are tested
+
+### Documentation
+- [ ] README updated if needed
+- [ ] API documentation updated
+- [ ] Breaking changes documented
+- [ ] Migration guide provided if applicable
+
+### Security
+- [ ] No hardcoded secrets or sensitive data
+- [ ] Input validation implemented
+- [ ] Authentication/authorization considered
+- [ ] Dependencies are up to date
+}}
+
+'''During review (Reviewer responsibilities):'''
+* Understand the context and requirements
+* Review code logic and implementation
+* Check for potential bugs and edge cases
+* Evaluate code style and maintainability
+* Provide constructive, actionable feedback
+* Suggest improvements and alternatives
+
+'''Post-review (Author responsibilities):'''
+* Address all reviewer comments
+* Make necessary code changes
+* Respond to questions and clarifications
+* Update tests and documentation as needed
+* Request re-review when ready
+
+== Review Guidelines and Best Practices ==
+
+=== For Review Authors ===
+
+'''Creating reviewable pull requests:'''
+
+{{Code|markdown|
+# Pull Request Title
+feat(auth): implement OAuth2 authentication system
+
+## Summary
+This PR implements OAuth2 authentication using GitHub as the provider. It includes login/logout functionality, user session management, and proper error handling.
+
+## Changes Made
+- Added OAuth2 configuration and middleware
+- Implemented login/logout routes
+- Created user session management
+- Added authentication guards for protected routes
+- Updated tests for new authentication flow
+
+## Type of Change
+- [x] New feature (non-breaking change which adds functionality)
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+
+## Testing
+- [x] Unit tests added/updated
+- [x] Integration tests added/updated
+- [x] Manual testing completed
+- [x] All existing tests pass
+
+## Screenshots/Demo
+![Login Flow](./docs/images/oauth-flow.gif)
+
+## Breaking Changes
+None
+
+## Migration Guide
+No migration needed - this is a new feature.
+
+## Related Issues
+Closes #123
+Related to #456
+
+## Reviewer Notes
+Please pay special attention to:
+- Security implementation in `auth/middleware.js`
+- Error handling in the OAuth callback
+- Session cleanup logic
+}}
+
+'''Code organization for review:'''
+{{Code|bash|
+# Organize commits logically
+git commit -m "feat: add OAuth2 configuration"
+git commit -m "feat: implement login/logout routes"
+git commit -m "feat: add session management"
+git commit -m "test: add authentication tests"
+git commit -m "docs: update authentication documentation"
+
+# Keep commits focused and atomic
+# Each commit should represent a single logical change
+# Avoid mixing multiple concerns in one commit
+}}
+
+=== For Reviewers ===
+
+'''Review checklist and approach:'''
+
+{{Code|markdown|
+# Code Review Checklist
+
+## Functionality
+- [ ] Does the code do what it's supposed to do?
+- [ ] Are edge cases handled appropriately?
+- [ ] Is error handling comprehensive?
+- [ ] Are there any obvious bugs or logic errors?
+
+## Design and Architecture
+- [ ] Is the code well-structured and organized?
+- [ ] Does it follow established patterns and conventions?
+- [ ] Are responsibilities properly separated?
+- [ ] Is the solution over-engineered or under-engineered?
+
+## Code Quality
+- [ ] Is the code readable and self-documenting?
+- [ ] Are variable and function names descriptive?
+- [ ] Is the code DRY (Don't Repeat Yourself)?
+- [ ] Are complex sections properly commented?
+
+## Performance
+- [ ] Are there any obvious performance issues?
+- [ ] Are algorithms efficient for expected data sizes?
+- [ ] Is memory usage reasonable?
+- [ ] Are there unnecessary network calls or database queries?
+
+## Security
+- [ ] Is user input properly validated and sanitized?
+- [ ] Are authentication and authorization handled correctly?
+- [ ] Are secrets and sensitive data protected?
+- [ ] Are there any SQL injection or XSS vulnerabilities?
+
+## Testing
+- [ ] Are there adequate tests for new functionality?
+- [ ] Do tests cover edge cases and error conditions?
+- [ ] Are tests maintainable and not brittle?
+- [ ] Is test coverage at an acceptable level?
+
+## Documentation
+- [ ] Is code properly documented?
+- [ ] Are API changes documented?
+- [ ] Is user-facing documentation updated?
+- [ ] Are breaking changes clearly explained?
+}}
+
+'''Providing effective feedback:'''
+
+{{Code|markdown|
+## Good Review Comments
+
+### Constructive and Specific
+❌ "This is wrong"
+✅ "This function doesn't handle the case where `userId` is null. Consider adding a guard clause at the beginning."
+
+### Suggest Solutions
+❌ "Fix this performance issue"
+✅ "This loop has O(n²) complexity. Consider using a Map for O(1) lookups:
+```javascript
+const userMap = new Map(users.map(u => [u.id, u]));
+const result = ids.map(id => userMap.get(id));
+```
+
+### Ask Questions for Clarity
+❌ "This doesn't make sense"
+✅ "I'm not sure I understand the reasoning behind this approach. Could you explain why we're using recursion here instead of iteration?"
+
+### Acknowledge Good Work
+✅ "Nice use of the Strategy pattern here - it makes this code much more maintainable."
+✅ "Great test coverage! I especially like how you tested the error conditions."
+
+### Provide Context
+✅ "This works for our current use case, but if we plan to support multiple file formats in the future, we might want to consider a more extensible approach like a plugin system."
+}}
+
+=== Review Communication ===
+
+'''Tone and language guidelines:'''
+
+{{Code|markdown|
+## Review Communication Best Practices
+
+### Use "We" instead of "You"
+❌ "You should use const instead of let here"
+✅ "We could use const instead of let here since the value doesn't change"
+
+### Focus on the Code, Not the Person
+❌ "You always forget to handle errors"
+✅ "This function could benefit from error handling for the network request"
+
+### Explain the "Why"
+❌ "Don't use var"
+✅ "Let's use const/let instead of var to avoid hoisting issues and make the scope clearer"
+
+### Be Respectful of Different Approaches
+❌ "This is the wrong way to do it"
+✅ "I've typically seen this pattern implemented differently. What are your thoughts on this alternative approach?"
+
+### Differentiate Between Issues and Preferences
+✅ "**Issue**: This will throw an error if user is undefined"
+✅ "**Nit**: Personal preference, but I find this more readable with early returns"
+✅ "**Suggestion**: Consider extracting this into a helper function for reusability"
+}}
+
+== Advanced Review Techniques ==
+
+=== Systematic Review Methods ===
+
+'''The "SOLID" review approach:'''
+{{Code|markdown|
+# SOLID Review Framework
+
+## S - Single Responsibility
+- Does each function/class have a single, well-defined purpose?
+- Are responsibilities clearly separated?
+
+## O - Open/Closed Principle
+- Is the code open for extension but closed for modification?
+- Can new features be added without changing existing code?
+
+## L - Liskov Substitution
+- Are inheritance relationships properly designed?
+- Can derived classes be used wherever base classes are expected?
+
+## I - Interface Segregation
+- Are interfaces focused and cohesive?
+- Do clients depend only on methods they actually use?
+
+## D - Dependency Inversion
+- Does the code depend on abstractions rather than concretions?
+- Are dependencies properly injected rather than hardcoded?
+}}
+
+'''Security-focused review checklist:'''
+{{Code|markdown|
+# Security Review Checklist
+
+## Input Validation
+- [ ] All user inputs are validated and sanitized
+- [ ] File uploads are restricted and scanned
+- [ ] SQL queries use parameterized statements
+- [ ] API inputs are validated against schemas
+
+## Authentication & Authorization
+- [ ] Authentication mechanisms are properly implemented
+- [ ] Session management is secure
+- [ ] Authorization checks are present and correct
+- [ ] Privilege escalation is prevented
+
+## Data Protection
+- [ ] Sensitive data is encrypted at rest and in transit
+- [ ] Passwords are properly hashed with salt
+- [ ] API keys and secrets are not hardcoded
+- [ ] Personal data handling complies with regulations
+
+## Error Handling
+- [ ] Error messages don't leak sensitive information
+- [ ] Proper logging is in place for security events
+- [ ] Rate limiting is implemented where appropriate
+- [ ] Fail-safe defaults are used
+
+## Dependencies
+- [ ] Third-party libraries are up to date
+- [ ] Known vulnerabilities are addressed
+- [ ] Dependency sources are trusted
+- [ ] License compatibility is verified
+}}
+
+=== Performance Review ===
+
+'''Performance-focused review guidelines:'''
+
+{{Code|javascript|
+// ❌ Inefficient approach
+function findUserPosts(users, posts) {
+  return users.map(user => {
+    return {
+      ...user,
+      posts: posts.filter(post => post.userId === user.id) // O(n*m)
+    };
+  });
+}
+
+// ✅ Optimized approach
+function findUserPosts(users, posts) {
+  // Create lookup map for O(1) access
+  const postsByUser = posts.reduce((acc, post) => {
+    if (!acc[post.userId]) acc[post.userId] = [];
+    acc[post.userId].push(post);
+    return acc;
+  }, {});
+  
+  return users.map(user => ({
+    ...user,
+    posts: postsByUser[user.id] || []
+  }));
+}
+
+// Review comment:
+// "Consider the performance implications with large datasets. 
+// The nested filter creates O(n*m) complexity. A Map-based 
+// approach would be more efficient for larger data sets."
+}}
+
+'''Memory and resource review:'''
+{{Code|python|
+# ❌ Memory inefficient
+def process_large_file(filename):
+    with open(filename, 'r') as f:
+        content = f.read()  # Loads entire file into memory
+        lines = content.split('\n')
+        return [process_line(line) for line in lines]
+
+# ✅ Memory efficient
+def process_large_file(filename):
+    results = []
+    with open(filename, 'r') as f:
+        for line in f:  # Process line by line
+            result = process_line(line.strip())
+            results.append(result)
+    return results
+
+# Review comment:
+# "For large files, loading the entire content into memory 
+# could cause issues. Consider processing line by line to 
+# maintain constant memory usage regardless of file size."
+}}
+
+== Review Tools and Automation ==
+
+=== GitHub Review Features ===
+
+'''Using GitHub's review tools effectively:'''
+
+{{Code|javascript|
+// Inline comments for specific lines
+function calculateTax(amount, rate) {
+  return amount * rate; // Review: Should we handle negative amounts?
+}
+
+// Suggestion mode for direct code changes
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // Reviewer can click "Add suggestion" to propose:
+  // return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+}
+}}
+
+'''Review conversation management:'''
+{{Code|markdown|
+## Review Conversation Flow
+
+### Initial Review Comment
+"This function could benefit from input validation. What happens if `amount` is negative or `rate` is zero?"
+
+### Author Response
+"Good point! I'll add validation for both cases and include appropriate error handling."
+
+### Follow-up Review
+"Thanks for adding the validation. The error messages are clear and helpful. ✅ Approved!"
+
+### Resolution
+"Conversation resolved after validation was added in commit abc123."
+}}
+
+=== Automated Review Tools ===
+
+'''Static analysis integration:'''
+{{Code|yaml|
+# .github/workflows/code-review.yml
+name: Automated Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for proper analysis
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run ESLint
+      run: |
+        npx eslint . --format=json --output-file=eslint-report.json
+        npx eslint . --format=stylish
+      continue-on-error: true
+    
+    - name: Run SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    
+    - name: Run CodeClimate Analysis
+      uses: codeclimate/codeclimate-action@v1
+      with:
+        coverageCommand: npm run test:coverage
+        debug: true
+    
+    - name: Comment on PR with Analysis
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // Read ESLint report
+          let eslintSummary = '';
+          try {
+            const eslintReport = JSON.parse(fs.readFileSync('eslint-report.json', 'utf8'));
+            const totalErrors = eslintReport.reduce((sum, file) => sum + file.errorCount, 0);
+            const totalWarnings = eslintReport.reduce((sum, file) => sum + file.warningCount, 0);
+            
+            if (totalErrors > 0 || totalWarnings > 0) {
+              eslintSummary = `## 🔍 ESLint Analysis\n- **Errors**: ${totalErrors}\n- **Warnings**: ${totalWarnings}\n\n`;
+            } else {
+              eslintSummary = `## ✅ ESLint Analysis\nNo issues found!\n\n`;
+            }
+          } catch (error) {
+            eslintSummary = `## ❌ ESLint Analysis\nFailed to parse results\n\n`;
+          }
+          
+          const comment = `
+          # Automated Code Review
+          
+          ${eslintSummary}
+          
+          ## 📊 Analysis Summary
+          - Static analysis completed
+          - Security scan completed
+          - Code coverage analysis completed
+          
+          Please review the detailed results above and address any issues before requesting human review.
+          `;
+          
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  security-review:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run Semgrep Security Analysis
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: >-
+          p/security-audit
+          p/secrets
+          p/owasp-top-ten
+    
+    - name: Run Snyk Security Scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+    
+    - name: Upload SARIF to GitHub
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: semgrep.sarif
+}}
+
+'''Code quality metrics:'''
+{{Code|javascript|
+// Script to calculate code quality metrics
+const fs = require('fs');
+const path = require('path');
+
+class CodeQualityAnalyzer {
+  constructor(directory) {
+    this.directory = directory;
+    this.metrics = {
+      totalFiles: 0,
+      totalLines: 0,
+      totalFunctions: 0,
+      averageComplexity: 0,
+      testCoverage: 0,
+      duplicatedLines: 0
+    };
+  }
+  
+  async analyzeDirectory() {
+    const files = this.getJavaScriptFiles(this.directory);
+    
+    for (const file of files) {
+      await this.analyzeFile(file);
+    }
+    
+    return this.generateReport();
+  }
+  
+  analyzeFile(filePath) {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const lines = content.split('\n');
+    
+    this.metrics.totalFiles++;
+    this.metrics.totalLines += lines.length;
+    
+    // Count functions
+    const functionMatches = content.match(/function\s+\w+|=>\s*{|:\s*function/g);
+    this.metrics.totalFunctions += functionMatches ? functionMatches.length : 0;
+    
+    // Calculate cyclomatic complexity (simplified)
+    const complexityKeywords = ['if', 'else', 'while', 'for', 'switch', 'case', 'catch'];
+    let complexity = 1; // Base complexity
+    
+    for (const keyword of complexityKeywords) {
+      const matches = content.match(new RegExp(`\\b${keyword}\\b`, 'g'));
+      complexity += matches ? matches.length : 0;
+    }
+    
+    // Store complexity per function (simplified calculation)
+    if (functionMatches) {
+      this.metrics.averageComplexity += complexity / functionMatches.length;
+    }
+  }
+  
+  generateReport() {
+    const avgComplexity = this.metrics.averageComplexity / this.metrics.totalFiles;
+    
+    return {
+      summary: {
+        files: this.metrics.totalFiles,
+        lines: this.metrics.totalLines,
+        functions: this.metrics.totalFunctions,
+        avgComplexity: Math.round(avgComplexity * 100) / 100
+      },
+      recommendations: this.getRecommendations(avgComplexity)
+    };
+  }
+  
+  getRecommendations(avgComplexity) {
+    const recommendations = [];
+    
+    if (avgComplexity > 10) {
+      recommendations.push('⚠️ High cyclomatic complexity detected. Consider breaking down complex functions.');
+    }
+    
+    if (this.metrics.totalLines / this.metrics.totalFiles > 300) {
+      recommendations.push('📄 Large file sizes detected. Consider splitting into smaller modules.');
+    }
+    
+    if (this.metrics.totalFunctions / this.metrics.totalFiles < 3) {
+      recommendations.push('🔧 Low function density. Consider breaking down large functions.');
+    }
+    
+    return recommendations;
+  }
+  
+  getJavaScriptFiles(dir) {
+    const files = [];
+    const items = fs.readdirSync(dir);
+    
+    for (const item of items) {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
+      
+      if (stat.isDirectory() && !item.startsWith('.') && item !== 'node_modules') {
+        files.push(...this.getJavaScriptFiles(fullPath));
+      } else if (item.endsWith('.js') || item.endsWith('.ts')) {
+        files.push(fullPath);
+      }
+    }
+    
+    return files;
+  }
+}
+
+// Usage in GitHub Actions
+async function analyzeAndComment() {
+  const analyzer = new CodeQualityAnalyzer('./src');
+  const report = await analyzer.analyzeDirectory();
+  
+  const comment = `
+  ## 📊 Code Quality Analysis
+  
+  ### Summary
+  - **Files analyzed**: ${report.summary.files}
+  - **Total lines**: ${report.summary.lines}
+  - **Functions found**: ${report.summary.functions}
+  - **Average complexity**: ${report.summary.avgComplexity}
+  
+  ### Recommendations
+  ${report.recommendations.map(rec => `- ${rec}`).join('\n')}
+  `;
+  
+  console.log(comment);
+}
+
+module.exports = { CodeQualityAnalyzer, analyzeAndComment };
+}}
+
+== Team Review Standards ==
+
+=== Establishing Review Culture ===
+
+'''Team guidelines document:'''
+{{Code|markdown|
+# Code Review Guidelines
+
+## Review Requirements
+- All code changes must be reviewed by at least 2 team members
+- Reviewers must be familiar with the relevant domain
+- Security-sensitive changes require security team review
+- Breaking changes require architecture team approval
+
+## Review Timelines
+- **Standard reviews**: 24 hours for initial feedback
+- **Urgent fixes**: 4 hours for critical production issues
+- **Large features**: 48 hours for comprehensive review
+- **Documentation**: 48 hours for thoroughness
+
+## Review Criteria
+### Must Fix (Blocking Issues)
+- Functional bugs or logic errors
+- Security vulnerabilities
+- Performance issues that impact users
+- Breaking changes without proper migration
+- Missing tests for new functionality
+
+### Should Fix (Strong Suggestions)
+- Code style violations
+- Unclear variable or function names
+- Missing documentation for complex logic
+- Potential maintenance issues
+- Non-optimal algorithms
+
+### Could Fix (Minor Suggestions)
+- Alternative implementation approaches
+- Minor optimization opportunities
+- Stylistic preferences
+- Future enhancement suggestions
+
+## Reviewer Assignment
+- **Junior developers**: Always paired with senior reviewer
+- **Senior developers**: Domain expert + peer reviewer
+- **Cross-team changes**: Include representative from affected team
+- **Infrastructure changes**: DevOps team involvement required
+
+## Response Guidelines
+- Authors must respond to all review comments
+- "Acknowledged" responses are acceptable for minor issues
+- Explanations required for rejected suggestions
+- Re-review requests after addressing major issues
+}}
+
+=== Review Metrics and Improvement ===
+
+'''Tracking review effectiveness:'''
+{{Code|javascript|
+// GitHub API script to analyze review metrics
+class ReviewMetricsAnalyzer {
+  constructor(octokit, owner, repo) {
+    this.octokit = octokit;
+    this.owner = owner;
+    this.repo = repo;
+  }
+  
+  async analyzeReviewMetrics(days = 30) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    
+    // Get merged PRs from the last 30 days
+    const prs = await this.octokit.rest.pulls.list({
+      owner: this.owner,
+      repo: this.repo,
+      state: 'closed',
+      sort: 'updated',
+      direction: 'desc',
+      per_page: 100
+    });
+    
+    const mergedPRs = prs.data
+      .filter(pr => pr.merged_at && new Date(pr.merged_at) > new Date(since));
+    
+    const metrics = {
+      totalPRs: mergedPRs.length,
+      averageTimeToFirstReview: 0,
+      averageTimeToMerge: 0,
+      reviewParticipation: new Map(),
+      reviewQuality: {
+        thorough: 0,
+        surface: 0,
+        total: 0
+      }
+    };
+    
+    for (const pr of mergedPRs) {
+      // Get reviews for this PR
+      const reviews = await this.octokit.rest.pulls.listReviews({
+        owner: this.owner,
+        repo: this.repo,
+        pull_number: pr.number
+      });
+      
+      // Calculate time to first review
+      if (reviews.data.length > 0) {
+        const firstReview = new Date(reviews.data[0].submitted_at);
+        const prCreated = new Date(pr.created_at);
+        const timeToFirstReview = (firstReview - prCreated) / (1000 * 60 * 60); // hours
+        metrics.averageTimeToFirstReview += timeToFirstReview;
+      }
+      
+      // Calculate time to merge
+      const merged = new Date(pr.merged_at);
+      const created = new Date(pr.created_at);
+      const timeToMerge = (merged - created) / (1000 * 60 * 60 * 24); // days
+      metrics.averageTimeToMerge += timeToMerge;
+      
+      // Track review participation
+      reviews.data.forEach(review => {
+        const reviewer = review.user.login;
+        if (!metrics.reviewParticipation.has(reviewer)) {
+          metrics.reviewParticipation.set(reviewer, 0);
+        }
+        metrics.reviewParticipation.set(reviewer, 
+          metrics.reviewParticipation.get(reviewer) + 1);
+      });
+      
+      // Analyze review quality (simplified heuristic)
+      reviews.data.forEach(review => {
+        metrics.reviewQuality.total++;
+        
+        if (review.body && review.body.length > 100) {
+          metrics.reviewQuality.thorough++;
+        } else {
+          metrics.reviewQuality.surface++;
+        }
+      });
+    }
+    
+    // Calculate averages
+    metrics.averageTimeToFirstReview /= mergedPRs.length;
+    metrics.averageTimeToMerge /= mergedPRs.length;
+    
+    return this.generateMetricsReport(metrics);
+  }
+  
+  generateMetricsReport(metrics) {
+    const topReviewers = Array.from(metrics.reviewParticipation.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+    
+    return {
+      summary: {
+        totalPRs: metrics.totalPRs,
+        avgTimeToFirstReview: Math.round(metrics.averageTimeToFirstReview * 10) / 10,
+        avgTimeToMerge: Math.round(metrics.averageTimeToMerge * 10) / 10,
+        thoroughReviewRate: Math.round((metrics.reviewQuality.thorough / metrics.reviewQuality.total) * 100)
+      },
+      topReviewers: topReviewers,
+      recommendations: this.generateRecommendations(metrics)
+    };
+  }
+  
+  generateRecommendations(metrics) {
+    const recommendations = [];
+    
+    if (metrics.averageTimeToFirstReview > 24) {
+      recommendations.push('⏰ Consider setting up review assignment automation or notifications');
+    }
+    
+    if (metrics.averageTimeToMerge > 5) {
+      recommendations.push('🚀 Look into streamlining the review process or breaking down large PRs');
+    }
+    
+    if ((metrics.reviewQuality.thorough / metrics.reviewQuality.total) < 0.5) {
+      recommendations.push('📝 Consider providing review training or templates for more thorough reviews');
+    }
+    
+    return recommendations;
+  }
+}
+}}
+
+== Specialized Review Types ==
+
+=== Security Code Review ===
+
+'''Security-focused review checklist:'''
+{{Code|markdown|
+# Security Code Review Checklist
+
+## Authentication & Authorization
+- [ ] Authentication mechanisms properly implemented
+- [ ] Session management is secure (proper expiration, secure flags)
+- [ ] Authorization checks are present at all entry points
+- [ ] Privilege escalation is prevented
+- [ ] Multi-factor authentication implemented where required
+
+## Input Validation & Sanitization
+- [ ] All user inputs are validated on both client and server
+- [ ] Input validation uses allowlists rather than blocklists
+- [ ] SQL injection prevention (parameterized queries)
+- [ ] XSS prevention (proper encoding/escaping)
+- [ ] File upload restrictions and scanning
+- [ ] Command injection prevention
+
+## Data Protection
+- [ ] Sensitive data encrypted at rest and in transit
+- [ ] Proper key management and rotation
+- [ ] Password hashing with appropriate algorithms (bcrypt, Argon2)
+- [ ] PII handling complies with regulations (GDPR, CCPA)
+- [ ] Data masking in logs and error messages
+
+## Error Handling & Logging
+- [ ] Error messages don't leak sensitive information
+- [ ] Comprehensive security event logging
+- [ ] Log tampering prevention
+- [ ] Proper exception handling without information disclosure
+
+## Dependencies & Infrastructure
+- [ ] Third-party dependencies are up to date
+- [ ] Known vulnerabilities addressed
+- [ ] Secure communication protocols (TLS 1.2+)
+- [ ] Proper CORS configuration
+- [ ] Security headers implemented (CSP, HSTS, etc.)
+}}
+
+=== Performance Review ===
+
+'''Performance-focused review approach:'''
+{{Code|python|
+# Performance Review Examples
+
+# ❌ Inefficient database queries
+def get_user_posts(user_id):
+    user = User.objects.get(id=user_id)
+    posts = []
+    for post_id in user.get_post_ids():  # N+1 query problem
+        post = Post.objects.get(id=post_id)
+        posts.append(post)
+    return posts
+
+# ✅ Optimized database queries
+def get_user_posts(user_id):
+    return Post.objects.filter(author_id=user_id).select_related('author')
+
+# Review comment: "This approach triggers N+1 queries. Consider using 
+# select_related() or prefetch_related() to fetch all data in a single query."
+
+# ❌ Inefficient algorithm
+def find_duplicates(items):
+    duplicates = []
+    for i, item in enumerate(items):
+        for j, other in enumerate(items[i+1:], i+1):  # O(n²)
+            if item == other:
+                duplicates.append(item)
+    return duplicates
+
+# ✅ Efficient algorithm
+def find_duplicates(items):
+    seen = set()
+    duplicates = set()
+    for item in items:  # O(n)
+        if item in seen:
+            duplicates.add(item)
+        else:
+            seen.add(item)
+    return list(duplicates)
+
+# Review comment: "The nested loop creates O(n²) complexity. Using a set 
+# for tracking seen items reduces this to O(n) time complexity."
+}}
+
+=== API Review ===
+
+'''API-specific review considerations:'''
+{{Code|json|
+{
+  "reviewChecklist": {
+    "design": [
+      "RESTful principles followed",
+      "Consistent naming conventions",
+      "Appropriate HTTP methods used",
+      "Proper status codes returned",
+      "Resource relationships clearly defined"
+    ],
+    "security": [
+      "Authentication required for protected endpoints",
+      "Authorization checks implemented",
+      "Rate limiting configured",
+      "Input validation on all parameters",
+      "CORS properly configured"
+    ],
+    "documentation": [
+      "OpenAPI/Swagger specification updated",
+      "Request/response examples provided",
+      "Error responses documented",
+      "Authentication requirements specified",
+      "Deprecation notices for old endpoints"
+    ],
+    "performance": [
+      "Pagination implemented for large datasets",
+      "Caching headers configured appropriately",
+      "Database queries optimized",
+      "Response payload size reasonable",
+      "Compression enabled where beneficial"
+    ],
+    "versioning": [
+      "Breaking changes properly versioned",
+      "Backward compatibility maintained",
+      "Migration path documented",
+      "Deprecation timeline specified",
+      "Version strategy consistent"
+    ]
+  }
+}
+}}
+
+== Review Challenges and Solutions ==
+
+=== Common Review Challenges ===
+
+'''Large pull requests:'''
+{{Code|markdown|
+## Handling Large PRs
+
+### Problem
+- Difficult to review comprehensively
+- Higher likelihood of missing issues
+- Longer review cycles
+- Reviewer fatigue
+
+### Solutions
+1. **Break down into smaller PRs**
+   - Feature flags for partial implementations
+   - Separate infrastructure and feature changes
+   - Progressive enhancement approach
+
+2. **Structured review approach**
+   - Review architecture and design first
+   - Focus on critical paths and edge cases
+   - Use pair programming for complex sections
+
+3. **Documentation and context**
+   - Detailed PR description with diagrams
+   - Video walkthrough for complex features
+   - Clear commit organization with logical progression
+}}
+
+'''Remote team challenges:'''
+{{Code|markdown|
+## Remote Review Challenges
+
+### Time Zone Differences
+- **Solution**: Asynchronous review process with clear expectations
+- **Tool**: Automated assignment based on availability
+- **Practice**: Detailed written feedback to minimize back-and-forth
+
+### Communication Barriers
+- **Solution**: Video calls for complex discussions
+- **Tool**: Screen sharing for code walkthroughs
+- **Practice**: Cultural sensitivity training for diverse teams
+
+### Context Loss
+- **Solution**: Comprehensive PR descriptions and documentation
+- **Tool**: Integration with project management tools
+- **Practice**: Regular team sync meetings for architectural decisions
+}}
+
+=== Review Process Optimization ===
+
+'''Automated review assignment:'''
+{{Code|javascript|
+// GitHub Actions workflow for intelligent reviewer assignment
+const assignReviewers = async (context, github) => {
+  const pr = context.payload.pull_request;
+  const files = await github.rest.pulls.listFiles({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    pull_number: pr.number
+  });
+  
+  const changedFiles = files.data.map(file => file.filename);
+  const reviewers = new Set();
+  
+  // Code ownership mapping
+  const ownership = {
+    'frontend/': ['frontend-team-lead', 'senior-frontend-dev'],
+    'backend/': ['backend-team-lead', 'senior-backend-dev'],
+    'database/': ['database-admin', 'backend-team-lead'],
+    'security/': ['security-team-lead', 'senior-security-engineer'],
+    'infrastructure/': ['devops-lead', 'platform-engineer']
+  };
+  
+  // Domain expertise mapping
+  const expertise = {
+    'auth': ['security-team-lead', 'identity-expert'],
+    'payment': ['payments-expert', 'security-team-lead'],
+    'performance': ['performance-expert', 'senior-architect'],
+    'api': ['api-expert', 'backend-team-lead']
+  };
+  
+  // Assign based on file paths
+  for (const [path, owners] of Object.entries(ownership)) {
+    if (changedFiles.some(file => file.startsWith(path))) {
+      owners.forEach(owner => reviewers.add(owner));
+    }
+  }
+  
+  // Assign based on PR content/title
+  const prContent = (pr.title + ' ' + pr.body).toLowerCase();
+  for (const [domain, experts] of Object.entries(expertise)) {
+    if (prContent.includes(domain)) {
+      experts.forEach(expert => reviewers.add(expert));
+    }
+  }
+  
+  // Remove PR author from reviewers
+  reviewers.delete(pr.user.login);
+  
+  // Limit to maximum 3 reviewers
+  const finalReviewers = Array.from(reviewers).slice(0, 3);
+  
+  if (finalReviewers.length > 0) {
+    await github.rest.pulls.requestReviewers({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: pr.number,
+      reviewers: finalReviewers
+    });
+  }
+};
+}}
+
+== Best Practices Summary ==
+
+=== For Authors ===
+
+'''Creating reviewable code:'''
+* Write self-documenting code with clear variable names
+* Keep PRs focused and reasonably sized
+* Provide comprehensive PR descriptions
+* Include tests and documentation updates
+* Respond promptly to reviewer feedback
+
+'''Pre-review checklist:'''
+* Code follows project standards and conventions
+* All tests pass and coverage is adequate
+* Documentation is updated where necessary
+* Security considerations are addressed
+* Performance implications are considered
+
+=== For Reviewers ===
+
+'''Effective reviewing:'''
+* Review promptly and thoroughly
+* Focus on logic, design, and maintainability
+* Provide constructive, specific feedback
+* Ask questions to understand the author's approach
+* Acknowledge good practices and improvements
+
+'''Review priorities:'''
+1. **Correctness** - Does the code work as intended?
+2. **Security** - Are there any security vulnerabilities?
+3. **Performance** - Will this impact system performance?
+4. **Maintainability** - Is the code easy to understand and modify?
+5. **Style** - Does it follow project conventions?
+
+=== For Teams ===
+
+'''Building review culture:'''
+* Establish clear review guidelines and expectations
+* Provide training on effective reviewing techniques
+* Use metrics to identify and address process issues
+* Celebrate good review practices and learning
+* Continuously improve the review process based on feedback
+
+{{Success|A well-implemented code review process significantly improves code quality, team knowledge sharing, and software reliability. Focus on building a collaborative culture where reviews are seen as learning opportunities rather than gatekeeping exercises.}}
+
+== Related Resources ==
+
+* [[Advanced Pull Requests]] - PR automation and advanced workflows
+* [[Git Hooks]] - Automated quality checks before review
+* [[GitHub Actions Basics]] - Automating review processes
+* [[Collaborative Workflows]] - Team development practices
+* [[Security Best Practices]] - Security-focused review guidelines
+
+[[Category:Intermediate Tutorials]]
+[[Category:Code Review]]
+[[Category:Quality Assurance]]
+[[Category:Team Collaboration]]
+[[Category:Best Practices]]

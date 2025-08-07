@@ -1,0 +1,538 @@
+{{Tutorial
+|title = Basic Repository Operations
+|author = GitHub Tutorials Expert  
+|difficulty = beginner
+|estimated_time = 25 minutes
+|prerequisites = GitHub account, basic Git knowledge
+|topics = Clone, Fork, Star, Repository management
+}}
+
+{{TOC limit|3}}
+
+= Basic Repository Operations =
+
+Learn the fundamental operations for working with GitHub repositories - the building blocks of collaborative development.
+
+== Repository Basics ==
+
+=== What is a Repository? ===
+
+A repository (or "repo") is a project folder that contains:
+* '''All project files''' - Code, documentation, images, etc.
+* '''Complete version history''' - Every change ever made
+* '''Branches''' - Different versions of the project
+* '''Metadata''' - Issues, pull requests, settings
+* '''Collaboration tools''' - Access controls and permissions
+
+{{Note|Think of a repository as a complete project workspace that can be shared and collaborated on with others.}}
+
+=== Repository Types ===
+
+'''Public Repositories:'''
+* Visible to everyone on the internet
+* Anyone can view and clone
+* Great for open source projects
+* Search engines can index content
+* Free on GitHub
+
+'''Private Repositories:'''
+* Only visible to you and collaborators
+* Require permission to access
+* Ideal for proprietary or personal projects
+* Not indexed by search engines
+* May require paid plan for teams
+
+=== Repository Structure ===
+
+A typical repository contains:
+{{Code|text|
+my-project/
+├── README.md              # Project description and instructions
+├── LICENSE                # Legal terms for using the code
+├── .gitignore            # Files to ignore in version control
+├── src/                  # Source code directory
+│   ├── main.js
+│   └── utils.js
+├── docs/                 # Documentation
+│   └── installation.md
+├── tests/                # Test files
+│   └── main.test.js
+└── package.json          # Project configuration (Node.js example)
+}}
+
+== Cloning Repositories ==
+
+=== What is Cloning? ===
+
+Cloning creates a local copy of a repository on your computer:
+* '''Complete copy''' - Includes all files and history
+* '''Independent workspace''' - Make changes without affecting original
+* '''Linked to remote''' - Can sync changes back and forth
+* '''Offline access''' - Work without internet connection
+
+=== How to Clone ===
+
+'''Via GitHub Web Interface:'''
+1. Navigate to the repository on GitHub
+2. Click the green '''Code''' button
+3. Copy the URL (HTTPS or SSH)
+4. Use Git command line or GitHub Desktop
+
+'''Via Command Line:'''
+{{Code|bash|
+# Clone with HTTPS
+git clone https://github.com/username/repository-name.git
+
+# Clone with SSH (if you have SSH keys set up)
+git clone git@github.com:username/repository-name.git
+
+# Clone to specific directory
+git clone https://github.com/username/repository-name.git my-folder
+
+# Clone specific branch
+git clone -b feature-branch https://github.com/username/repository-name.git
+}}
+
+'''Via GitHub Desktop:'''
+1. Open GitHub Desktop
+2. Click '''File''' → '''Clone repository'''
+3. Choose from your repositories or enter URL
+4. Select local directory
+5. Click '''Clone'''
+
+=== Cloning Options ===
+
+'''Shallow Clone (faster for large repositories):'''
+{{Code|bash|
+# Only download recent history
+git clone --depth 1 https://github.com/username/repository-name.git
+
+# Clone specific branch only
+git clone --single-branch --branch main https://github.com/username/repository-name.git
+}}
+
+'''Partial Clone (for very large repositories):'''
+{{Code|bash|
+# Clone without downloading all files immediately
+git clone --filter=blob:none https://github.com/username/repository-name.git
+}}
+
+{{Good|For most projects, a regular clone works perfectly. Use shallow clones only when dealing with very large repositories with extensive history.}}
+
+== Forking Repositories ==
+
+=== What is Forking? ===
+
+Forking creates your own copy of someone else's repository:
+* '''Independent copy''' under your GitHub account
+* '''Maintains link''' to original repository
+* '''Freedom to experiment''' without affecting original
+* '''Path to contribution''' via pull requests
+
+=== When to Fork ===
+
+Fork a repository when you want to:
+* '''Contribute to open source''' projects
+* '''Customize existing project''' for your needs
+* '''Learn from others' code''' by experimenting
+* '''Create your own version''' of a project
+* '''Backup important projects''' you depend on
+
+=== How to Fork ===
+
+'''Via GitHub Web Interface:'''
+1. Navigate to the repository you want to fork
+2. Click the '''Fork''' button in the top-right corner
+3. Choose your account or organization
+4. Wait for GitHub to create the fork
+5. You now have your own copy at `github.com/yourusername/repository-name`
+
+'''After Forking:'''
+{{Code|bash|
+# Clone your fork to work locally
+git clone https://github.com/yourusername/repository-name.git
+
+# Add original repository as upstream remote
+cd repository-name
+git remote add upstream https://github.com/original-owner/repository-name.git
+
+# Verify remotes
+git remote -v
+}}
+
+=== Keeping Forks Updated ===
+
+Keep your fork synchronized with the original repository:
+
+{{Code|bash|
+# Fetch latest changes from upstream
+git fetch upstream
+
+# Switch to main branch
+git checkout main
+
+# Merge upstream changes
+git merge upstream/main
+
+# Push updates to your fork
+git push origin main
+}}
+
+{{Info|Regular synchronization prevents your fork from becoming outdated and makes contributing back easier.}}
+
+== Starring Repositories ==
+
+=== What is Starring? ===
+
+Starring is GitHub's bookmarking system:
+* '''Show appreciation''' to project maintainers
+* '''Bookmark useful projects''' for later reference
+* '''Discover related projects''' through recommendations
+* '''Track project popularity''' and community interest
+
+=== How to Star ===
+
+1. Navigate to any repository
+2. Click the '''Star''' button (⭐) in the top-right
+3. The star count increases by one
+4. Repository is added to your stars list
+
+=== Managing Your Stars ===
+
+View and organize your starred repositories:
+1. Go to your profile: `github.com/yourusername`
+2. Click the '''Stars''' tab
+3. Browse your starred repositories
+4. Use search to find specific stars
+5. Unstar repositories you no longer need
+
+'''Searching your stars:'''
+{{Code|text|
+language:javascript        # JavaScript repositories you've starred
+topic:machine-learning     # ML-related starred repos
+user:octocat              # Stars from specific user
+}}
+
+{{Good|Star repositories you find useful or interesting. It helps maintainers know their work is appreciated and helps you build a personal library of useful projects.}}
+
+== Watching Repositories ==
+
+=== What is Watching? ===
+
+Watching a repository subscribes you to notifications:
+* '''All activity''' - Issues, pull requests, releases
+* '''Participation only''' - Only when you're mentioned
+* '''Ignore''' - No notifications at all
+* '''Custom''' - Choose specific event types
+
+=== Watch Settings ===
+
+Configure what notifications you receive:
+
+'''Not watching:'''
+* No notifications
+* Only notified when participating or mentioned
+
+'''Watching:'''
+* All conversations
+* All issues and pull requests
+* All releases and deployments
+
+'''Custom:'''
+* Choose specific events:
+  * Issues
+  * Pull requests  
+  * Releases
+  * Discussions
+  * Security alerts
+
+=== Managing Notifications ===
+
+Control your notification preferences:
+1. Go to Settings → Notifications
+2. Choose delivery method (email, web, mobile)
+3. Set frequency (immediately, daily, weekly)
+4. Customize per repository type
+
+{{Warning|Watching active repositories can generate many notifications. Start with "Participating and @mentions" and adjust as needed.}}
+
+== Repository Settings (For Owners) ==
+
+=== General Settings ===
+
+Repository owners can configure:
+* '''Repository name''' - Change anytime
+* '''Description''' - Brief project summary
+* '''Website URL''' - Link to deployed app or documentation
+* '''Topics''' - Tags for discoverability
+* '''Visibility''' - Public or private
+* '''Features''' - Enable/disable wikis, issues, projects
+
+=== Access and Permissions ===
+
+'''Collaborators:'''
+* Add people with write access
+* Different permission levels available
+* Remove access when needed
+
+'''Teams (Organizations):'''
+* Assign team-based permissions
+* Manage access at scale
+* Inherit organizational policies
+
+'''Deploy Keys:'''
+* SSH keys for automated deployments
+* Read-only or read-write access
+* Server-specific authentication
+
+=== Branch Settings ===
+
+'''Protected Branches:'''
+* Prevent direct pushes to important branches
+* Require pull request reviews
+* Require status checks to pass
+* See [[Branch Protection Rules]] for details
+
+'''Default Branch:'''
+* Choose which branch is shown by default
+* Usually `main` or `master`
+* First branch people see when visiting repository
+
+== Repository Insights ==
+
+=== Analytics and Statistics ===
+
+Repository owners can view:
+* '''Traffic''' - Visitors and page views
+* '''Clones''' - How many times repository was cloned
+* '''Referrers''' - Where visitors came from
+* '''Popular content''' - Most viewed files and directories
+
+=== Community Health ===
+
+GitHub provides community health indicators:
+* '''README''' - Project description and instructions
+* '''License''' - Legal terms for usage
+* '''Contributing guidelines''' - How others can contribute
+* '''Code of conduct''' - Community standards
+* '''Issue templates''' - Structured issue reporting
+* '''Pull request templates''' - Standardized PR format
+
+=== Dependency Information ===
+
+View project dependencies:
+* '''Dependency graph''' - What packages you use
+* '''Dependents''' - Projects that depend on yours
+* '''Security alerts''' - Vulnerabilities in dependencies
+* '''Dependency updates''' - Automated update suggestions
+
+## Working with Files ==
+
+=== Adding Files ===
+
+'''Via Web Interface:'''
+1. Navigate to repository
+2. Click '''Add file''' → '''Create new file'''
+3. Enter filename and content
+4. Write commit message
+5. Choose to commit directly or create branch
+6. Click '''Commit new file'''
+
+'''Via Command Line:'''
+{{Code|bash|
+# Create new file
+echo "console.log('Hello World');" > hello.js
+
+# Stage file
+git add hello.js
+
+# Commit file
+git commit -m "Add hello world script"
+
+# Push to GitHub
+git push origin main
+}}
+
+=== Editing Files ===
+
+'''Small changes via web interface:'''
+1. Navigate to file in repository
+2. Click the pencil icon (Edit)
+3. Make changes in web editor
+4. Write commit message
+5. Commit changes
+
+'''Larger changes via local clone:'''
+{{Code|bash|
+# Edit files in your preferred editor
+# Stage changes
+git add modified-file.js
+
+# Commit changes
+git commit -m "Update user interface logic"
+
+# Push to GitHub  
+git push origin main
+}}
+
+=== Deleting Files ===
+
+'''Via Web Interface:'''
+1. Navigate to file
+2. Click trash can icon (Delete)
+3. Write commit message
+4. Commit deletion
+
+'''Via Command Line:'''
+{{Code|bash|
+# Remove file from Git and filesystem
+git rm unwanted-file.js
+
+# Commit deletion
+git commit -m "Remove deprecated script"
+
+# Push changes
+git push origin main
+}}
+
+## Repository Collaboration ==
+
+=== Adding Collaborators ===
+
+Repository owners can add collaborators:
+1. Go to repository settings
+2. Click '''Manage access'''
+3. Click '''Invite a collaborator'''
+4. Enter GitHub username or email
+5. Choose permission level
+6. Send invitation
+
+'''Permission Levels:'''
+* '''Read''' - Can view and clone repository
+* '''Triage''' - Can manage issues and pull requests
+* '''Write''' - Can push changes and manage issues/PRs
+* '''Maintain''' - Can manage repository without destructive actions
+* '''Admin''' - Full access including settings and deletion
+
+=== Team Collaboration ===
+
+For organizations with multiple repositories:
+* '''Create teams''' for different groups
+* '''Assign repository access''' to teams
+* '''Manage permissions''' at team level
+* '''Inherit organizational policies'''
+
+=== Contributing to Others' Repositories ===
+
+When you don't have direct access:
+1. '''Fork''' the repository
+2. '''Clone''' your fork locally
+3. '''Create branch''' for your changes
+4. '''Make changes''' and commit
+5. '''Push''' to your fork
+6. '''Create pull request''' to original repository
+
+{{Success|Repository operations form the foundation of GitHub collaboration. Master these basics and you'll be ready for more advanced workflows.}}
+
+== Best Practices ==
+
+=== Repository Naming ===
+
+Choose good repository names:
+* '''Descriptive''' - Clearly indicates purpose
+* '''Concise''' - Not too long or verbose
+* '''Lowercase''' - Standard convention
+* '''Hyphens for spaces''' - `my-awesome-project`
+* '''Avoid special characters''' - Stick to letters, numbers, hyphens
+
+'''Good names:'''
+{{Code|text|
+user-authentication-service
+blog-cms
+weather-forecast-app
+company-style-guide
+}}
+
+'''Poor names:'''
+{{Code|text|
+project1
+stuff
+my_repo
+SuperAwesomeProjectWithVeryLongName
+}}
+
+=== Repository Organization ===
+
+Keep repositories organized:
+* '''One project per repository''' - Don't mix unrelated code
+* '''Clear file structure''' - Logical organization
+* '''Good README''' - Explain what, why, and how
+* '''Proper .gitignore''' - Exclude unnecessary files
+* '''Consistent naming''' - Follow team conventions
+
+=== Security Considerations ===
+
+Protect your repositories:
+* '''Never commit secrets''' - Passwords, API keys, tokens
+* '''Use .gitignore''' - Exclude sensitive configuration
+* '''Review collaborator access''' - Regular permission audits
+* '''Enable security alerts''' - Monitor for vulnerabilities
+* '''Use private repos''' for sensitive projects
+
+=== Maintenance Tasks ===
+
+Regular repository maintenance:
+* '''Update dependencies''' - Keep packages current
+* '''Review and close''' old issues and PRs
+* '''Archive unused repositories''' - Reduce clutter
+* '''Update documentation''' - Keep README current
+* '''Clean up branches''' - Delete merged branches
+
+== Troubleshooting Common Issues ==
+
+=== Clone Issues ===
+
+'''Permission denied:'''
+* Check if repository is public or if you have access
+* Verify SSH keys are set up correctly
+* Try HTTPS instead of SSH
+* Confirm you're logged into correct GitHub account
+
+'''Repository not found:'''
+* Verify repository URL is correct
+* Check if repository was renamed or deleted
+* Ensure you have access permissions
+* Try accessing via web browser first
+
+=== Fork Issues ===
+
+'''Can't fork:'''
+* You may already have a fork (GitHub allows one fork per account)
+* Repository may have forking disabled
+* You may be trying to fork your own repository
+
+'''Fork out of sync:'''
+* Fetch and merge from upstream regularly
+* Set up upstream remote after forking
+* Consider deleting and re-forking if very outdated
+
+=== Access Issues ===
+
+'''Can't push changes:'''
+* Verify you have write access to repository
+* Check if branch is protected
+* Ensure you're pushing to correct remote
+* Confirm authentication is working
+
+== Related Resources ==
+
+* [[Creating Your First Repository]] - Step-by-step repository creation
+* [[Basic Git Commands]] - Essential Git operations  
+* [[GitHub Web Interface Tour]] - Navigate GitHub effectively
+* [[Pull Request Best Practices]] - Contributing to repositories
+* [[Branch Protection Rules]] - Securing important branches
+
+[[Category:Beginner Tutorials]]
+[[Category:GitHub]]
+[[Category:Repository Management]]
+[[Category:Collaboration]]

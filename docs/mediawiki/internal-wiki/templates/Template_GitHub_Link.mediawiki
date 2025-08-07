@@ -1,0 +1,21 @@
+<noinclude>
+This template creates a properly formatted GitHub link with icon.
+
+== Usage ==
+<pre>
+{{GitHub Link|octocat/Hello-World}}
+{{GitHub Link|octocat/Hello-World|Custom Link Text}}
+</pre>
+
+== Parameters ==
+* '''1''': GitHub repository path (owner/repo)
+* '''2''' (optional): Custom link text. If not provided, uses the repository name.
+
+</noinclude><includeonly>{{#if: {{{1|}}} |
+<span style="display: inline-flex; align-items: center; gap: 4px;">
+[[File:GitHub-Mark.png|16px|link=https://github.com/{{{1}}}]]
+[https://github.com/{{{1}}} {{{2|{{{1}}}}}}]
+</span>
+| Error: Repository path required
+}}</includeonly>
+[[Category:Link templates]]

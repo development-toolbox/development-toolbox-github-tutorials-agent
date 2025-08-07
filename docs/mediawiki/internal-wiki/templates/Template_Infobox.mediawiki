@@ -1,0 +1,64 @@
+<noinclude>
+This template creates a flexible infobox for pages.
+
+== Usage ==
+<pre>
+{{Infobox
+|title = Title
+|image = Image.png
+|header1 = Header 1
+|data1 = Data 1
+|header2 = Header 2
+|data2 = Data 2
+}}
+</pre>
+
+== Parameters ==
+* '''title''': Main title of the infobox
+* '''image''' (optional): Image filename to display
+* '''headerN''': Header for row N (N = 1-20)
+* '''dataN''': Data for row N (N = 1-20)
+
+</noinclude><includeonly><table class="infobox" style="border: 1px solid #a2a9b1; border-collapse: collapse; background: #f8f9fa; color: black; margin: 0.5em 0 0.5em 1em; padding: 0.2em; float: right; clear: right; font-size: 88%; line-height: 1.5em; width: 22em;">
+{{#if: {{{title|}}} |
+<tr>
+<th colspan="2" style="text-align: center; font-size: 125%; font-weight: bold; background: #ccccff;">{{{title}}}</th>
+</tr>
+}}
+{{#if: {{{image|}}} |
+<tr>
+<td colspan="2" style="text-align: center;">[[File:{{{image}}}|250px]]</td>
+</tr>
+}}
+{{#if: {{{header1|}}} |
+<tr>
+<th style="text-align: left; background: #ccccff; padding: 0.2em 0.4em;">{{{header1}}}</th>
+<td style="padding: 0.2em 0.4em;">{{{data1|}}}</td>
+</tr>
+}}
+{{#if: {{{header2|}}} |
+<tr>
+<th style="text-align: left; background: #ccccff; padding: 0.2em 0.4em;">{{{header2}}}</th>
+<td style="padding: 0.2em 0.4em;">{{{data2|}}}</td>
+</tr>
+}}
+{{#if: {{{header3|}}} |
+<tr>
+<th style="text-align: left; background: #ccccff; padding: 0.2em 0.4em;">{{{header3}}}</th>
+<td style="padding: 0.2em 0.4em;">{{{data3|}}}</td>
+</tr>
+}}
+{{#if: {{{header4|}}} |
+<tr>
+<th style="text-align: left; background: #ccccff; padding: 0.2em 0.4em;">{{{header4}}}</th>
+<td style="padding: 0.2em 0.4em;">{{{data4|}}}</td>
+</tr>
+}}
+{{#if: {{{header5|}}} |
+<tr>
+<th style="text-align: left; background: #ccccff; padding: 0.2em 0.4em;">{{{header5}}}</th>
+<td style="padding: 0.2em 0.4em;">{{{data5|}}}</td>
+</tr>
+}}
+</table></includeonly>
+[[Category:Infobox templates]]

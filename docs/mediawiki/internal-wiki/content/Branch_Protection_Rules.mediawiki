@@ -1,0 +1,441 @@
+{{Tutorial
+|title = Branch Protection Rules Configuration Guide
+|author = GitHub Tutorials Expert
+|difficulty = intermediate
+|estimated_time = 20 minutes
+|prerequisites = Repository admin access, basic Git knowledge
+|topics = Branch protection, Security, Quality gates, Code review
+}}
+
+{{TOC limit|3}}
+
+= Branch Protection Rules =
+
+Branch protection rules safeguard important branches by enforcing workflows and preventing direct pushes, ensuring code quality and maintaining project stability.
+
+== What Are Branch Protection Rules? ==
+
+Branch protection rules are policies that:
+* Prevent force pushes and deletions
+* Require pull request reviews before merging
+* Require status checks to pass
+* Enforce linear history
+* Restrict who can push to protected branches
+
+{{Note|Branch protection rules are essential for team collaboration and maintaining code quality in production environments.}}
+
+== Setting Up Basic Protection ==
+
+=== Accessing Branch Protection Settings ===
+
+1. Navigate to your repository on GitHub
+2. Click '''Settings''' tab
+3. Select '''Branches''' from the left sidebar
+4. Click '''Add rule''' or edit existing rule
+5. Enter branch name pattern (e.g., `main`, `master`, `release/*`)
+
+=== Essential Protection Settings ===
+
+'''Require a pull request before merging:'''
+* ✅ Enable this for all important branches
+* Prevents direct commits to protected branch
+* Forces all changes through pull request process
+
+'''Require approvals:'''
+* Set minimum number of reviewers (recommended: 1-2)
+* Choose '''Dismiss stale reviews when new commits are pushed'''
+* Enable '''Require review from code owners''' if using CODEOWNERS
+
+'''Require status checks to pass:'''
+* ✅ '''Require branches to be up to date before merging'''
+* Select specific status checks (CI/CD, tests, linting)
+* Add new status checks as they become available
+
+{{Good|Start with basic protections and gradually add more sophisticated rules as your team matures.}}
+
+== Advanced Protection Rules ==
+
+=== Require Conversation Resolution ===
+
+* Ensures all pull request conversations are resolved before merging
+* Prevents incomplete discussions from being overlooked
+* Useful for thorough code review processes
+
+=== Require Signed Commits ===
+
+* Enforces cryptographic signing of all commits
+* Provides authentication and integrity verification
+* Important for high-security environments
+
+'''Setting up commit signing:'''
+{{Code|bash|
+# Generate GPG key
+gpg --full-generate-key
+
+# List keys and get key ID
+gpg --list-secret-keys --keyid-format LONG
+
+# Configure Git to use GPG key
+git config --global user.signingkey YOUR_KEY_ID
+git config --global commit.gpgsign true
+
+# Add GPG key to GitHub account
+gpg --armor --export YOUR_KEY_ID
+}}
+
+=== Require Linear History ===
+
+* Prevents merge commits
+* Enforces rebase or squash merge strategies
+* Results in cleaner, more readable commit history
+
+=== Include Administrators ===
+
+* Applies protection rules to repository administrators
+* Ensures consistent workflow for all team members
+* Recommended for strict compliance environments
+
+{{Warning|Enabling "Include administrators" means even repository owners must follow the protection rules.}}
+
+== Status Checks Configuration ==
+
+=== Required Status Checks ===
+
+Common status checks to require:
+* '''Continuous Integration''' - automated testing
+* '''Code Quality''' - linting, formatting, complexity analysis
+* '''Security Scanning''' - vulnerability detection
+* '''Build Success''' - compilation and artifact creation
+
+=== GitHub Actions Integration ===
+
+'''Example workflow that creates status checks:'''
+{{Code|yaml|
+name: Required Checks
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: npm test
+  
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run linter
+        run: npm run lint
+  
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Security audit
+        run: npm audit
+}}
+
+=== External Status Checks ===
+
+Integrate third-party tools:
+* '''SonarCloud''' - code quality analysis
+* '''Snyk''' - security vulnerability scanning
+* '''Codecov''' - test coverage reporting
+* '''DeepCode''' - AI-powered code review
+
+== CODEOWNERS Integration ==
+
+=== Setting Up CODEOWNERS ===
+
+Create `.github/CODEOWNERS` file:
+{{Code|text|
+# Global owners
+* @dev-team-leads
+
+# Frontend code
+/src/frontend/ @frontend-team
+
+# API endpoints
+/src/api/ @backend-team
+/src/api/auth/ @backend-team @security-team
+
+# Infrastructure
+/infrastructure/ @devops-team
+/.github/ @devops-team
+
+# Documentation
+/docs/ @technical-writers
+README.md @technical-writers
+
+# Database changes
+/migrations/ @database-team @backend-team
+
+# Security-sensitive files
+/src/auth/ @security-team
+/src/payment/ @security-team @backend-team
+}}
+
+=== CODEOWNERS Best Practices ===
+
+* Use teams instead of individual users when possible
+* Be specific about file patterns
+* Avoid too many required reviewers (slows development)
+* Regularly audit and update ownership assignments
+* Consider using multiple owners for critical areas
+
+{{Good|Use CODEOWNERS to ensure domain experts review relevant changes while distributing review workload effectively.}}
+
+== Branch Name Patterns ==
+
+=== Pattern Matching ===
+
+Branch protection rules support pattern matching:
+
+'''Exact matches:'''
+* `main` - protects only the main branch
+* `develop` - protects only the develop branch
+
+'''Wildcard patterns:'''
+* `release/*` - protects all release branches
+* `hotfix/*` - protects all hotfix branches
+* `*` - protects all branches (use carefully)
+
+'''Multiple patterns:'''
+Create separate rules for different branch types with appropriate settings.
+
+=== Common Patterns ===
+
+{{Code|text|
+main                    # Production branch
+develop                 # Integration branch
+release/*              # Release preparation branches
+hotfix/*               # Critical fix branches
+feature/*              # Feature development branches
+}}
+
+== Managing Exceptions ==
+
+=== Bypass Protection ===
+
+Sometimes protection needs to be bypassed:
+* Emergency hotfixes
+* Repository maintenance
+* Automated processes
+
+'''Who can bypass:'''
+* Repository administrators (if "Include administrators" is disabled)
+* Users with "Bypass branch protection" permission
+* GitHub Apps with appropriate permissions
+
+=== Temporary Exceptions ===
+
+For emergency situations:
+1. Temporarily disable protection rule
+2. Make necessary changes
+3. Re-enable protection immediately
+4. Document the exception for audit purposes
+
+{{Warning|Always document protection bypasses and re-enable rules as quickly as possible.}}
+
+== Monitoring and Compliance ==
+
+=== Audit Trail ===
+
+GitHub tracks all protection rule changes:
+* View in repository Settings → Branches
+* Check organization audit log for compliance
+* Monitor bypass events for security
+
+=== Compliance Reporting ===
+
+Generate reports showing:
+* Protected branches coverage
+* Review compliance rates
+* Status check pass/fail rates
+* Protection bypass incidents
+
+=== Automated Monitoring ===
+
+'''GitHub Actions for compliance:'''
+{{Code|yaml|
+name: Branch Protection Audit
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly on Monday
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch protection
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const branches = await github.rest.repos.listBranches({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            
+            for (const branch of branches.data) {
+              const protection = await github.rest.repos.getBranchProtection({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                branch: branch.name
+              }).catch(() => null);
+              
+              if (!protection && branch.name === 'main') {
+                core.setFailed(`Main branch is not protected!`);
+              }
+            }
+}}
+
+== Team-Specific Configurations ==
+
+=== Development Teams ===
+
+'''Recommended settings:'''
+* Require pull request reviews (1-2 approvers)
+* Require status checks (CI, linting)
+* Allow force pushes to feature branches only
+* Dismiss stale reviews on new commits
+
+=== Open Source Projects ===
+
+'''Additional considerations:'''
+* Higher reviewer requirements (2+ approvers)
+* Require signed commits
+* Strict status check requirements
+* Consider requiring contributions from known contributors
+
+=== Enterprise Environments ===
+
+'''Enhanced security:'''
+* Require signed commits
+* Multiple required reviewers
+* Comprehensive status checks
+* Include administrators in restrictions
+* Regular compliance audits
+
+== Common Configurations ==
+
+=== Minimal Protection (Small Teams) ===
+
+{{Code|yaml|
+# Basic protection for small teams
+- Require a pull request before merging
+- Require 1 approval
+- Require status checks to pass before merging
+- Require branches to be up to date before merging
+}}
+
+=== Standard Protection (Medium Teams) ===
+
+{{Code|yaml|
+# Standard protection for growing teams
+- Require a pull request before merging
+- Require 2 approvals
+- Dismiss stale reviews when new commits are pushed
+- Require review from code owners
+- Require status checks to pass before merging
+- Require branches to be up to date before merging
+- Require conversation resolution before merging
+}}
+
+=== Strict Protection (Large Teams/Enterprise) ===
+
+{{Code|yaml|
+# Strict protection for large teams and enterprises
+- Require a pull request before merging
+- Require 2 approvals
+- Dismiss stale reviews when new commits are pushed
+- Require review from code owners
+- Require status checks to pass before merging
+- Require branches to be up to date before merging
+- Require conversation resolution before merging
+- Require signed commits
+- Require linear history
+- Include administrators
+}}
+
+== Troubleshooting ==
+
+=== Common Issues ===
+
+'''Status checks not appearing:'''
+* Ensure status check names match exactly
+* Verify GitHub Actions workflow is running
+* Check that status is reported to the correct branch
+
+'''Cannot merge despite approvals:'''
+* Check all status checks are passing
+* Verify branch is up to date with base branch
+* Ensure all conversations are resolved
+
+'''Protection rules not working:'''
+* Verify rule pattern matches branch name exactly
+* Check user permissions and role assignments
+* Confirm rule is enabled and properly configured
+
+=== Debugging Status Checks ===
+
+{{Code|bash|
+# List required status checks via API
+curl -H "Authorization: token YOUR_TOKEN" \
+  https://api.github.com/repos/OWNER/REPO/branches/BRANCH/protection
+
+# Check status of specific commit
+curl -H "Authorization: token YOUR_TOKEN" \
+  https://api.github.com/repos/OWNER/REPO/commits/SHA/status
+}}
+
+== Best Practices Summary ==
+
+{{Good|Follow these practices for effective branch protection:}}
+
+'''Start Simple:'''
+* Begin with basic pull request requirements
+* Add complexity gradually as team matures
+* Monitor compliance and adjust rules as needed
+
+'''Balance Security and Velocity:'''
+* Don't over-protect development branches
+* Use appropriate reviewer requirements
+* Automate quality checks where possible
+
+'''Regular Maintenance:'''
+* Review and update rules quarterly
+* Audit compliance and bypass usage
+* Update CODEOWNERS as team structure changes
+* Remove outdated status check requirements
+
+'''Team Communication:'''
+* Document protection policies clearly
+* Train team members on workflow requirements
+* Provide clear escalation paths for exceptions
+* Celebrate compliance achievements
+
+{{See also|
+* [[Pull Request Best Practices]] - Effective code review practices
+* [[GitHub Actions Workflows]] - Setting up automated status checks
+* [[Security Best Practices]] - Repository security guidelines
+* [[Collaborative Development]] - Team workflow strategies
+}}
+
+== Next Steps ==
+
+After implementing branch protection:
+
+1. Configure [[GitHub Actions Workflows]] for automated status checks
+2. Establish [[Pull Request Best Practices]] for your team
+3. Implement [[Security Best Practices]] across your repositories
+4. Consider [[GitHub Enterprise Administration]] for organization-wide policies
+
+{{Success|Properly configured branch protection rules are fundamental to maintaining code quality and enabling safe collaboration at scale.}}
+
+[[Category:Intermediate Tutorials]]
+[[Category:Security]]
+[[Category:Repository Management]]
+[[Category:Best Practices]]
+[[Category:GitHub]]

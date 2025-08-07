@@ -1,0 +1,44 @@
+<includeonly><div style="background: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 5px; padding: 10px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+<div style="text-align: left;">
+{{#if: {{{prev|}}} | 
+<span style="font-size: 14px;">← Previous:</span><br>
+<strong>[[ {{{prev}}} ]]</strong>
+| &nbsp; }}
+</div>
+<div style="text-align: center;">
+<span style="font-size: 12px; color: #666;">TUTORIAL NAVIGATION</span>
+</div>
+<div style="text-align: right;">
+{{#if: {{{next|}}} | 
+<span style="font-size: 14px;">Next: →</span><br>
+<strong>[[ {{{next}}} ]]</strong>
+| &nbsp; }}
+</div>
+</div></includeonly><noinclude>
+== Template:Navigation ==
+
+This template creates navigation links between tutorial pages.
+
+=== Usage ===
+
+<pre>
+{{Navigation
+|prev=Previous Page Title
+|next=Next Page Title
+}}
+</pre>
+
+=== Parameters ===
+
+* '''prev''' - Title of the previous tutorial page (optional)
+* '''next''' - Title of the next tutorial page (optional)
+
+=== Example ===
+
+{{Navigation
+|prev=Getting Started with GitHub
+|next=Creating Your First Pull Request
+}}
+
+[[Category:Templates]]
+</noinclude>

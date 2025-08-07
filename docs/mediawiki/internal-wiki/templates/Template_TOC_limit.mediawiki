@@ -1,0 +1,30 @@
+<noinclude>
+This template creates a table of contents with a limit on the depth of sections shown.
+
+== Usage ==
+<pre>
+{{TOC limit|2}}  <!-- Shows only level 1 and 2 headings -->
+{{TOC limit|3}}  <!-- Shows level 1, 2, and 3 headings -->
+{{TOC limit}}    <!-- Default shows all levels -->
+</pre>
+
+== Parameters ==
+* '''1''' (optional): The maximum heading level to display (1-6). Default shows all levels.
+
+</noinclude><includeonly>{{#if:{{{1|}}}|<div class="toclimit-{{{1}}}">}}__TOC__{{#if:{{{1|}}}|</div>
+<style>
+.toclimit-2 .toclevel-3,
+.toclimit-2 .toclevel-4,
+.toclimit-2 .toclevel-5,
+.toclimit-2 .toclevel-6 { display: none; }
+
+.toclimit-3 .toclevel-4,
+.toclimit-3 .toclevel-5,
+.toclimit-3 .toclevel-6 { display: none; }
+
+.toclimit-4 .toclevel-5,
+.toclimit-4 .toclevel-6 { display: none; }
+
+.toclimit-5 .toclevel-6 { display: none; }
+</style>}}</includeonly>
+[[Category:Formatting templates]]

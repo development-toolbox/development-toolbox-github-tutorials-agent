@@ -1,0 +1,518 @@
+= GitHub Keyboard Shortcuts =
+
+Master GitHub's keyboard shortcuts to navigate faster and boost your productivity. This comprehensive reference covers shortcuts for all major GitHub features.
+
+{{Note|Press `?` on any GitHub page to see available shortcuts for that specific page.}}
+
+== Universal Shortcuts ==
+
+These shortcuts work on most GitHub pages:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `?` || Show keyboard shortcuts help || Any page
+|-
+| `s` or `/` || Focus search bar || Any page
+|-
+| `g n` || Go to notifications || Any page
+|-
+| `g d` || Go to dashboard || Any page
+|-
+| `g i` || Go to issues || Any page
+|-
+| `g p` || Go to pull requests || Any page
+|}
+
+== Repository Navigation ==
+
+Navigate quickly within repositories:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `g c` || Go to Code tab || Repository
+|-
+| `g i` || Go to Issues tab || Repository
+|-
+| `g p` || Go to Pull requests tab || Repository
+|-
+| `g a` || Go to Actions tab || Repository
+|-
+| `g b` || Go to Projects tab || Repository
+|-
+| `g w` || Go to Wiki tab || Repository
+|-
+| `g s` || Go to Settings tab || Repository (if admin)
+|}
+
+== File and Code Navigation ==
+
+Efficiently browse code and files:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `t` || Activate file finder || Repository code view
+|-
+| `l` || Jump to line || Viewing a file
+|-
+| `w` || Switch branch or tag || Repository
+|-
+| `y` || Get permalink to file || Viewing a file
+|-
+| `b` || Show blame view || Viewing a file
+|-
+| `h` || Show file history || Viewing a file
+|}
+
+=== File Finder (`t`) ===
+
+The file finder is one of the most powerful shortcuts:
+* Type filename to search
+* Use fuzzy matching (e.g., "gcfg" finds "github-config.yml")
+* Press `Enter` to open file
+* Use arrow keys to navigate results
+
+=== Line Navigation (`l`) ===
+
+Jump to specific lines quickly:
+* Press `l` to activate line jump
+* Type line number and press `Enter`
+* Use `l` followed by range: `l:10-20` for line range
+* Combine with permalinks for sharing specific code
+
+== Issues and Pull Requests ==
+
+Manage issues and PRs efficiently:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `c` || Create new issue || Issues list
+|-
+| `c` || Create new pull request || Pull requests list
+|-
+| `cmd/ctrl + enter` || Submit comment || Issue/PR discussion
+|-
+| `ctrl + shift + p` || Toggle between Write and Preview tabs || Comment editor
+|-
+| `r` || Quote reply to selected text || Issue/PR discussion
+|-
+| `a` || Apply suggested change || PR review
+|}
+
+=== Comment and Review Shortcuts ===
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `tab` || Add suggestion || PR review (after selecting code)
+|-
+| `cmd/ctrl + k` || Insert link || Comment editor
+|-
+| `cmd/ctrl + b` || Bold text || Comment editor
+|-
+| `cmd/ctrl + i` || Italic text || Comment editor
+|-
+| `cmd/ctrl + shift + p` || Toggle preview || Comment editor
+|}
+
+== Pull Request Reviews ==
+
+Navigate and interact with pull request reviews:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `v` || Toggle diff view || PR Files tab
+|-
+| `cmd/ctrl + shift + enter` || Submit review || PR review
+|-
+| `alt + click` || Add single comment || PR diff view
+|-
+| `j` || Next diff hunk || PR diff view
+|-
+| `k` || Previous diff hunk || PR diff view
+|}
+
+=== Diff Navigation ===
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `n` || Next file || PR Files tab
+|-
+| `p` || Previous file || PR Files tab
+|-
+| `]` || Next comment || PR conversation
+|-
+| `[` || Previous comment || PR conversation
+|}
+
+== Search and Navigation ==
+
+Advanced search and navigation techniques:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `s` || Focus search || Global
+|-
+| `g s` || Go to search || Global
+|-
+| `g h` || Go to homepage || Global
+|-
+| `g n` || Go to notifications || Global
+|-
+| `g d` || Go to dashboard || Global
+|}
+
+=== Search Shortcuts ===
+
+When in search:
+* Use filters like `repo:owner/name`
+* `type:issue` or `type:pr` for specific content
+* `author:username` for specific authors
+* `created:>2023-01-01` for date ranges
+
+== Project Boards ==
+
+Navigate GitHub Projects (classic):
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `enter` || Edit selected card || Project board
+|-
+| `escape` || Close card editor || Project board
+|-
+| `space` || Move card to next column || Project board
+|-
+| `shift + space` || Move card to previous column || Project board
+|}
+
+== Notifications ==
+
+Manage notifications efficiently:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `e` || Mark as read || Notifications
+|-
+| `shift + u` || Mark as unread || Notifications
+|-
+| `y` || Remove from view || Notifications
+|-
+| `shift + i` || Mark all as read || Notifications
+|}
+
+== Code Editor Shortcuts ==
+
+When editing files directly on GitHub:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `cmd/ctrl + f` || Find in file || Code editor
+|-
+| `cmd/ctrl + g` || Find next || Code editor
+|-
+| `cmd/ctrl + shift + g` || Find previous || Code editor
+|-
+| `cmd/ctrl + h` || Replace in file || Code editor
+|-
+| `cmd/ctrl + d` || Select next occurrence || Code editor
+|-
+| `cmd/ctrl + /` || Toggle comment || Code editor
+|}
+
+=== Advanced Editor Features ===
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `cmd/ctrl + ]` || Indent line || Code editor
+|-
+| `cmd/ctrl + [` || Outdent line || Code editor
+|-
+| `alt + up/down` || Move line up/down || Code editor
+|-
+| `shift + alt + up/down` || Copy line up/down || Code editor
+|}
+
+== GitHub Actions ==
+
+Navigate workflow runs and logs:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `r` || Re-run workflow || Workflow run page
+|-
+| `f` || Toggle full-screen logs || Workflow run logs
+|-
+| `shift + t` || Toggle timestamps || Workflow run logs
+|-
+| `escape` || Exit full-screen || Workflow run logs
+|}
+
+== Browser-Specific Features ==
+
+These work with GitHub's web interface:
+
+=== Chrome/Edge Extensions ===
+
+Popular extensions that add shortcuts:
+* **Refined GitHub** - Adds many quality-of-life improvements
+* **Octotree** - File tree navigation
+* **GitHub Hovercard** - Quick profile previews
+
+=== Browser Navigation ===
+
+{| class="wikitable"
+! Shortcut !! Action !! Browser
+|-
+| `cmd/ctrl + l` || Focus address bar || All browsers
+|-
+| `cmd/ctrl + r` || Refresh page || All browsers
+|-
+| `cmd/ctrl + shift + r` || Hard refresh || All browsers
+|-
+| `cmd/ctrl + w` || Close tab || All browsers
+|-
+| `cmd/ctrl + t` || New tab || All browsers
+|}
+
+== Mobile Shortcuts ==
+
+GitHub mobile app shortcuts:
+
+=== iOS GitHub App ===
+* **Pull down** - Refresh current view
+* **Long press** - Context menu on items
+* **Swipe left** - Quick actions on notifications
+* **Shake** - Send feedback
+
+=== Android GitHub App ===
+* **Pull down** - Refresh current view
+* **Long press** - Context menu on items
+* **Swipe left/right** - Navigate between tabs
+
+== Accessibility Shortcuts ==
+
+GitHub supports accessibility features:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `Alt + F10` || Navigate to GitHub header || Any page
+|-
+| `Tab` || Navigate between elements || Any page
+|-
+| `Shift + Tab` || Navigate backwards || Any page
+|-
+| `Enter` || Activate button/link || Any page
+|-
+| `Space` || Select checkbox || Forms
+|}
+
+== Markdown Editor Shortcuts ==
+
+When writing issues, PRs, or comments:
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `cmd/ctrl + b` || Bold selected text || Markdown editor
+|-
+| `cmd/ctrl + i` || Italic selected text || Markdown editor
+|-
+| `cmd/ctrl + k` || Insert link || Markdown editor
+|-
+| `cmd/ctrl + shift + p` || Toggle preview || Markdown editor
+|-
+| `cmd/ctrl + e` || Insert code || Markdown editor
+|}
+
+=== Advanced Markdown ===
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `cmd/ctrl + shift + 7` || Insert ordered list || Markdown editor
+|-
+| `cmd/ctrl + shift + 8` || Insert unordered list || Markdown editor
+|-
+| `cmd/ctrl + shift + .` || Insert quote || Markdown editor
+|-
+| `cmd/ctrl + g` || Insert mention || Markdown editor
+|}
+
+== Command Palette ==
+
+GitHub's command palette (when available):
+
+{| class="wikitable"
+! Shortcut !! Action !! Context
+|-
+| `cmd/ctrl + k` || Open command palette || Supported pages
+|-
+| `cmd/ctrl + shift + k` || Open command palette (alternate) || Supported pages
+|}
+
+The command palette allows you to:
+* Search for repositories
+* Navigate to different sections
+* Perform quick actions
+* Access recent items
+
+## Power User Tips ==
+
+=== Combining Shortcuts ===
+
+Chain shortcuts for efficiency:
+* `g i` then `c` - Go to issues and create new issue
+* `t` then type filename - Quick file navigation
+* `g p` then filter by author - View your pull requests
+
+=== Custom Bookmarklets ===
+
+Create browser bookmarklets for common actions:
+
+{{Code|javascript|
+// Quick repository search
+javascript:(function(){var q=prompt('Repository search:');if(q)window.location='https://github.com/search?q='+encodeURIComponent(q)+'&type=repositories';})();
+
+// Go to current user's repositories
+javascript:(function(){window.location='https://github.com/'+document.querySelector('[data-login]').getAttribute('data-login')+'?tab=repositories';})();
+}}
+
+=== URL Patterns ===
+
+Learn GitHub URL patterns for quick navigation:
+* `github.com/owner/repo/issues/new` - Create new issue
+* `github.com/owner/repo/compare` - Compare branches
+* `github.com/owner/repo/pulse` - Repository insights
+* `github.com/owner/repo/network` - Network graph
+
+== Shortcuts by Context ==
+
+=== Repository Homepage ===
+Most useful shortcuts when viewing a repository:
+1. `t` - Find files quickly
+2. `g i` - View issues
+3. `g p` - View pull requests
+4. `w` - Switch branches
+5. `s` - Search repository
+
+=== Issue/PR Pages ===
+Essential shortcuts for issues and pull requests:
+1. `r` - Quote reply
+2. `cmd/ctrl + enter` - Submit comment
+3. `]` / `[` - Navigate comments
+4. `g i` / `g p` - Return to list view
+
+=== Code Review ===
+Critical shortcuts during code review:
+1. `v` - Toggle diff view
+2. `j` / `k` - Navigate diff hunks
+3. `n` / `p` - Navigate files
+4. `alt + click` - Add inline comment
+
+== Quick Reference Card ==
+
+=== Essential Daily Shortcuts ===
+```
+s or /        Search
+g n           Notifications  
+g d           Dashboard
+t             File finder
+l             Jump to line
+?             Help
+```
+
+=== Code Navigation ===
+```
+g c           Code tab
+w             Switch branch
+y             Permalink
+b             Blame view
+h             History
+```
+
+=== Issues & PRs ===
+```
+g i           Issues
+g p           Pull requests
+c             Create new
+r             Quote reply
+cmd+enter     Submit
+```
+
+== Customization ==
+
+=== Browser Extensions ===
+
+Enhance GitHub with extensions that add more shortcuts:
+
+**Refined GitHub:**
+* Adds many UI improvements
+* Additional keyboard shortcuts
+* Better navigation features
+
+**GitHub File Icons:**
+* Visual file type indicators
+* Easier file recognition
+* No shortcuts but improves navigation
+
+**Octotree:**
+* `cmd/ctrl + shift + s` - Toggle sidebar
+* File tree navigation
+* Quick file access
+
+=== User Scripts ===
+
+Use Greasemonkey/Tampermonkey for custom shortcuts:
+
+{{Code|javascript|
+// Example: Add custom shortcut for starring repositories
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'S' && e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        const starButton = document.querySelector('[data-ga-click*="star"]');
+        if (starButton) starButton.click();
+    }
+});
+}}
+
+== Platform Differences ==
+
+=== Windows vs Mac ===
+
+| Action | Windows | Mac |
+|--------|---------|-----|
+| Submit comment | `Ctrl + Enter` | `Cmd + Enter` |
+| Bold text | `Ctrl + B` | `Cmd + B` |
+| Find in page | `Ctrl + F` | `Cmd + F` |
+| New tab | `Ctrl + T` | `Cmd + T` |
+
+=== GitHub Enterprise vs GitHub.com ===
+
+Most shortcuts work identically, but some enterprise-specific features may have additional shortcuts depending on configuration.
+
+{{Good|Practice using shortcuts regularly to build muscle memory. Start with 3-5 essential shortcuts and gradually add more to your repertoire.}}
+
+== Related Resources ==
+
+* [[GitHub Web Interface Tour]] - Understanding GitHub's interface
+* [[Basic Git Commands]] - Command-line shortcuts and aliases
+* [[GitHub Desktop Guide]] - Desktop application shortcuts
+* [[Troubleshooting Guide]] - When shortcuts don't work
+
+{{Info|GitHub regularly adds new shortcuts and features. Check the `?` help dialog periodically to discover new productivity enhancements.}}
+
+[[Category:Reference]]
+[[Category:Productivity]]
+[[Category:GitHub]]
+[[Category:Quick Reference]]

@@ -1,0 +1,367 @@
+= GitHub Glossary =
+
+A comprehensive glossary of GitHub and Git terminology, from basic concepts to advanced features.
+
+{{Note|This glossary covers both Git (the version control system) and GitHub (the hosting platform) terms.}}
+
+== A ==
+
+'''Action'''
+: A reusable unit of code that performs a specific task in a GitHub Actions workflow. Actions can be written in JavaScript, run in Docker containers, or be composite actions combining multiple steps.
+
+'''Artifact'''
+: Files or data produced by a workflow run, such as compiled binaries, test results, or logs. Artifacts can be downloaded from the GitHub interface or used by other jobs in the workflow.
+
+'''Author'''
+: The person who originally wrote a commit. In Git, this is different from the committer, who may have applied the commit on behalf of the author.
+
+== B ==
+
+'''Branch'''
+: A parallel version of a repository's code. Branches allow you to work on features or fixes in isolation from the main codebase. The default branch is typically named `main` or `master`.
+
+'''Branch Protection'''
+: Rules that prevent certain actions on important branches, such as requiring pull request reviews before merging or preventing force pushes.
+
+== C ==
+
+'''CI/CD'''
+: Continuous Integration/Continuous Deployment. A practice of automatically building, testing, and deploying code changes using automated workflows.
+
+'''Clone'''
+: Creating a copy of a repository from a remote location (like GitHub) to your local machine, including all files, branches, and commit history.
+
+'''Collaborator'''
+: A person with write access to a repository who can make changes, create branches, and review pull requests.
+
+'''Commit'''
+: A snapshot of changes to the repository at a specific point in time. Each commit has a unique identifier (SHA hash) and includes a message describing the changes.
+
+'''Committer'''
+: The person who applied a commit to the repository. This may be different from the author if someone else applied the commit on the author's behalf.
+
+'''Continuous Integration (CI)'''
+: The practice of automatically building and testing code changes as they are committed to ensure they don't break the existing codebase.
+
+== D ==
+
+'''Deploy Key'''
+: An SSH key that grants access to a single repository, often used for automated deployments or CI/CD systems.
+
+'''Deployment'''
+: The process of making code changes available in a specific environment (staging, production, etc.). GitHub tracks deployments and their statuses.
+
+'''Diff'''
+: A view showing the differences between two versions of files, highlighting additions, deletions, and modifications.
+
+'''Draft Pull Request'''
+: A pull request that is marked as work-in-progress and not ready for review. Draft PRs cannot be merged until marked as ready.
+
+== E ==
+
+'''Enterprise'''
+: GitHub's offering for large organisations, providing advanced security, compliance, and administration features.
+
+'''Environment'''
+: A deployment target (like staging or production) with specific protection rules and secrets. Environments can require approvals before deployments.
+
+== F ==
+
+'''Fork'''
+: A copy of a repository that allows you to freely experiment with changes without affecting the original project. Forks maintain a connection to the upstream repository.
+
+'''Force Push'''
+: Overwriting the remote branch history with your local branch, potentially losing commits. This should be used carefully, especially on shared branches.
+
+== G ==
+
+'''Git'''
+: The distributed version control system that GitHub is built upon. Git tracks changes to files and coordinates work between multiple people.
+
+'''GitHub'''
+: A web-based platform for hosting Git repositories, providing collaboration tools, issue tracking, and project management features.
+
+'''GitHub Actions'''
+: GitHub's built-in CI/CD platform that allows you to automate workflows based on repository events.
+
+'''GitHub App'''
+: A type of integration that can be installed on organisations or repositories to extend GitHub's functionality with custom features.
+
+'''GitHub Pages'''
+: A static site hosting service that publishes websites directly from GitHub repositories.
+
+== H ==
+
+'''HEAD'''
+: A reference to the most recent commit on the current branch. In Git commands, HEAD represents the current position in the repository's history.
+
+'''Hook'''
+: Scripts that run automatically at certain points in the Git workflow, such as before commits (pre-commit hooks) or after pushes (post-receive hooks).
+
+== I ==
+
+'''Issue'''
+: A way to track bugs, feature requests, or other tasks related to a repository. Issues can be assigned to people, labeled, and linked to pull requests.
+
+'''Issue Template'''
+: A predefined format for creating issues that helps ensure consistent information is provided when reporting bugs or requesting features.
+
+== J ==
+
+'''Job'''
+: A set of steps that execute on the same runner in a GitHub Actions workflow. Jobs can run in parallel or sequentially depending on dependencies.
+
+== L ==
+
+'''Label'''
+: Tags that can be applied to issues and pull requests to categorise and organise them (e.g., "bug", "enhancement", "documentation").
+
+'''License'''
+: A legal document that specifies how others can use, modify, and distribute your code. Common licenses include MIT, Apache 2.0, and GPL.
+
+== M ==
+
+'''Main Branch'''
+: The primary branch of a repository where the stable, production-ready code is maintained. Formerly often called "master".
+
+'''Maintainer'''
+: A person with administrative access to a repository who manages contributions, releases, and overall project direction.
+
+'''Markdown'''
+: A lightweight markup language used for formatting text in README files, issues, pull requests, and other GitHub content.
+
+'''Merge'''
+: The process of combining changes from one branch into another. This integrates the work done on feature branches back into the main branch.
+
+'''Merge Conflict'''
+: Occurs when Git cannot automatically merge changes because the same lines of code have been modified differently in two branches.
+
+'''Milestone'''
+: A way to group issues and pull requests to track progress toward a particular goal or release.
+
+== O ==
+
+'''OAuth'''
+: A standard for token-based authentication that allows applications to access GitHub on behalf of users without requiring passwords.
+
+'''Organisation'''
+: A shared account where multiple users can collaborate across many repositories with sophisticated administrative and security features.
+
+'''Origin'''
+: The default name for the remote repository from which a local repository was cloned.
+
+== P ==
+
+'''Personal Access Token (PAT)'''
+: A token that can be used instead of a password for authenticating to GitHub via HTTPS or the API.
+
+'''Project'''
+: GitHub's project management tool that provides Kanban-style boards for organising issues and pull requests.
+
+'''Pull Request (PR)'''
+: A request to merge changes from one branch into another, providing a platform for code review and discussion before integration.
+
+'''Push'''
+: Uploading local commits to a remote repository, making your changes available to others.
+
+== R ==
+
+'''README'''
+: A file (usually README.md) that provides information about a project, including description, installation instructions, and usage examples.
+
+'''Rebase'''
+: The process of moving or combining commits from one branch onto another, creating a linear history.
+
+'''Release'''
+: A packaged version of software at a specific point in time, often including compiled binaries and release notes.
+
+'''Repository (Repo)'''
+: A storage location for a project's files and revision history. Repositories can be local (on your computer) or remote (like on GitHub).
+
+'''Review'''
+: The process of examining proposed changes in a pull request, providing feedback, and approving or requesting changes.
+
+'''Runner'''
+: A server that runs GitHub Actions workflows. Can be GitHub-hosted or self-hosted.
+
+== S ==
+
+'''SHA'''
+: Secure Hash Algorithm. The unique identifier for each commit, typically displayed as a 40-character hexadecimal string.
+
+'''Squash'''
+: Combining multiple commits into a single commit, often done when merging feature branches to maintain a clean history.
+
+'''SSH Key'''
+: A pair of cryptographic keys used for secure authentication to GitHub without requiring a password.
+
+'''Stage/Staging'''
+: The process of preparing changes for commit. Staged changes are included in the next commit.
+
+'''Star'''
+: A way to bookmark repositories you find interesting or useful. Stars also indicate popularity and can help with repository discovery.
+
+'''Status Check'''
+: Automated tests or processes that run on pull requests to verify the code meets certain criteria before merging.
+
+== T ==
+
+'''Tag'''
+: A reference to a specific commit, often used to mark release points in the repository's history.
+
+'''Template Repository'''
+: A repository that can be used as a starting point for new repositories, providing a standardised structure and files.
+
+'''Token'''
+: A credential used for authentication, such as personal access tokens or OAuth tokens.
+
+== U ==
+
+'''Upstream'''
+: The original repository from which a fork was created. Used to keep forks updated with changes from the original project.
+
+== V ==
+
+'''Version Control'''
+: A system that records changes to files over time so you can recall specific versions later. Git is a distributed version control system.
+
+== W ==
+
+'''Watch'''
+: A way to receive notifications about activity in a repository, such as new issues, pull requests, or releases.
+
+'''Webhook'''
+: HTTP callbacks that are triggered by specific events in a repository, allowing external services to respond to GitHub events.
+
+'''Workflow'''
+: An automated process defined in a YAML file that runs based on repository events. Workflows contain one or more jobs.
+
+'''Working Directory'''
+: The current state of files in your local repository, including any modifications you've made but haven't yet committed.
+
+== Common Abbreviations ==
+
+{| class="wikitable"
+! Abbreviation !! Full Term !! Description
+|-
+| CI || Continuous Integration || Automated building and testing
+|-
+| CD || Continuous Deployment || Automated deployment process
+|-
+| PR || Pull Request || Request to merge changes
+|-
+| SHA || Secure Hash Algorithm || Unique commit identifier
+|-
+| SSH || Secure Shell || Encrypted network protocol
+|-
+| URL || Uniform Resource Locator || Web address
+|-
+| API || Application Programming Interface || System interface for developers
+|-
+| CLI || Command Line Interface || Text-based user interface
+|-
+| GUI || Graphical User Interface || Visual user interface
+|-
+| JSON || JavaScript Object Notation || Data interchange format
+|-
+| YAML || YAML Ain't Markup Language || Data serialisation standard
+|-
+| HTTP || HyperText Transfer Protocol || Web communication protocol
+|-
+| HTTPS || HTTP Secure || Encrypted HTTP
+|}
+
+== Git States and Areas ==
+
+Understanding Git's conceptual areas:
+
+'''Working Directory'''
+: Files as they currently exist on your filesystem
+
+'''Staging Area (Index)'''
+: Files that are prepared for the next commit
+
+'''Repository'''
+: The Git database containing all committed snapshots
+
+'''Remote Repository'''
+: A version of the repository hosted elsewhere (like on GitHub)
+
+== Branch Types ==
+
+'''Feature Branch'''
+: A branch created to develop a specific feature
+
+'''Hotfix Branch'''
+: A branch created to quickly fix critical issues in production
+
+'''Release Branch'''
+: A branch created to prepare a new production release
+
+'''Main/Master Branch'''
+: The primary branch containing production-ready code
+
+'''Development Branch'''
+: A branch where features are integrated before release
+
+== Workflow Types ==
+
+'''GitHub Flow'''
+: A simple workflow using feature branches and pull requests
+
+'''Git Flow'''
+: A more complex workflow with specific branch types for different purposes
+
+'''Forking Workflow'''
+: A workflow where contributors fork the main repository
+
+'''Centralized Workflow'''
+: A simple workflow where everyone commits to a single branch
+
+== Status and States ==
+
+'''Clean Working Directory'''
+: No modified, staged, or untracked files
+
+'''Dirty Working Directory'''
+: Contains modified or untracked files
+
+'''Staged Changes'''
+: Changes that are prepared for commit
+
+'''Unstaged Changes'''
+: Changes that exist but aren't prepared for commit
+
+'''Untracked Files'''
+: Files that Git isn't monitoring
+
+'''Ignored Files'''
+: Files that Git is configured to ignore
+
+== GitHub Permissions ==
+
+'''Read'''
+: Can view and clone repositories
+
+'''Write'''
+: Can push changes and manage issues/PRs
+
+'''Admin'''
+: Can manage repository settings and collaborators
+
+'''Owner'''
+: Full control over repository and its settings
+
+== See Also ==
+
+* [[Basic Git Commands]] - Essential Git commands
+* [[GitHub Actions Fundamentals]] - Introduction to automation
+* [[Pull Request Best Practices]] - Collaboration guidelines
+* [[Getting Started with GitHub]] - Beginner's guide
+
+{{Info|This glossary is regularly updated. If you notice missing terms or need clarification on any definition, please create an issue or contribute to this page.}}
+
+[[Category:Reference]]
+[[Category:Glossary]]
+[[Category:GitHub]]
+[[Category:Git]]

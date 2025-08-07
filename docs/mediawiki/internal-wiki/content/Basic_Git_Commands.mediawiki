@@ -1,0 +1,629 @@
+{{Tutorial
+|title = Essential Git Commands
+|author = GitHub Tutorials Expert
+|difficulty = beginner
+|estimated_time = 30 minutes
+|prerequisites = Git installed, basic command line knowledge
+|topics = Git CLI, Version control, Command line
+}}
+
+{{TOC limit|3}}
+
+= Essential Git Commands =
+
+Learning Git commands is fundamental to version control mastery. This guide covers the essential commands every developer needs to know, with practical examples and explanations.
+
+== Before You Begin ==
+
+=== Prerequisites ===
+* Git installed on your system
+* Basic command line/terminal knowledge
+* A GitHub account (for remote operations)
+* Text editor of your choice
+
+{{Note|If you prefer visual interfaces, see [[GitHub Desktop Guide]] for a graphical alternative to these commands.}}
+
+=== Checking Your Git Installation ===
+
+{{Code|bash|
+# Check Git version
+git --version
+
+# View Git configuration
+git config --list
+
+# Set up your identity (required for commits)
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+}}
+
+== Repository Basics ==
+
+=== Creating and Cloning Repositories ===
+
+'''Initialize a new repository:'''
+{{Code|bash|
+# Create new directory and initialize Git
+mkdir my-project
+cd my-project
+git init
+
+# Initialize with default branch name
+git init --initial-branch=main
+}}
+
+'''Clone an existing repository:'''
+{{Code|bash|
+# Clone via HTTPS
+git clone https://github.com/username/repository.git
+
+# Clone via SSH (if SSH key configured)
+git clone git@github.com:username/repository.git
+
+# Clone to specific directory
+git clone https://github.com/username/repository.git my-folder
+}}
+
+'''Check repository status:'''
+{{Code|bash|
+# See current status
+git status
+
+# Short status format
+git status --short
+}}
+
+== Working with Files ==
+
+=== The Three States ===
+
+Git files exist in three states:
+# '''Working Directory''' - Modified files
+# '''Staging Area''' - Files ready to commit
+# '''Repository''' - Committed files
+
+{{Info|Think of staging as preparing files for a photo (commit) - you choose which files to include before taking the snapshot.}}
+
+=== Adding Files to Staging ===
+
+{{Code|bash|
+# Add specific file
+git add filename.txt
+
+# Add multiple files
+git add file1.txt file2.txt
+
+# Add all files in current directory
+git add .
+
+# Add all files in repository
+git add --all
+
+# Add files matching pattern
+git add *.js
+
+# Interactively choose what to add
+git add --patch
+}}
+
+=== Removing Files ===
+
+{{Code|bash|
+# Remove file from Git and filesystem
+git rm filename.txt
+
+# Remove from Git but keep in filesystem
+git rm --cached filename.txt
+
+# Remove directory recursively
+git rm -r directory/
+}}
+
+=== Moving and Renaming Files ===
+
+{{Code|bash|
+# Rename/move file
+git mv oldname.txt newname.txt
+
+# Move file to directory
+git mv file.txt directory/
+}}
+
+== Making Commits ==
+
+=== Basic Commits ===
+
+{{Code|bash|
+# Commit staged files
+git commit -m "Add user authentication feature"
+
+# Commit with longer message
+git commit -m "Add user authentication" -m "Includes login, logout, and password reset functionality"
+
+# Add and commit in one step (tracked files only)
+git commit -am "Fix navigation bug"
+
+# Open editor for commit message
+git commit
+}}
+
+{{Good|Write clear, descriptive commit messages that explain WHY you made the change, not just what changed.}}
+
+=== Viewing Commit History ===
+
+{{Code|bash|
+# View commit history
+git log
+
+# Compact one-line format
+git log --oneline
+
+# Show last 5 commits
+git log -5
+
+# Show commits with file changes
+git log --stat
+
+# Show commits with actual changes
+git log --patch
+
+# Graphical representation
+git log --graph --oneline
+
+# Filter by author
+git log --author="Your Name"
+
+# Filter by date
+git log --since="2023-01-01" --until="2023-12-31"
+}}
+
+== Working with Branches ==
+
+=== Branch Basics ===
+
+{{Code|bash|
+# List all branches
+git branch
+
+# List all branches (including remote)
+git branch --all
+
+# Create new branch
+git branch feature-login
+
+# Create and switch to new branch
+git checkout -b feature-login
+
+# Switch to existing branch
+git checkout main
+
+# Modern way to switch branches (Git 2.23+)
+git switch main
+
+# Create and switch to new branch (modern)
+git switch --create feature-login
+}}
+
+=== Branch Management ===
+
+{{Code|bash|
+# Rename current branch
+git branch -m new-branch-name
+
+# Delete branch (safe - won't delete unmerged changes)
+git branch -d feature-login
+
+# Force delete branch (dangerous!)
+git branch -D feature-login
+
+# Show last commit on each branch
+git branch -v
+
+# Show merged branches
+git branch --merged
+
+# Show unmerged branches
+git branch --no-merged
+}}
+
+== Merging and Rebasing ==
+
+=== Merging Branches ===
+
+{{Code|bash|
+# Switch to target branch
+git checkout main
+
+# Merge feature branch
+git merge feature-login
+
+# Merge with custom commit message
+git merge feature-login -m "Merge user authentication feature"
+
+# Abort merge if conflicts occur
+git merge --abort
+}}
+
+=== Rebasing (Advanced) ===
+
+{{Warning|Rebasing rewrites history. Never rebase branches that others are working on.}}
+
+{{Code|bash|
+# Rebase current branch onto main
+git rebase main
+
+# Interactive rebase (last 3 commits)
+git rebase -i HEAD~3
+
+# Continue rebase after resolving conflicts
+git rebase --continue
+
+# Abort rebase
+git rebase --abort
+}}
+
+== Working with Remote Repositories ==
+
+=== Remote Management ===
+
+{{Code|bash|
+# View remote repositories
+git remote -v
+
+# Add remote repository
+git remote add origin https://github.com/username/repository.git
+
+# Change remote URL
+git remote set-url origin https://github.com/username/new-repo.git
+
+# Remove remote
+git remote remove origin
+}}
+
+=== Fetching and Pulling ===
+
+{{Code|bash|
+# Fetch changes from remote (doesn't merge)
+git fetch origin
+
+# Fetch from all remotes
+git fetch --all
+
+# Pull changes (fetch + merge)
+git pull origin main
+
+# Pull with rebase instead of merge
+git pull --rebase origin main
+}}
+
+=== Pushing Changes ===
+
+{{Code|bash|
+# Push to origin remote, main branch
+git push origin main
+
+# Push new branch to remote
+git push -u origin feature-login
+
+# Push all branches
+git push --all origin
+
+# Force push (dangerous!)
+git push --force origin main
+
+# Safer force push
+git push --force-with-lease origin main
+}}
+
+== Undoing Changes ==
+
+=== Unstaging Files ===
+
+{{Code|bash|
+# Unstage specific file
+git restore --staged filename.txt
+
+# Unstage all files
+git restore --staged .
+
+# Old syntax (still works)
+git reset HEAD filename.txt
+}}
+
+=== Discarding Changes ===
+
+{{Code|bash|
+# Discard changes in working directory
+git restore filename.txt
+
+# Discard all changes
+git restore .
+
+# Old syntax (still works)
+git checkout -- filename.txt
+}}
+
+=== Undoing Commits ===
+
+{{Code|bash|
+# Undo last commit, keep changes in working directory
+git reset --soft HEAD~1
+
+# Undo last commit, unstage changes
+git reset HEAD~1
+
+# Undo last commit, discard changes (dangerous!)
+git reset --hard HEAD~1
+
+# Create new commit that undoes previous commit
+git revert HEAD
+
+# Revert specific commit
+git revert abc1234
+}}
+
+== Viewing Differences ==
+
+{{Code|bash|
+# Show changes in working directory
+git diff
+
+# Show changes in staging area
+git diff --staged
+
+# Compare branches
+git diff main..feature-branch
+
+# Compare specific files
+git diff filename.txt
+
+# Compare specific commits
+git diff abc1234 def5678
+
+# Show changes from last commit
+git diff HEAD~1 HEAD
+}}
+
+== Stashing Changes ==
+
+{{Code|bash|
+# Stash current changes
+git stash
+
+# Stash with message
+git stash push -m "Work in progress on login feature"
+
+# List stashes
+git stash list
+
+# Apply most recent stash
+git stash apply
+
+# Apply and remove stash
+git stash pop
+
+# Apply specific stash
+git stash apply stash@{2}
+
+# Show stash contents
+git stash show -p stash@{0}
+
+# Drop specific stash
+git stash drop stash@{0}
+
+# Clear all stashes
+git stash clear
+}}
+
+== Searching and Information ==
+
+{{Code|bash|
+# Search for text in repository
+git grep "function"
+
+# Search in specific files
+git grep "TODO" -- "*.js"
+
+# Show file at specific commit
+git show HEAD~2:filename.txt
+
+# Show commit details
+git show abc1234
+
+# Find when line was last modified
+git blame filename.txt
+
+# Find commits that introduced/removed text
+git log -S "search term" --oneline
+}}
+
+== Configuration ==
+
+=== Global Configuration ===
+
+{{Code|bash|
+# Set global username and email
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+# Set default editor
+git config --global core.editor "code --wait"
+
+# Set default branch name
+git config --global init.defaultBranch main
+
+# Enable colored output
+git config --global color.ui auto
+
+# Set up aliases
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm commit
+}}
+
+=== Repository-Specific Configuration ===
+
+{{Code|bash|
+# Set config for current repository only
+git config user.name "Work Name"
+git config user.email "work.email@company.com"
+
+# View current configuration
+git config --list
+
+# View specific setting
+git config user.name
+}}
+
+== Common Workflows ==
+
+=== Feature Branch Workflow ===
+
+{{Code|bash|
+# 1. Start from main branch
+git checkout main
+git pull origin main
+
+# 2. Create feature branch
+git checkout -b feature/user-profile
+
+# 3. Make changes and commit
+git add .
+git commit -m "Add user profile page"
+
+# 4. Push feature branch
+git push -u origin feature/user-profile
+
+# 5. Create pull request on GitHub
+# (done via web interface)
+
+# 6. After merge, clean up
+git checkout main
+git pull origin main
+git branch -d feature/user-profile
+}}
+
+=== Hotfix Workflow ===
+
+{{Code|bash|
+# 1. Create hotfix branch from main
+git checkout main
+git checkout -b hotfix/critical-bug
+
+# 2. Fix and commit
+git add .
+git commit -m "Fix critical security vulnerability"
+
+# 3. Push and create PR
+git push -u origin hotfix/critical-bug
+
+# 4. After merge, update local main
+git checkout main
+git pull origin main
+git branch -d hotfix/critical-bug
+}}
+
+== Troubleshooting Common Issues ==
+
+=== Merge Conflicts ===
+
+When conflicts occur:
+{{Code|bash|
+# 1. Git will mark conflicted files
+git status
+
+# 2. Open conflicted files and resolve
+# Look for conflict markers: <<<<<<<, =======, >>>>>>>
+
+# 3. Add resolved files
+git add resolved-file.txt
+
+# 4. Complete the merge
+git commit
+}}
+
+=== Accidentally Committed to Wrong Branch ===
+
+{{Code|bash|
+# 1. Create new branch from current position
+git branch correct-branch
+
+# 2. Reset current branch to previous commit
+git reset --hard HEAD~1
+
+# 3. Switch to correct branch
+git checkout correct-branch
+}}
+
+=== Need to Update Commit Message ===
+
+{{Code|bash|
+# Change last commit message
+git commit --amend -m "New commit message"
+
+# Add files to last commit
+git add forgotten-file.txt
+git commit --amend --no-edit
+}}
+
+== Best Practices ==
+
+{{Good|Follow these practices for a clean Git history and smooth collaboration.}}
+
+=== Commit Guidelines ===
+* Make atomic commits (one logical change per commit)
+* Write descriptive commit messages
+* Commit frequently with small changes
+* Test before committing
+
+=== Branch Naming ===
+* Use descriptive names: `feature/user-authentication`
+* Include issue numbers: `bugfix/issue-123-memory-leak`
+* Use consistent conventions across team
+
+=== Remote Repository Hygiene ===
+* Pull before pushing
+* Don't force push to shared branches
+* Delete merged branches promptly
+* Keep commit history clean
+
+{{See also|
+* [[GitHub Desktop Guide]] - GUI alternative to command line
+* [[Creating Your First Repository]] - Repository creation basics
+* [[Introduction to Branching]] - Branching concepts and strategies
+* [[Pull Request Best Practices]] - Code review and collaboration
+* [[Troubleshooting Guide]] - Solutions to common Git problems
+}}
+
+== Quick Reference ==
+
+=== Most Used Commands ===
+{{Code|bash|
+git status          # Check repository status
+git add .           # Stage all changes
+git commit -m "msg" # Commit with message
+git push            # Push to remote
+git pull            # Pull from remote
+git branch          # List branches
+git checkout -b new # Create and switch to branch
+git merge branch    # Merge branch
+git log --oneline   # View commit history
+git diff            # View changes
+}}
+
+=== Emergency Commands ===
+{{Code|bash|
+git stash           # Save work in progress
+git reset --hard    # Discard all changes (dangerous!)
+git revert HEAD     # Undo last commit safely
+git reflog          # View all Git operations
+git fsck            # Check repository integrity
+}}
+
+{{Success|You now have the essential Git commands needed for effective version control. Practice these regularly to build muscle memory!}}
+
+[[Category:Beginner Tutorials]]
+[[Category:Git]]
+[[Category:Command Line]]
+[[Category:Version Control]]

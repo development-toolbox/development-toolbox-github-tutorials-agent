@@ -1,0 +1,226 @@
+= Intermediate Tutorials =
+
+These tutorials build upon the fundamentals covered in beginner tutorials and introduce more advanced concepts, workflows, and best practices for effective GitHub usage.
+
+== Prerequisites ==
+
+Before starting intermediate tutorials, you should be comfortable with:
+* Basic Git commands and concepts
+* Creating and managing repositories
+* Making commits and understanding Git history
+* Using GitHub's web interface
+* Basic branching and merging
+
+{{Note|If you're new to GitHub, start with [[Category:Beginner Tutorials]] first.}}
+
+== Core Intermediate Topics ==
+
+=== Collaboration and Workflows ===
+* [[Pull Request Best Practices]] - Master the art of code review
+* [[Collaborative Development]] - Work effectively with teams
+* [[Branching Strategies]] - GitFlow, GitHub Flow, and more
+* [[Code Review Guidelines]] - Give and receive effective feedback
+* [[Managing Issues and Projects]] - Organise work and track progress
+
+=== Automation and CI/CD ===
+* [[GitHub Actions Workflows]] - Automate your development process
+* [[Branch Protection Rules]] - Secure your important branches
+* [[GitHub API Integration]] - Automate GitHub operations
+* [[CI/CD Tools]] - Integrate with external tools and services
+
+=== Repository Management ===
+* [[Advanced Repository Settings]] - Configure repositories for teams
+* [[Security Configuration]] - Implement security best practices
+* [[Performance Optimization]] - Handle large repositories efficiently
+* [[Backup and Migration Strategies]] - Protect and move your data
+
+== Learning Path ==
+
+We recommend following this sequence for intermediate topics:
+
+=== Phase 1: Team Collaboration (2-3 weeks) ===
+# [[Pull Request Best Practices]] - Foundation of team development
+# [[Code Review Guidelines]] - Essential review skills
+# [[Collaborative Development]] - Team workflow patterns
+# [[Managing Issues and Projects]] - Project organisation
+
+=== Phase 2: Process Automation (2-3 weeks) ===
+# [[GitHub Actions Workflows]] - Basic automation
+# [[Branch Protection Rules]] - Enforce quality gates
+# [[GitHub API Integration]] - Custom automation
+# [[CI/CD Tools]] - External tool integration
+
+=== Phase 3: Advanced Management (1-2 weeks) ===
+# [[Security Configuration]] - Secure your repositories
+# [[Performance Optimization]] - Scale your workflows
+# [[Advanced Repository Settings]] - Fine-tune configurations
+
+{{Good|Practice each concept in a real project to reinforce your learning.}}
+
+== Hands-On Projects ==
+
+=== Project 1: Team Collaboration Setup ===
+'''Objective:''' Set up a repository for team development
+
+'''Tasks:'''
+* Configure branch protection rules
+* Create pull request templates
+* Set up automated testing
+* Establish code review process
+* Configure issue templates
+
+'''Skills practiced:'''
+* Repository configuration
+* Team workflow design
+* Automation setup
+
+=== Project 2: CI/CD Pipeline ===
+'''Objective:''' Build a complete continuous integration pipeline
+
+'''Tasks:'''
+* Create GitHub Actions workflows
+* Set up testing and linting
+* Implement deployment automation
+* Configure notifications
+* Add security scanning
+
+'''Skills practiced:'''
+* Workflow design
+* Automation scripting
+* Security integration
+* Deployment strategies
+
+=== Project 3: Open Source Contribution ===
+'''Objective:''' Contribute to an existing open source project
+
+'''Tasks:'''
+* Find a suitable project
+* Understand the contribution process
+* Make a meaningful contribution
+* Navigate code review
+* Follow up on feedback
+
+'''Skills practiced:'''
+* Reading contribution guidelines
+* Working with maintainers
+* Code review participation
+* Community engagement
+
+== Tools and Integrations ==
+
+=== Essential Tools for Intermediate Users ===
+* '''GitHub CLI''' - Command-line interface for GitHub
+* '''GitHub Desktop''' - Visual Git interface (if preferred)
+* '''VS Code GitHub Extension''' - IDE integration
+* '''Dependabot''' - Automated dependency updates
+
+=== Popular Integrations ===
+* '''Slack/Discord''' - Team notifications
+* '''Jira/Linear''' - Project management
+* '''SonarCloud''' - Code quality analysis
+* '''Snyk''' - Security vulnerability scanning
+
+== Common Challenges and Solutions ==
+
+=== Merge Conflicts ===
+'''Challenge:''' Complex merge conflicts in team environments
+'''Solution:''' Learn advanced conflict resolution techniques and prevention strategies
+
+=== Workflow Complexity ===
+'''Challenge:''' Overly complex branching strategies
+'''Solution:''' Start simple and evolve workflows based on team needs
+
+=== CI/CD Failures ===
+'''Challenge:''' Flaky or slow automated tests
+'''Solution:''' Implement proper testing practices and performance optimization
+
+=== Team Coordination ===
+'''Challenge:''' Multiple developers working on overlapping features
+'''Solution:''' Establish clear communication and planning processes
+
+{{Warning|Don't try to implement all advanced features at once. Introduce changes gradually and let your team adapt.}}
+
+== Advanced Concepts Preview ==
+
+Once you're comfortable with intermediate topics, you'll be ready for:
+* [[Advanced GitHub Actions]] - Custom actions and complex workflows
+* [[GitHub Enterprise Administration]] - Organisation-level management
+* [[Security Best Practices]] - Advanced security configurations
+* [[Custom GitHub Apps]] - Building GitHub integrations
+* [[GitHub GraphQL API]] - Advanced API usage
+
+== Assessment and Next Steps ==
+
+=== Self-Assessment Checklist ===
+
+'''Collaboration Skills:'''
+- [ ] Can create effective pull requests with good descriptions
+- [ ] Provide constructive code review feedback
+- [ ] Resolve merge conflicts confidently
+- [ ] Use branching strategies effectively
+
+'''Automation Skills:'''
+- [ ] Create and maintain GitHub Actions workflows
+- [ ] Set up branch protection rules
+- [ ] Integrate external tools and services
+- [ ] Debug workflow failures
+
+'''Management Skills:'''
+- [ ] Configure repositories for team use
+- [ ] Implement security best practices
+- [ ] Organise issues and projects effectively
+- [ ] Handle repository performance issues
+
+=== Continuing Your Journey ===
+
+'''If you're struggling with intermediate concepts:'''
+* Review [[Category:Beginner Tutorials]] for foundation concepts
+* Practice with personal projects before team environments
+* Join GitHub community discussions
+* Consider pair programming or mentoring
+
+'''If you've mastered intermediate concepts:'''
+* Move on to [[Category:Advanced Tutorials]]
+* Contribute to open source projects
+* Mentor other developers
+* Share your knowledge through documentation or presentations
+
+== Community Resources ==
+
+=== Getting Help ===
+* [[Project:Support]] - Internal support channels
+* [https://github.community/ GitHub Community] - Official community forum
+* [https://stackoverflow.com/questions/tagged/github Stack Overflow] - Technical questions
+* [https://docs.github.com/ GitHub Docs] - Official documentation
+
+=== Contributing Back ===
+* Improve this wiki's documentation
+* Create tutorials for specific use cases
+* Share your workflow configurations
+* Answer questions in community forums
+
+{{See also|
+* [[Category:Beginner Tutorials]] - Foundation concepts
+* [[Category:Advanced Tutorials]] - Next level topics
+* [[Category:GitHub Actions]] - Automation and CI/CD
+* [[Category:Collaboration]] - Team development practices
+* [[Category:Security]] - Security best practices
+}}
+
+== Success Stories ==
+
+'''Team Productivity Improvements:'''
+* 50% reduction in merge conflicts through better branching strategies
+* 75% faster code reviews with pull request templates
+* 90% fewer production bugs with automated testing
+
+'''Process Automation Benefits:'''
+* Automated deployment reducing release time from hours to minutes
+* Consistent code quality through automated linting and testing
+* Improved security through automated vulnerability scanning
+
+{{Success|Intermediate GitHub skills transform individual contributors into effective team members and enable scalable development processes.}}
+
+[[Category:Tutorials]]
+[[Category:Navigation]]
+[[Category:Intermediate]]

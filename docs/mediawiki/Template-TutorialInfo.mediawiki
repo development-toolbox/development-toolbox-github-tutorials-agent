@@ -1,0 +1,46 @@
+<noinclude>
+This template is used to display tutorial information boxes.
+
+== Usage ==
+<pre>
+{{TutorialInfo
+|level=Beginner/Intermediate/Advanced
+|duration=30 minutes
+|prerequisites=None or list prerequisites
+|topics=Comma-separated list of topics
+}}
+</pre>
+
+== Example ==
+{{TutorialInfo
+|level=Beginner
+|duration=30 minutes
+|prerequisites=None
+|topics=Account creation, Basic navigation
+}}
+
+</noinclude><includeonly><div style="background-color: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 3px; padding: 12px; margin-bottom: 16px;">
+<div style="font-weight: bold; font-size: 1.1em; margin-bottom: 8px; color: #000;">Tutorial Information</div>
+<table style="width: 100%; background: transparent;">
+<tr>
+<td style="width: 50%; padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Level:'''</div>
+<div style="margin-left: 10px;">{{{level|Not specified}}}</div>
+</td>
+<td style="width: 50%; padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Duration:'''</div>
+<div style="margin-left: 10px;">{{{duration|Not specified}}}</div>
+</td>
+</tr>
+<tr>
+<td style="padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Prerequisites:'''</div>
+<div style="margin-left: 10px;">{{{prerequisites|None}}}</div>
+</td>
+<td style="padding: 4px; vertical-align: top;">
+<div style="color: #54595d; font-size: 0.9em;">'''Topics:'''</div>
+<div style="margin-left: 10px;">{{{topics|Not specified}}}</div>
+</td>
+</tr>
+</table>
+</div>[[Category:Tutorials]]{{#ifeq:{{{level}}}|Beginner|[[Category:Beginner Tutorials]]}}{{#ifeq:{{{level}}}|Intermediate|[[Category:Intermediate Tutorials]]}}{{#ifeq:{{{level}}}|Advanced|[[Category:Advanced Tutorials]]}}</includeonly>

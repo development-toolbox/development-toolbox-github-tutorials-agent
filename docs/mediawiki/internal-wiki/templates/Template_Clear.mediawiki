@@ -1,0 +1,21 @@
+<noinclude>
+This template creates a clear fix for floating elements.
+
+== Usage ==
+<pre>
+{{Clear}}
+{{Clear|left}}
+{{Clear|right}}
+{{Clear|both}}
+</pre>
+
+== Parameters ==
+* '''1''' (optional): Clear direction (left, right, both). Default is both.
+
+</noinclude><includeonly><div style="clear: {{#switch: {{{1|}}}
+| left = left
+| right = right
+| both = both
+| #default = both
+}};"></div></includeonly>
+[[Category:Layout templates]]

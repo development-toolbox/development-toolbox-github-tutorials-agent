@@ -1,0 +1,55 @@
+<includeonly><div style="background: #f8f9fa; border: 1px solid #a2a9b1; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+<div>
+'''Level:''' <span style="padding: 2px 8px; border-radius: 3px; background: {{#switch: {{{level|}}}
+ | Beginner = #4caf50; color: white
+ | Intermediate = #ff9800; color: white
+ | Advanced = #f44336; color: white
+ | Expert = #9c27b0; color: white
+ | #default = #666; color: white
+}}">{{{level|Not specified}}}</span>
+</div>
+<div>
+'''Duration:''' {{{duration|Not specified}}}
+</div>
+<div>
+'''Prerequisites:''' {{{prerequisites|None}}}
+</div>
+<div>
+'''Topics:''' {{{topics|Not specified}}}
+</div>
+</div>
+</div></includeonly><noinclude>
+== Template:TutorialInfo ==
+
+This template displays tutorial metadata in a consistent format.
+
+=== Usage ===
+
+<pre>
+{{TutorialInfo
+|level=Beginner/Intermediate/Advanced/Expert
+|duration=30 minutes
+|prerequisites=[[Getting Started]], [[Basic Git]]
+|topics=Branches, Commits, Pull Requests
+}}
+</pre>
+
+=== Parameters ===
+
+* '''level''' - Tutorial difficulty level (Beginner, Intermediate, Advanced, Expert)
+* '''duration''' - Estimated time to complete
+* '''prerequisites''' - Required knowledge or completed tutorials
+* '''topics''' - Main topics covered in the tutorial
+
+=== Example ===
+
+{{TutorialInfo
+|level=Intermediate
+|duration=45 minutes
+|prerequisites=[[Getting Started with GitHub]]
+|topics=GitHub Actions, CI/CD, Automation
+}}
+
+[[Category:Templates]]
+</noinclude>
